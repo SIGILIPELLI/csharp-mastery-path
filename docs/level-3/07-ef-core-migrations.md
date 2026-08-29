@@ -1,0 +1,5 @@
+# 07 · Working with Databases (EF Core migrations)
+
+This module is part of Level 3 · Advanced.
+
+More lessons are on the way — check back soon.

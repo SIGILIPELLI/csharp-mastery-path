@@ -1,0 +1,100 @@
+site_name: C# Mastery Path
+site_description: A structured, module-wise C#/.NET training program from entry level to master level.
+site_url: https://sigilipelli.github.io/csharp-mastery-path/
+repo_url: https://github.com/SIGILIPELLI/csharp-mastery-path
+repo_name: csharp-mastery-path
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - content.code.copy
+    - content.code.annotate
+    - search.suggest
+    - search.highlight
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - toc:
+      permalink: true
+
+extra_css:
+  - stylesheets/extra.css
+
+nav:
+  - Home: index.md
+  - Privacy Policy: privacy.md
+  - "Level 1 · Entry":
+      - Overview: level-1/index.md
+      - "01 · What Is C# & .NET?": level-1/01-what-is-csharp-dotnet.md
+      - "02 · Variables & Types": level-1/02-variables-types.md
+      - "03 · Control Flow": level-1/03-control-flow.md
+      - "04 · Methods & Functions": level-1/04-methods-functions.md
+      - "05 · Classes & Objects": level-1/05-classes-objects.md
+      - "06 · Collections": level-1/06-collections.md
+      - "07 · Exception Handling": level-1/07-exception-handling.md
+      - "08 · LINQ Basics": level-1/08-linq-basics.md
+      - "09 · File I/O & Working with Text": level-1/09-file-io.md
+      - "10 · Project — Console Task Manager App": level-1/10-project-task-manager.md
+  - "Level 2 · Intermediate":
+      - Overview: level-2/index.md
+      - "01 · Interfaces & Polymorphism": level-2/01-interfaces-polymorphism.md
+      - "02 · Generics": level-2/02-generics.md
+      - "03 · Delegates & Events": level-2/03-delegates-events.md
+      - "04 · Async/Await Basics": level-2/04-async-await-basics.md
+      - "05 · Nullable Reference Types & Null Safety": level-2/05-nullable-reference-types.md
+      - "06 · Testing with xUnit": level-2/06-testing-xunit.md
+      - "07 · Working with JSON (System.Text.Json)": level-2/07-json-system-text-json.md
+      - "08 · Records & Pattern Matching": level-2/08-records-pattern-matching.md
+      - "09 · NuGet & Project Structure": level-2/09-nuget-project-structure.md
+      - "10 · Project — Weather CLI": level-2/10-project-weather-cli.md
+  - "Level 3 · Advanced":
+      - Overview: level-3/index.md
+      - "01 · ASP.NET Core Basics": level-3/01-aspnet-core-basics.md
+      - "02 · Entity Framework Core Basics": level-3/02-ef-core-basics.md
+      - "03 · Dependency Injection Deep Dive": level-3/03-dependency-injection.md
+      - "04 · Advanced Async & Task Parallel Library": level-3/04-advanced-async-tpl.md
+      - "05 · Design Patterns in C#": level-3/05-design-patterns.md
+      - "06 · Testing Advanced (Moq, integration tests)": level-3/06-testing-advanced.md
+      - "07 · Working with Databases (EF Core migrations)": level-3/07-ef-core-migrations.md
+      - "08 · Middleware & Filters in ASP.NET Core": level-3/08-middleware-filters.md
+      - "09 · Performance & Memory (Span, structs)": level-3/09-performance-memory.md
+      - "10 · Project — REST API Service": level-3/10-project-rest-api.md
+  - "Level 4 · Master":
+      - Overview: level-4/index.md
+      - "01 · Microservices Patterns in .NET": level-4/01-microservices-patterns.md
+      - "02 · Advanced ASP.NET Core (auth, gRPC)": level-4/02-advanced-aspnet-core.md
+      - "03 · Distributed Systems Basics for .NET": level-4/03-distributed-systems-basics.md
+      - "04 · Testing at Scale & CI": level-4/04-testing-at-scale-ci.md
+      - "05 · Performance Profiling & Optimization": level-4/05-performance-profiling.md
+      - "06 · Security Best Practices": level-4/06-security-best-practices.md
+      - "07 · Deployment (Docker for .NET)": level-4/07-deployment-docker.md
+      - "08 · Observability (logging, tracing)": level-4/08-observability.md
+      - "09 · Building an In-House .NET Framework": level-4/09-inhouse-dotnet-framework.md
+      - "10 · Capstone Project": level-4/10-capstone-project.md
