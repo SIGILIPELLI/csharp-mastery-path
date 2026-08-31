@@ -1802,6 +1802,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 · Performance Profiling & Optimization
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1818,6 +1836,113 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dotnet-trace-for-cpu-profiling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dotnet-trace for CPU profiling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dotnet-counters-for-live-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dotnet-counters for live metrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dotnet-gcdump-for-memory-leaks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dotnet-gcdump for memory leaks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reading-gc-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading GC behavior
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#server-gc-vs-workstation-gc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server GC vs. Workstation GC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reducing-allocations-in-hot-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reducing allocations in hot paths
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#load-testing-to-generate-realistic-profiling-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Load testing to generate realistic profiling data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2116,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dotnet-trace-for-cpu-profiling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dotnet-trace for CPU profiling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dotnet-counters-for-live-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dotnet-counters for live metrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dotnet-gcdump-for-memory-leaks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dotnet-gcdump for memory leaks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reading-gc-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading GC behavior
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#server-gc-vs-workstation-gc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server GC vs. Workstation GC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reducing-allocations-in-hot-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reducing allocations in hot paths
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#load-testing-to-generate-realistic-profiling-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Load testing to generate realistic profiling data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2231,127 @@
 
 
 <h1 id="05-performance-profiling-optimization">05 · Performance Profiling &amp; Optimization<a class="headerlink" href="#05-performance-profiling-optimization" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 4 · Master.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>Level 3 module 09 introduced <code>Span&lt;T&gt;</code> and <code>BenchmarkDotNet</code> for
+micro-benchmarks. This module covers profiling a running application to find
+<em>where</em> time and memory actually go, rather than guessing.</p>
+<h2 id="dotnet-trace-for-cpu-profiling"><code>dotnet-trace</code> for CPU profiling<a class="headerlink" href="#dotnet-trace-for-cpu-profiling" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>dotnet<span class="w"> </span>tool<span class="w"> </span>install<span class="w"> </span>--global<span class="w"> </span>dotnet-trace
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>dotnet<span class="w"> </span>trace<span class="w"> </span>collect<span class="w"> </span>--process-id<span class="w"> </span><span class="k">$(</span>pgrep<span class="w"> </span>-f<span class="w"> </span>MyApi<span class="k">)</span><span class="w"> </span>--providers<span class="w"> </span>Microsoft-DotNETCore-SampleProfiler
+</code></pre></div>
+<p>This attaches to a running process, samples the call stack at intervals, and
+writes a <code>.nettrace</code> file — open it in <code>dotnet-trace</code>'s companion viewer,
+Visual Studio, or <code>speedscope</code> (after converting: <code>dotnet-trace convert
+trace.nettrace --format speedscope</code>) to see a flame graph of where CPU time
+concentrates. Do this against a realistic load (a load-testing tool hitting
+the API), not an idle process — an idle process has no CPU activity to
+profile.</p>
+<h2 id="dotnet-counters-for-live-metrics"><code>dotnet-counters</code> for live metrics<a class="headerlink" href="#dotnet-counters-for-live-metrics" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>dotnet<span class="w"> </span>tool<span class="w"> </span>install<span class="w"> </span>--global<span class="w"> </span>dotnet-counters
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>dotnet<span class="w"> </span>counters<span class="w"> </span>monitor<span class="w"> </span>--process-id<span class="w"> </span><span class="k">$(</span>pgrep<span class="w"> </span>-f<span class="w"> </span>MyApi<span class="k">)</span><span class="w"> </span>System.Runtime<span class="w"> </span>Microsoft.AspNetCore.Hosting
+</code></pre></div>
+<p>This streams live counters — GC heap size, gen 0/1/2 collection counts,
+thread pool queue length, request rate, request duration — refreshing in
+the terminal. A thread pool queue length that's consistently nonzero under
+load means requests are waiting for a worker thread — a strong signal of
+blocking calls (<code>.Result</code>, <code>.Wait()</code>) starving the pool (Level 3, module
+04).</p>
+<h2 id="dotnet-gcdump-for-memory-leaks"><code>dotnet-gcdump</code> for memory leaks<a class="headerlink" href="#dotnet-gcdump-for-memory-leaks" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>dotnet<span class="w"> </span>tool<span class="w"> </span>install<span class="w"> </span>--global<span class="w"> </span>dotnet-gcdump
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>dotnet<span class="w"> </span>gcdump<span class="w"> </span>collect<span class="w"> </span>--process-id<span class="w"> </span><span class="k">$(</span>pgrep<span class="w"> </span>-f<span class="w"> </span>MyApi<span class="k">)</span>
+</code></pre></div>
+<p>Take two dumps minutes apart under steady load and diff the object counts
+per type. A type whose instance count grows unboundedly between the two
+dumps, without the workload growing, is a leak — commonly an event
+subscription that's never unsubscribed, a static collection that only ever
+grows, or a cache with no eviction policy.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// A classic leak: subscribing without unsubscribing</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ReportWidget</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">IDisposable</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">{</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">StockTicker</span><span class="w"> </span><span class="n">_ticker</span><span class="p">;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nf">ReportWidget</span><span class="p">(</span><span class="n">StockTicker</span><span class="w"> </span><span class="n">ticker</span><span class="p">)</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">        </span><span class="n">_ticker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ticker</span><span class="p">;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">        </span><span class="n">_ticker</span><span class="p">.</span><span class="n">PriceChanged</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">OnPriceChanged</span><span class="p">;</span><span class="w">   </span><span class="c1">// ticker now holds a reference to this widget</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">OnPriceChanged</span><span class="p">(</span><span class="kt">object?</span><span class="w"> </span><span class="n">sender</span><span class="p">,</span><span class="w"> </span><span class="kt">decimal</span><span class="w"> </span><span class="n">price</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Dispose</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">_ticker</span><span class="p">.</span><span class="n">PriceChanged</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">OnPriceChanged</span><span class="p">;</span><span class="w">   </span><span class="c1">// must unsubscribe</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="p">}</span>
+</code></pre></div>
+<p>If <code>ReportWidget</code> instances are created and discarded frequently but never
+<code>Dispose()</code>d, the long-lived <code>StockTicker</code>'s event keeps every one of them
+alive forever — the GC can't collect an object something else still
+references, even if nothing else in the app "wants" it anymore.</p>
+<h2 id="reading-gc-behavior">Reading GC behavior<a class="headerlink" href="#reading-gc-behavior" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Gen0: {GC.CollectionCount(0)}, Gen1: {GC.CollectionCount(1)}, Gen2: {GC.CollectionCount(2)}"</span><span class="p">);</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Total allocated: {GC.GetTotalAllocatedBytes() / 1024 / 1024} MB"</span><span class="p">);</span>
+</code></pre></div>
+<p>Frequent Gen0 collections are normal and cheap (most objects die young).
+Frequent Gen2 collections are expensive and a red flag — they mean objects
+are surviving longer than expected, often because something is holding
+references (the leak pattern above) or because large/long-lived caches
+churn.</p>
+<h2 id="server-gc-vs-workstation-gc">Server GC vs. Workstation GC<a class="headerlink" href="#server-gc-vs-workstation-gc" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="cm">&lt;!-- MyApi.csproj --&gt;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">&lt;PropertyGroup&gt;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">&lt;ServerGarbageCollection&gt;</span>true<span class="nt">&lt;/ServerGarbageCollection&gt;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="nt">&lt;ConcurrentGarbageCollection&gt;</span>true<span class="nt">&lt;/ConcurrentGarbageCollection&gt;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nt">&lt;/PropertyGroup&gt;</span>
+</code></pre></div>
+<p>Server GC (the ASP.NET Core default) uses one heap and one GC thread per
+core, optimized for throughput on multi-core server workloads at the cost
+of more memory. Workstation GC uses less memory and is friendlier for
+single-user desktop/CLI apps. Getting this setting wrong for the workload
+(Workstation GC on a busy multi-core API server) shows up as
+disproportionately high GC pause time in <code>dotnet-counters</code>.</p>
+<h2 id="reducing-allocations-in-hot-paths">Reducing allocations in hot paths<a class="headerlink" href="#reducing-allocations-in-hot-paths" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// Before: allocates a new string every call, on a hot logging path</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kt">string</span><span class="w"> </span><span class="nf">FormatLog</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">level</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">message</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">$"[{DateTime.UtcNow:O}] {level}: {message}"</span><span class="p">;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1">// After: reuse a pooled StringBuilder via ObjectPool, avoid repeated formatting allocations</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">ObjectPool</span><span class="o">&lt;</span><span class="n">StringBuilder</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_pool</span><span class="w"> </span><span class="o">=</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">DefaultObjectPoolProvider</span><span class="p">().</span><span class="n">CreateStringBuilderPool</span><span class="p">();</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="kt">string</span><span class="w"> </span><span class="nf">FormatLogPooled</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">level</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">message</span><span class="p">)</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="p">{</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">sb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_pool</span><span class="p">.</span><span class="n">Get</span><span class="p">();</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span><span class="k">try</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">        </span><span class="n">sb</span><span class="p">.</span><span class="n">Append</span><span class="p">(</span><span class="sc">'['</span><span class="p">).</span><span class="n">Append</span><span class="p">(</span><span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">ToString</span><span class="p">(</span><span class="s">"O"</span><span class="p">)).</span><span class="n">Append</span><span class="p">(</span><span class="s">"] "</span><span class="p">).</span><span class="n">Append</span><span class="p">(</span><span class="n">level</span><span class="p">).</span><span class="n">Append</span><span class="p">(</span><span class="s">": "</span><span class="p">).</span><span class="n">Append</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">sb</span><span class="p">.</span><span class="n">ToString</span><span class="p">();</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">    </span><span class="k">finally</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">        </span><span class="n">_pool</span><span class="p">.</span><span class="n">Return</span><span class="p">(</span><span class="n">sb</span><span class="p">);</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="p">}</span>
+</code></pre></div>
+<p><code>ObjectPool&lt;T&gt;</code> (from <code>Microsoft.Extensions.ObjectPool</code>) reuses
+<code>StringBuilder</code> instances instead of allocating and discarding one per call
+— worthwhile only on measurably hot paths (a request-per-second logging call
+in a high-throughput service), verified with <code>BenchmarkDotNet</code>'s
+<code>[MemoryDiagnoser]</code> before and after, exactly as module 09 (Level 3)
+demonstrated. Optimizing code nobody profiled first is how you get
+unreadable code with no measured benefit.</p>
+<h2 id="load-testing-to-generate-realistic-profiling-data">Load testing to generate realistic profiling data<a class="headerlink" href="#load-testing-to-generate-realistic-profiling-data" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>dotnet<span class="w"> </span>tool<span class="w"> </span>install<span class="w"> </span>--global<span class="w"> </span>Microsoft.dotnet-httprepl
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># or, for real load generation:</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># k6 run --vus 50 --duration 30s script.js</span>
+</code></pre></div>
+<p>Profiling an API with no traffic tells you almost nothing — pair
+<code>dotnet-trace</code>/<code>dotnet-counters</code> with a load generator (k6, <code>bombardier</code>,
+or even a simple parallel loop of <code>HttpClient</code> calls) hitting representative
+endpoints, so the CPU/memory data reflects production-shaped concurrency
+rather than a single request.</p>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<p>Take the Level 3 REST API project (module 10), run it under load (a simple
+console app firing 200 concurrent <code>GET /books</code> requests with
+<code>Parallel.ForEachAsync</code>, per Level 3 module 04), and capture a
+<code>dotnet-counters monitor</code> snapshot during the run. Identify the thread pool
+queue length and GC gen0 count. Then deliberately introduce a <code>.Result</code> call
+in one endpoint handler, rerun the same load, and compare the thread pool
+metrics — document the difference in a comment in the exercise file.</p>
 
 
 

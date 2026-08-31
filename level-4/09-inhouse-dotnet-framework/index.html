@@ -1914,6 +1914,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 · Building an In-House .NET Framework
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1930,6 +1948,91 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#a-shared-resultt-type-instead-of-exceptions-for-expected-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A shared Result&lt;T&gt; type instead of exceptions for expected failures
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-shared-problem-details-error-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A shared problem-details error format
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-reusable-middleware-extension-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A reusable middleware extension package
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#packaging-it-as-a-nuget-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Packaging it as a NuGet package
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guarding-against-overreach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Guarding against overreach
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2094,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#a-shared-resultt-type-instead-of-exceptions-for-expected-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A shared Result&lt;T&gt; type instead of exceptions for expected failures
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-shared-problem-details-error-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A shared problem-details error format
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-reusable-middleware-extension-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A reusable middleware extension package
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#packaging-it-as-a-nuget-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Packaging it as a NuGet package
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guarding-against-overreach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Guarding against overreach
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2187,148 @@
 
 
 <h1 id="09-building-an-in-house-net-framework">09 · Building an In-House .NET Framework<a class="headerlink" href="#09-building-an-in-house-net-framework" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 4 · Master.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>Larger organizations often build a thin internal framework on top of
+ASP.NET Core — shared conventions for error handling, result types, and
+cross-cutting concerns so every team's service looks and behaves
+consistently. This module builds a small one, in miniature, to show the
+underlying techniques: source-generator-free extension methods, a shared
+<code>Result&lt;T&gt;</code> type, and a reusable NuGet package.</p>
+<h2 id="a-shared-resultt-type-instead-of-exceptions-for-expected-failures">A shared <code>Result&lt;T&gt;</code> type instead of exceptions for expected failures<a class="headerlink" href="#a-shared-resultt-type-instead-of-exceptions-for-expected-failures" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">public</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">Result</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="p">{</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">IsSuccess</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">T</span><span class="o">?</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string?</span><span class="w"> </span><span class="n">Error</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="nf">Result</span><span class="p">(</span><span class="kt">bool</span><span class="w"> </span><span class="n">isSuccess</span><span class="p">,</span><span class="w"> </span><span class="n">T</span><span class="o">?</span><span class="w"> </span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="kt">string?</span><span class="w"> </span><span class="n">error</span><span class="p">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">        </span><span class="n">IsSuccess</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isSuccess</span><span class="p">;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">value</span><span class="p">;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">        </span><span class="n">Error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">error</span><span class="p">;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Result</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Success</span><span class="p">(</span><span class="n">T</span><span class="w"> </span><span class="k">value</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="k">true</span><span class="p">,</span><span class="w"> </span><span class="k">value</span><span class="p">,</span><span class="w"> </span><span class="k">null</span><span class="p">);</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">Result</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Failure</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">error</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="k">default</span><span class="p">,</span><span class="w"> </span><span class="n">error</span><span class="p">);</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">TResult</span><span class="w"> </span><span class="n">Match</span><span class="o">&lt;</span><span class="n">TResult</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Func</span><span class="o">&lt;</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">TResult</span><span class="o">&gt;</span><span class="w"> </span><span class="n">onSuccess</span><span class="p">,</span><span class="w"> </span><span class="n">Func</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="n">TResult</span><span class="o">&gt;</span><span class="w"> </span><span class="n">onFailure</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">        </span><span class="n">IsSuccess</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">onSuccess</span><span class="p">(</span><span class="n">Value</span><span class="o">!</span><span class="p">)</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">onFailure</span><span class="p">(</span><span class="n">Error</span><span class="o">!</span><span class="p">);</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">public</span><span class="w"> </span><span class="n">Result</span><span class="o">&lt;</span><span class="n">Order</span><span class="o">&gt;</span><span class="w"> </span><span class="n">PlaceOrder</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">customer</span><span class="p">,</span><span class="w"> </span><span class="kt">decimal</span><span class="w"> </span><span class="n">total</span><span class="p">)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="p">{</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="n">IsNullOrWhiteSpace</span><span class="p">(</span><span class="n">customer</span><span class="p">))</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Result</span><span class="o">&lt;</span><span class="n">Order</span><span class="o">&gt;</span><span class="p">.</span><span class="n">Failure</span><span class="p">(</span><span class="s">"Customer name is required."</span><span class="p">);</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">total</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Result</span><span class="o">&lt;</span><span class="n">Order</span><span class="o">&gt;</span><span class="p">.</span><span class="n">Failure</span><span class="p">(</span><span class="s">"Total must be positive."</span><span class="p">);</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Result</span><span class="o">&lt;</span><span class="n">Order</span><span class="o">&gt;</span><span class="p">.</span><span class="n">Success</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Order</span><span class="p">(</span><span class="n">Guid</span><span class="p">.</span><span class="n">NewGuid</span><span class="p">(),</span><span class="w"> </span><span class="n">customer</span><span class="p">,</span><span class="w"> </span><span class="n">total</span><span class="p">));</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">}</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1">// Calling code:</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="kt">var</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PlaceOrder</span><span class="p">(</span><span class="s">"Alice"</span><span class="p">,</span><span class="w"> </span><span class="mf">49.99m</span><span class="p">);</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">IResult</span><span class="w"> </span><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="n">Match</span><span class="p">(</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="n">onSuccess</span><span class="p">:</span><span class="w"> </span><span class="n">order</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Results</span><span class="p">.</span><span class="n">Created</span><span class="p">(</span><span class="s">$"/orders/{order.Id}"</span><span class="p">,</span><span class="w"> </span><span class="n">order</span><span class="p">),</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="n">onFailure</span><span class="p">:</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Results</span><span class="p">.</span><span class="n">BadRequest</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="p">}));</span>
+</code></pre></div>
+<p>Using <code>Result&lt;T&gt;</code> for <em>expected</em> failures (bad input, business rule
+violations) keeps exceptions reserved for genuinely exceptional conditions
+(a database connection dropping) — exceptions are relatively expensive and
+easy to accidentally swallow with an overly broad <code>catch</code>, whereas a
+<code>Result&lt;T&gt;</code> forces the caller to handle both branches via <code>Match</code>.</p>
+<h2 id="a-shared-problem-details-error-format">A shared problem-details error format<a class="headerlink" href="#a-shared-problem-details-error-format" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ProblemResults</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="p">{</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">IResult</span><span class="w"> </span><span class="nf">ValidationProblem</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">detail</span><span class="p">,</span><span class="w"> </span><span class="kt">string?</span><span class="w"> </span><span class="n">instance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">        </span><span class="n">Results</span><span class="p">.</span><span class="n">Problem</span><span class="p">(</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">            </span><span class="n">title</span><span class="p">:</span><span class="w"> </span><span class="s">"Validation failed"</span><span class="p">,</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">            </span><span class="n">detail</span><span class="p">:</span><span class="w"> </span><span class="n">detail</span><span class="p">,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">            </span><span class="n">statusCode</span><span class="p">:</span><span class="w"> </span><span class="n">StatusCodes</span><span class="p">.</span><span class="n">Status400BadRequest</span><span class="p">,</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">            </span><span class="n">instance</span><span class="p">:</span><span class="w"> </span><span class="n">instance</span><span class="p">);</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">IResult</span><span class="w"> </span><span class="nf">NotFoundProblem</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">resource</span><span class="p">,</span><span class="w"> </span><span class="kt">object</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">        </span><span class="n">Results</span><span class="p">.</span><span class="n">Problem</span><span class="p">(</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">            </span><span class="n">title</span><span class="p">:</span><span class="w"> </span><span class="s">$"{resource} not found"</span><span class="p">,</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">            </span><span class="n">detail</span><span class="p">:</span><span class="w"> </span><span class="s">$"No {resource} exists with id '{id}'."</span><span class="p">,</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">            </span><span class="n">statusCode</span><span class="p">:</span><span class="w"> </span><span class="n">StatusCodes</span><span class="p">.</span><span class="n">Status404NotFound</span><span class="p">);</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="p">}</span>
+</code></pre></div>
+<p>Every team's API returning errors in the <em>same</em> shape (RFC 7807 "problem
+details") means every consuming client can write one error-handling code
+path instead of one per service — this is exactly the kind of small,
+boring consistency an in-house framework exists to enforce.</p>
+<h2 id="a-reusable-middleware-extension-package">A reusable middleware extension package<a class="headerlink" href="#a-reusable-middleware-extension-package" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// MyCompany.AspNetCore.Shared/ServiceCollectionExtensions.cs</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ServiceCollectionExtensions</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">{</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">IServiceCollection</span><span class="w"> </span><span class="nf">AddCompanyDefaults</span><span class="p">(</span><span class="k">this</span><span class="w"> </span><span class="n">IServiceCollection</span><span class="w"> </span><span class="n">services</span><span class="p">,</span><span class="w"> </span><span class="n">IConfiguration</span><span class="w"> </span><span class="n">config</span><span class="p">)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddProblemDetails</span><span class="p">();</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddHealthChecks</span><span class="p">().</span><span class="n">AddCheck</span><span class="p">(</span><span class="s">"self"</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">HealthCheckResult</span><span class="p">.</span><span class="n">Healthy</span><span class="p">());</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">        </span><span class="n">services</span><span class="p">.</span><span class="n">AddCors</span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">options</span><span class="p">.</span><span class="n">AddDefaultPolicy</span><span class="p">(</span><span class="n">policy</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">            </span><span class="n">policy</span><span class="p">.</span><span class="n">WithOrigins</span><span class="p">(</span><span class="n">config</span><span class="p">.</span><span class="n">GetSection</span><span class="p">(</span><span class="s">"AllowedOrigins"</span><span class="p">).</span><span class="n">Get</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">[]</span><span class="o">&gt;</span><span class="p">()</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="n">Array</span><span class="p">.</span><span class="n">Empty</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">())</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">                  </span><span class="p">.</span><span class="n">AllowAnyMethod</span><span class="p">().</span><span class="n">AllowAnyHeader</span><span class="p">()));</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">services</span><span class="p">;</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">WebApplication</span><span class="w"> </span><span class="nf">UseCompanyDefaults</span><span class="p">(</span><span class="k">this</span><span class="w"> </span><span class="n">WebApplication</span><span class="w"> </span><span class="n">app</span><span class="p">)</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">        </span><span class="n">app</span><span class="p">.</span><span class="n">UseExceptionHandler</span><span class="p">();</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">        </span><span class="n">app</span><span class="p">.</span><span class="n">UseCors</span><span class="p">();</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">        </span><span class="n">app</span><span class="p">.</span><span class="n">MapHealthChecks</span><span class="p">(</span><span class="s">"/health/live"</span><span class="p">);</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">app</span><span class="p">;</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">// In each team's Program.cs — one line pulls in every shared convention:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddCompanyDefaults</span><span class="p">(</span><span class="n">builder</span><span class="p">.</span><span class="n">Configuration</span><span class="p">);</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="kt">var</span><span class="w"> </span><span class="n">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="n">Build</span><span class="p">();</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">app</span><span class="p">.</span><span class="n">UseCompanyDefaults</span><span class="p">();</span>
+</code></pre></div>
+<p>This is the actual shape most "in-house frameworks" take in practice: not a
+from-scratch reimplementation of ASP.NET Core, but a thin, versioned NuGet
+package of extension methods wrapping already-battle-tested framework
+pieces with the org's chosen defaults — new services opt in with one or two
+lines instead of every team reinventing CORS policy and health checks
+slightly differently.</p>
+<h2 id="packaging-it-as-a-nuget-package">Packaging it as a NuGet package<a class="headerlink" href="#packaging-it-as-a-nuget-package" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="cm">&lt;!-- MyCompany.AspNetCore.Shared.csproj --&gt;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">&lt;Project</span><span class="w"> </span><span class="na">Sdk=</span><span class="s">"Microsoft.NET.Sdk"</span><span class="nt">&gt;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">&lt;PropertyGroup&gt;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="nt">&lt;TargetFramework&gt;</span>net8.0<span class="nt">&lt;/TargetFramework&gt;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="nt">&lt;PackageId&gt;</span>MyCompany.AspNetCore.Shared<span class="nt">&lt;/PackageId&gt;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="nt">&lt;Version&gt;</span>1.2.0<span class="nt">&lt;/Version&gt;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="nt">&lt;Authors&gt;</span>Platform<span class="w"> </span>Team<span class="nt">&lt;/Authors&gt;</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="nt">&lt;/PropertyGroup&gt;</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="nt">&lt;ItemGroup&gt;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="nt">&lt;PackageReference</span><span class="w"> </span><span class="na">Include=</span><span class="s">"Microsoft.AspNetCore.App"</span><span class="w"> </span><span class="nt">/&gt;</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="nt">&lt;/ItemGroup&gt;</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="nt">&lt;/Project&gt;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>dotnet<span class="w"> </span>pack<span class="w"> </span>-c<span class="w"> </span>Release
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>dotnet<span class="w"> </span>nuget<span class="w"> </span>push<span class="w"> </span>bin/Release/MyCompany.AspNetCore.Shared.1.2.0.nupkg<span class="w"> </span>--source<span class="w"> </span>https://nuget.mycompany.internal/v3/index.json
+</code></pre></div>
+<p>Publishing to an internal NuGet feed (Azure Artifacts, GitHub Packages, or a
+self-hosted feed) lets every service reference
+<code>MyCompany.AspNetCore.Shared</code> by version the same way they reference any
+public package — semantic versioning (module 09, Level 2) becomes the
+contract for "is this a safe upgrade" across every consuming team.</p>
+<h2 id="guarding-against-overreach">Guarding against overreach<a class="headerlink" href="#guarding-against-overreach" title="Permanent link">&para;</a></h2>
+<p>The failure mode of in-house frameworks is scope creep: a "shared defaults"
+package that grows into a mandatory, leaky abstraction over ASP.NET Core
+itself, coupling every team to the platform team's release cadence for
+things that didn't need sharing. A good rule: only centralize what's
+genuinely identical across teams (health check conventions, error shape,
+required security headers) — leave anything domain-specific
+(business logic, entity models, team-specific validation) entirely out of
+the shared package.</p>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<p>Extract a <code>Result&lt;T&gt;</code> type and the <code>ProblemResults</code> helpers above into a
+separate class library project, reference it from the Level 3 REST API
+project, and refactor the <code>POST /books</code> and <code>PUT /books/{id}</code> endpoints to
+return <code>Result&lt;Book&gt;</code> from the repository layer, translated to
+<code>IResult</code>/<code>ProblemDetails</code> at the endpoint boundary via <code>Match</code>. Pack the
+library with <code>dotnet pack</code> and confirm the <code>.nupkg</code> is produced with the
+expected version number.</p>
 
 
 

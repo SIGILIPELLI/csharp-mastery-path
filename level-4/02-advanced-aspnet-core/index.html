@@ -1718,6 +1718,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 · Advanced ASP.NET Core (auth, gRPC)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1734,6 +1752,102 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#jwt-bearer-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JWT bearer authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#issuing-a-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issuing a token
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protecting-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protecting endpoints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#grpc-basics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        gRPC basics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#calling-a-grpc-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calling a gRPC service
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#grpc-streaming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        gRPC streaming
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2105,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#jwt-bearer-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JWT bearer authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#issuing-a-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issuing a token
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protecting-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protecting endpoints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#grpc-basics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        gRPC basics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#calling-a-grpc-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Calling a gRPC service
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#grpc-streaming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        gRPC streaming
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2209,167 @@
 
 
 <h1 id="02-advanced-aspnet-core-auth-grpc">02 · Advanced ASP.NET Core (auth, gRPC)<a class="headerlink" href="#02-advanced-aspnet-core-auth-grpc" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 4 · Master.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>This module covers authentication/authorization with JWT bearer tokens, and
+gRPC as a typed, high-performance alternative to JSON-over-HTTP for
+service-to-service calls.</p>
+<h2 id="jwt-bearer-authentication">JWT bearer authentication<a class="headerlink" href="#jwt-bearer-authentication" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>dotnet<span class="w"> </span>add<span class="w"> </span>package<span class="w"> </span>Microsoft.AspNetCore.Authentication.JwtBearer
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">using</span><span class="w"> </span><span class="nn">Microsoft.AspNetCore.Authentication.JwtBearer</span><span class="p">;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">using</span><span class="w"> </span><span class="nn">Microsoft.IdentityModel.Tokens</span><span class="p">;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">using</span><span class="w"> </span><span class="nn">System.Text</span><span class="p">;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="kt">var</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WebApplication</span><span class="p">.</span><span class="n">CreateBuilder</span><span class="p">(</span><span class="n">args</span><span class="p">);</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="kt">var</span><span class="w"> </span><span class="n">signingKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SymmetricSecurityKey</span><span class="p">(</span><span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">.</span><span class="n">GetBytes</span><span class="p">(</span><span class="s">"a-very-long-development-only-secret-key-32b+"</span><span class="p">));</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddAuthentication</span><span class="p">(</span><span class="n">JwtBearerDefaults</span><span class="p">.</span><span class="n">AuthenticationScheme</span><span class="p">)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="p">.</span><span class="n">AddJwtBearer</span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">        </span><span class="n">options</span><span class="p">.</span><span class="n">TokenValidationParameters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TokenValidationParameters</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">            </span><span class="n">ValidateIssuer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">,</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">            </span><span class="n">ValidIssuer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"my-api"</span><span class="p">,</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">            </span><span class="n">ValidateAudience</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">,</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">            </span><span class="n">ValidAudience</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"my-api-clients"</span><span class="p">,</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">            </span><span class="n">ValidateLifetime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">,</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">            </span><span class="n">ValidateIssuerSigningKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">,</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">            </span><span class="n">IssuerSigningKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">signingKey</span><span class="p">,</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">        </span><span class="p">};</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddAuthorization</span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="p">{</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">    </span><span class="n">options</span><span class="p">.</span><span class="n">AddPolicy</span><span class="p">(</span><span class="s">"AdminOnly"</span><span class="p">,</span><span class="w"> </span><span class="n">policy</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">policy</span><span class="p">.</span><span class="n">RequireRole</span><span class="p">(</span><span class="s">"Admin"</span><span class="p">));</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="p">});</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="kt">var</span><span class="w"> </span><span class="n">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="n">Build</span><span class="p">();</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="n">app</span><span class="p">.</span><span class="n">UseAuthentication</span><span class="p">();</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="n">app</span><span class="p">.</span><span class="n">UseAuthorization</span><span class="p">();</span>
+</code></pre></div>
+<p>Every validated claim (<code>ValidateIssuer</code>, <code>ValidateAudience</code>,
+<code>ValidateLifetime</code>, signature via <code>IssuerSigningKey</code>) closes a specific
+forgery vector — a token signed by a different key, issued for a different
+audience, or simply expired, is rejected before any endpoint code runs.</p>
+<h2 id="issuing-a-token">Issuing a token<a class="headerlink" href="#issuing-a-token" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">using</span><span class="w"> </span><span class="nn">Microsoft.IdentityModel.JsonWebTokens</span><span class="p">;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">app</span><span class="p">.</span><span class="n">MapPost</span><span class="p">(</span><span class="s">"/login"</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">LoginRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">{</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">request</span><span class="p">.</span><span class="n">Username</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s">"alice"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="n">Password</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s">"correct-horse"</span><span class="p">)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Results</span><span class="p">.</span><span class="n">Unauthorized</span><span class="p">();</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">descriptor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SecurityTokenDescriptor</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">        </span><span class="n">Subject</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ClaimsIdentity</span><span class="p">(</span><span class="k">new</span><span class="p">[]</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="nf">Claim</span><span class="p">(</span><span class="n">ClaimTypes</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="n">Username</span><span class="p">),</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">            </span><span class="k">new</span><span class="w"> </span><span class="nf">Claim</span><span class="p">(</span><span class="n">ClaimTypes</span><span class="p">.</span><span class="n">Role</span><span class="p">,</span><span class="w"> </span><span class="s">"Admin"</span><span class="p">),</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">        </span><span class="p">}),</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">        </span><span class="n">Expires</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">AddHours</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">        </span><span class="n">Issuer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"my-api"</span><span class="p">,</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">        </span><span class="n">Audience</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"my-api-clients"</span><span class="p">,</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">        </span><span class="n">SigningCredentials</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SigningCredentials</span><span class="p">(</span><span class="n">signingKey</span><span class="p">,</span><span class="w"> </span><span class="n">SecurityAlgorithms</span><span class="p">.</span><span class="n">HmacSha256</span><span class="p">),</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">    </span><span class="p">};</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">handler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JsonWebTokenHandler</span><span class="p">();</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">handler</span><span class="p">.</span><span class="n">CreateToken</span><span class="p">(</span><span class="n">descriptor</span><span class="p">);</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Results</span><span class="p">.</span><span class="n">Ok</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">token</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="p">});</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="k">public</span><span class="w"> </span><span class="k">record</span><span class="w"> </span><span class="nf">LoginRequest</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">Username</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Password</span><span class="p">);</span>
+</code></pre></div>
+<p>A real system verifies credentials against a hashed password store (never a
+literal string comparison) — this shows the token-issuing shape, not a
+production login flow.</p>
+<h2 id="protecting-endpoints">Protecting endpoints<a class="headerlink" href="#protecting-endpoints" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">app</span><span class="p">.</span><span class="n">MapGet</span><span class="p">(</span><span class="s">"/profile"</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">ClaimsPrincipal</span><span class="w"> </span><span class="n">user</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="n">Results</span><span class="p">.</span><span class="n">Ok</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user</span><span class="p">.</span><span class="n">Identity</span><span class="o">!</span><span class="p">.</span><span class="n">Name</span><span class="w"> </span><span class="p">}))</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">   </span><span class="p">.</span><span class="n">RequireAuthorization</span><span class="p">();</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">app</span><span class="p">.</span><span class="n">MapDelete</span><span class="p">(</span><span class="s">"/users/{id:int}"</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Results</span><span class="p">.</span><span class="n">Ok</span><span class="p">())</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">   </span><span class="p">.</span><span class="n">RequireAuthorization</span><span class="p">(</span><span class="s">"AdminOnly"</span><span class="p">);</span>
+</code></pre></div>
+<p><code>RequireAuthorization()</code> demands any authenticated user; passing a named
+policy demands that policy's specific requirement — here, the <code>Admin</code> role
+claim set at token-issuing time.</p>
+<h2 id="grpc-basics">gRPC basics<a class="headerlink" href="#grpc-basics" title="Permanent link">&para;</a></h2>
+<p>gRPC uses Protocol Buffers over HTTP/2 for typed, binary, low-overhead
+service calls — a common choice for internal service-to-service traffic
+where JSON's readability isn't needed and the extra throughput matters.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">// Protos/greet.proto</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">syntax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"proto3"</span><span class="p">;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">option</span><span class="w"> </span><span class="na">csharp_namespace</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"GreeterService"</span><span class="p">;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="kd">service</span><span class="w"> </span><span class="n">Greeter</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="k">rpc</span><span class="w"> </span><span class="n">SayHello</span><span class="w"> </span><span class="p">(</span><span class="n">HelloRequest</span><span class="p">)</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="p">(</span><span class="n">HelloReply</span><span class="p">);</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">}</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="kd">message</span><span class="w"> </span><span class="nc">HelloRequest</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="kd">message</span><span class="w"> </span><span class="nc">HelloReply</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="kd">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>dotnet<span class="w"> </span>new<span class="w"> </span>grpc<span class="w"> </span>-o<span class="w"> </span>GreeterService
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// Services/GreeterServiceImpl.cs</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">GreeterServiceImpl</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">Greeter</span><span class="p">.</span><span class="n">GreeterBase</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="p">{</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">HelloReply</span><span class="o">&gt;</span><span class="w"> </span><span class="n">SayHello</span><span class="p">(</span><span class="n">HelloRequest</span><span class="w"> </span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">ServerCallContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Task</span><span class="p">.</span><span class="n">FromResult</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">HelloReply</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$"Hello, {request.Name}!"</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// Program.cs</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddGrpc</span><span class="p">();</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="kt">var</span><span class="w"> </span><span class="n">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="n">Build</span><span class="p">();</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">app</span><span class="p">.</span><span class="n">MapGrpcService</span><span class="o">&lt;</span><span class="n">GreeterServiceImpl</span><span class="o">&gt;</span><span class="p">();</span>
+</code></pre></div>
+<p>The <code>.proto</code> file is the contract; <code>dotnet build</code> code-generates
+<code>Greeter.GreeterBase</code> and the message classes (<code>HelloRequest</code>, <code>HelloReply</code>)
+from it. <code>GreeterServiceImpl</code> overrides the generated base class's method —
+strongly typed on both request and response, no manual JSON
+serialization/deserialization or route strings involved.</p>
+<h2 id="calling-a-grpc-service">Calling a gRPC service<a class="headerlink" href="#calling-a-grpc-service" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">using</span><span class="w"> </span><span class="nn">Grpc.Net.Client</span><span class="p">;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GrpcChannel</span><span class="p">.</span><span class="n">ForAddress</span><span class="p">(</span><span class="s">"https://localhost:5001"</span><span class="p">);</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="kt">var</span><span class="w"> </span><span class="n">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Greeter</span><span class="p">.</span><span class="n">GreeterClient</span><span class="p">(</span><span class="n">channel</span><span class="p">);</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="kt">var</span><span class="w"> </span><span class="n">reply</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">client</span><span class="p">.</span><span class="n">SayHelloAsync</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">HelloRequest</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"World"</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">reply</span><span class="p">.</span><span class="n">Message</span><span class="p">);</span><span class="w">   </span><span class="c1">// "Hello, World!"</span>
+</code></pre></div>
+<p>The generated <code>GreeterClient</code> gives compile-time-checked calls — a typo in a
+field name is a build error, not a runtime JSON deserialization surprise the
+way an untyped REST client can produce.</p>
+<h2 id="grpc-streaming">gRPC streaming<a class="headerlink" href="#grpc-streaming" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kd">service</span><span class="w"> </span><span class="n">Greeter</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="k">rpc</span><span class="w"> </span><span class="n">SayHello</span><span class="w"> </span><span class="p">(</span><span class="n">HelloRequest</span><span class="p">)</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="p">(</span><span class="n">HelloReply</span><span class="p">);</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="k">rpc</span><span class="w"> </span><span class="n">StreamGreetings</span><span class="w"> </span><span class="p">(</span><span class="n">HelloRequest</span><span class="p">)</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="p">(</span><span class="n">stream</span><span class="w"> </span><span class="n">HelloReply</span><span class="p">);</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">StreamGreetings</span><span class="p">(</span><span class="n">HelloRequest</span><span class="w"> </span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">IServerStreamWriter</span><span class="o">&lt;</span><span class="n">HelloReply</span><span class="o">&gt;</span><span class="w"> </span><span class="n">responseStream</span><span class="p">,</span><span class="w"> </span><span class="n">ServerCallContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="p">{</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">        </span><span class="k">await</span><span class="w"> </span><span class="n">responseStream</span><span class="p">.</span><span class="n">WriteAsync</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">HelloReply</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$"Hello #{i} to {request.Name}"</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">        </span><span class="k">await</span><span class="w"> </span><span class="n">Task</span><span class="p">.</span><span class="n">Delay</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">.</span><span class="n">CancellationToken</span><span class="p">);</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">call</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">client</span><span class="p">.</span><span class="n">StreamGreetings</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">HelloRequest</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"World"</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">await</span><span class="w"> </span><span class="nf">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">reply</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">call</span><span class="p">.</span><span class="n">ResponseStream</span><span class="p">.</span><span class="n">ReadAllAsync</span><span class="p">())</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">reply</span><span class="p">.</span><span class="n">Message</span><span class="p">);</span>
+</code></pre></div>
+<p>Server streaming keeps one HTTP/2 connection open and pushes multiple
+responses over it — useful for live progress updates, tailing logs, or
+any producer/consumer relationship that isn't a single request/response.</p>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<p>Add JWT authentication to the REST API project from Level 3 module 10: a
+<code>POST /login</code> endpoint issuing a token for a hardcoded user, <code>[Authorize]</code>
+(or <code>.RequireAuthorization()</code>) on <code>POST</code>/<code>PUT</code>/<code>DELETE</code> <code>/books</code> endpoints
+while leaving <code>GET</code> endpoints open, and an integration test (module 06 of
+Level 3) confirming an unauthenticated <code>POST /books</code> returns 401 while an
+authenticated one succeeds.</p>
 
 
 

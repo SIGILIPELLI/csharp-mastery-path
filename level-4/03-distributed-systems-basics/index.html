@@ -1746,6 +1746,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 · Distributed Systems Basics for .NET
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1762,6 +1780,91 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#idempotency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Idempotency
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-outbox-pattern-for-reliable-event-publishing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The outbox pattern for reliable event publishing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cap-theorem-practically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CAP theorem, practically
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distributed-locking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distributed locking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-checks-for-orchestration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health checks for orchestration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2094,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#idempotency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Idempotency
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-outbox-pattern-for-reliable-event-publishing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The outbox pattern for reliable event publishing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cap-theorem-practically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CAP theorem, practically
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distributed-locking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distributed locking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-checks-for-orchestration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health checks for orchestration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2187,161 @@
 
 
 <h1 id="03-distributed-systems-basics-for-net">03 · Distributed Systems Basics for .NET<a class="headerlink" href="#03-distributed-systems-basics-for-net" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 4 · Master.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>Once an application spans multiple processes and machines, new failure
+modes appear that never come up in a single process: partial failures,
+duplicate messages, clock skew, and the need for consensus about shared
+state. This module covers the concepts and the .NET-specific tools for
+handling them.</p>
+<h2 id="idempotency">Idempotency<a class="headerlink" href="#idempotency" title="Permanent link">&para;</a></h2>
+<p>A retried request (from a client timeout, a load balancer failover, a
+message redelivery) must not double-charge a customer or double-ship an
+order.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">PaymentsController</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="p">{</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">ConcurrentDictionary</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="n">PaymentResult</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_processed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">();</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">PaymentResult</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ChargeAsync</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">idempotencyKey</span><span class="p">,</span><span class="w"> </span><span class="kt">decimal</span><span class="w"> </span><span class="n">amount</span><span class="p">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">_processed</span><span class="p">.</span><span class="n">TryGetValue</span><span class="p">(</span><span class="n">idempotencyKey</span><span class="p">,</span><span class="w"> </span><span class="k">out</span><span class="w"> </span><span class="kt">var</span><span class="w"> </span><span class="n">existing</span><span class="p">))</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">existing</span><span class="p">;</span><span class="w">   </span><span class="c1">// already handled this exact request — return the same result</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">ActuallyChargeAsync</span><span class="p">(</span><span class="n">amount</span><span class="p">);</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">        </span><span class="n">_processed</span><span class="p">[</span><span class="n">idempotencyKey</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">PaymentResult</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ActuallyChargeAsync</span><span class="p">(</span><span class="kt">decimal</span><span class="w"> </span><span class="n">amount</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">        </span><span class="n">Task</span><span class="p">.</span><span class="n">FromResult</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">PaymentResult</span><span class="p">(</span><span class="n">Guid</span><span class="p">.</span><span class="n">NewGuid</span><span class="p">(),</span><span class="w"> </span><span class="n">amount</span><span class="p">,</span><span class="w"> </span><span class="s">"succeeded"</span><span class="p">));</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="p">}</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="k">public</span><span class="w"> </span><span class="k">record</span><span class="w"> </span><span class="nf">PaymentResult</span><span class="p">(</span><span class="n">Guid</span><span class="w"> </span><span class="n">TransactionId</span><span class="p">,</span><span class="w"> </span><span class="kt">decimal</span><span class="w"> </span><span class="n">Amount</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Status</span><span class="p">);</span>
+</code></pre></div>
+<p>The caller supplies an <code>idempotencyKey</code> (often a client-generated GUID) with
+each attempt; the server stores results keyed by it, so retrying the exact
+same logical operation is provably safe. Production systems persist this in
+a database with a TTL, not an in-memory dictionary, so it survives restarts
+and works across multiple server instances.</p>
+<h2 id="the-outbox-pattern-for-reliable-event-publishing">The outbox pattern for reliable event publishing<a class="headerlink" href="#the-outbox-pattern-for-reliable-event-publishing" title="Permanent link">&para;</a></h2>
+<p>Publishing an event <em>and</em> saving to the database aren't atomic across two
+separate systems — if the process crashes between them, you get an
+inconsistency (saved but never published, or published but the save rolled
+back).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">OutboxMessage</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="p">{</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">Guid</span><span class="w"> </span><span class="n">Id</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">""</span><span class="p">;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Payload</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">""</span><span class="p">;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">Published</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">}</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">PlaceOrderAsync</span><span class="p">(</span><span class="n">Order</span><span class="w"> </span><span class="n">order</span><span class="p">,</span><span class="w"> </span><span class="n">LibraryDbContext</span><span class="w"> </span><span class="n">db</span><span class="p">)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="p">{</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="n">db</span><span class="p">.</span><span class="n">Orders</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">order</span><span class="p">);</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="n">db</span><span class="p">.</span><span class="n">OutboxMessages</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">OutboxMessage</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">        </span><span class="n">Id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Guid</span><span class="p">.</span><span class="n">NewGuid</span><span class="p">(),</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">        </span><span class="n">Type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">nameof</span><span class="p">(</span><span class="n">OrderPlaced</span><span class="p">),</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">        </span><span class="n">Payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JsonSerializer</span><span class="p">.</span><span class="n">Serialize</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">OrderPlaced</span><span class="p">(</span><span class="n">order</span><span class="p">.</span><span class="n">Id</span><span class="p">)),</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">        </span><span class="n">Published</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="n">db</span><span class="p">.</span><span class="n">SaveChangesAsync</span><span class="p">();</span><span class="w">   </span><span class="c1">// order + outbox row commit in ONE transaction</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="p">}</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1">// A separate background worker polls unpublished rows and publishes them:</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">PublishPendingAsync</span><span class="p">(</span><span class="n">LibraryDbContext</span><span class="w"> </span><span class="n">db</span><span class="p">,</span><span class="w"> </span><span class="n">IEventPublisher</span><span class="w"> </span><span class="n">publisher</span><span class="p">)</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="p">{</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">pending</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">db</span><span class="p">.</span><span class="n">OutboxMessages</span><span class="p">.</span><span class="n">Where</span><span class="p">(</span><span class="n">m</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">!</span><span class="n">m</span><span class="p">.</span><span class="n">Published</span><span class="p">).</span><span class="n">ToListAsync</span><span class="p">();</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">    </span><span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">pending</span><span class="p">)</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">        </span><span class="k">await</span><span class="w"> </span><span class="n">publisher</span><span class="p">.</span><span class="n">PublishAsync</span><span class="p">(</span><span class="n">message</span><span class="p">.</span><span class="n">Type</span><span class="p">,</span><span class="w"> </span><span class="n">message</span><span class="p">.</span><span class="n">Payload</span><span class="p">);</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">        </span><span class="n">message</span><span class="p">.</span><span class="n">Published</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="n">db</span><span class="p">.</span><span class="n">SaveChangesAsync</span><span class="p">();</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="p">}</span>
+</code></pre></div>
+<p>Writing the order and the outbox row in the same <code>SaveChangesAsync()</code> call
+makes them atomic (same database transaction). A separate poller then
+publishes at-least-once — if it crashes mid-publish, the row is still
+unpublished and gets retried, which is why consumers of these events must
+themselves be idempotent (handle a duplicate <code>OrderPlaced</code> safely).</p>
+<h2 id="cap-theorem-practically">CAP theorem, practically<a class="headerlink" href="#cap-theorem-practically" title="Permanent link">&para;</a></h2>
+<p>You can't have perfect Consistency, Availability, and Partition tolerance
+simultaneously once a network partition happens — partition tolerance is
+usually mandatory (networks <em>do</em> fail), so the real choice is consistency
+vs. availability during a partition:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// AP-leaning: serve from a local cache during a partition, accept staleness</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">Product</span><span class="o">?&gt;</span><span class="w"> </span><span class="n">GetProductAsync</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">IDistributedCache</span><span class="w"> </span><span class="n">cache</span><span class="p">,</span><span class="w"> </span><span class="n">IProductRepository</span><span class="w"> </span><span class="n">repo</span><span class="p">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p">{</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">cached</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">cache</span><span class="p">.</span><span class="n">GetStringAsync</span><span class="p">(</span><span class="s">$"product:{id}"</span><span class="p">);</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cached</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">JsonSerializer</span><span class="p">.</span><span class="n">Deserialize</span><span class="o">&lt;</span><span class="n">Product</span><span class="o">&gt;</span><span class="p">(</span><span class="n">cached</span><span class="p">);</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="k">try</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">product</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">repo</span><span class="p">.</span><span class="n">FindAsync</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">product</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">            </span><span class="k">await</span><span class="w"> </span><span class="n">cache</span><span class="p">.</span><span class="n">SetStringAsync</span><span class="p">(</span><span class="s">$"product:{id}"</span><span class="p">,</span><span class="w"> </span><span class="n">JsonSerializer</span><span class="p">.</span><span class="n">Serialize</span><span class="p">(</span><span class="n">product</span><span class="p">),</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">                </span><span class="k">new</span><span class="w"> </span><span class="n">DistributedCacheEntryOptions</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">AbsoluteExpirationRelativeToNow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromMinutes</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">product</span><span class="p">;</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="p">)</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="p">(</span><span class="n">cached</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">JsonSerializer</span><span class="p">.</span><span class="n">Deserialize</span><span class="o">&lt;</span><span class="n">Product</span><span class="o">&gt;</span><span class="p">(</span><span class="n">cached</span><span class="p">);</span><span class="w">   </span><span class="c1">// stale but available</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="p">}</span>
+</code></pre></div>
+<p>This reads cached (possibly stale) data if the primary store is
+unreachable, favoring availability over strict consistency — the right
+default for a product catalog page, wrong for a bank balance.</p>
+<h2 id="distributed-locking">Distributed locking<a class="headerlink" href="#distributed-locking" title="Permanent link">&para;</a></h2>
+<p>Two instances of a scheduled job must not both process the same batch.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="w"> </span><span class="n">TryAcquireLockAsync</span><span class="p">(</span><span class="n">IDistributedCache</span><span class="w"> </span><span class="n">cache</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">lockKey</span><span class="p">,</span><span class="w"> </span><span class="n">TimeSpan</span><span class="w"> </span><span class="n">ttl</span><span class="p">)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Guid</span><span class="p">.</span><span class="n">NewGuid</span><span class="p">().</span><span class="n">ToString</span><span class="p">();</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">acquired</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">cache</span><span class="p">.</span><span class="n">GetStringAsync</span><span class="p">(</span><span class="n">lockKey</span><span class="p">)</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">null</span><span class="p">;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">acquired</span><span class="p">)</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">        </span><span class="k">await</span><span class="w"> </span><span class="n">cache</span><span class="p">.</span><span class="n">SetStringAsync</span><span class="p">(</span><span class="n">lockKey</span><span class="p">,</span><span class="w"> </span><span class="n">token</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DistributedCacheEntryOptions</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">AbsoluteExpirationRelativeToNow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ttl</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">acquired</span><span class="p">;</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="p">}</span>
+</code></pre></div>
+<p>This sketch has a race (check-then-set isn't atomic) — a real
+implementation uses a backing store's atomic primitive, e.g. Redis's <code>SET
+key value NX EX ttl</code> (set-if-not-exists with expiry in one command), so two
+callers can never both believe they hold the lock. The TTL matters as much
+as the acquisition: without it, a crashed holder locks everyone else out
+forever.</p>
+<h2 id="health-checks-for-orchestration">Health checks for orchestration<a class="headerlink" href="#health-checks-for-orchestration" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>dotnet<span class="w"> </span>add<span class="w"> </span>package<span class="w"> </span>AspNetCore.HealthChecks.SqlServer
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddHealthChecks</span><span class="p">()</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="p">.</span><span class="n">AddCheck</span><span class="p">(</span><span class="s">"self"</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">HealthCheckResult</span><span class="p">.</span><span class="n">Healthy</span><span class="p">())</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="p">.</span><span class="n">AddDbContextCheck</span><span class="o">&lt;</span><span class="n">LibraryDbContext</span><span class="o">&gt;</span><span class="p">();</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">app</span><span class="p">.</span><span class="n">MapHealthChecks</span><span class="p">(</span><span class="s">"/health/live"</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HealthCheckOptions</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">{</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="n">Predicate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">check</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">check</span><span class="p">.</span><span class="n">Name</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">"self"</span><span class="p">,</span><span class="w">   </span><span class="c1">// liveness: is the process responsive at all</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="p">});</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="n">app</span><span class="p">.</span><span class="n">MapHealthChecks</span><span class="p">(</span><span class="s">"/health/ready"</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HealthCheckOptions</span><span class="p">());</span><span class="w">   </span><span class="c1">// readiness: can it serve traffic</span>
+</code></pre></div>
+<p>Orchestrators (Kubernetes, module 07) poll liveness to decide whether to
+restart a container, and readiness to decide whether to route traffic to
+it — separating the two matters: a pod stuck waiting on a slow database
+should fail readiness (stop receiving new traffic) without necessarily
+failing liveness (getting killed and restarted, which wouldn't fix a
+downstream outage anyway).</p>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<p>Implement the outbox pattern end-to-end against SQLite (module 07, Level 3):
+an <code>Orders</code> table, an <code>OutboxMessages</code> table, a <code>PlaceOrderAsync</code> that
+writes both in one <code>SaveChangesAsync</code>, and a console-hosted background
+service (<code>BackgroundService</code>, polling every 2 seconds) that publishes
+pending messages to <code>Console.WriteLine</code> and marks them published. Kill the
+process mid-run (before the publisher polls) and restart it — verify the
+unpublished order is still published on the next poll, proving no event was
+lost.</p>
 
 
 

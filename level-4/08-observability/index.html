@@ -1886,6 +1886,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 · Observability (logging, tracing)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1902,6 +1920,102 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#structured-logging-with-ilogger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structured logging with ILogger
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-levels-and-scopes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log levels and scopes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distributed-tracing-with-opentelemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distributed tracing with OpenTelemetry
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-a-custom-span" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding a custom span
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#correlating-logs-traces-and-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Correlating logs, traces, and metrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2105,91 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#structured-logging-with-ilogger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structured logging with ILogger
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-levels-and-scopes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log levels and scopes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distributed-tracing-with-opentelemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distributed tracing with OpenTelemetry
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-a-custom-span" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding a custom span
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#correlating-logs-traces-and-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Correlating logs, traces, and metrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2209,143 @@
 
 
 <h1 id="08-observability-logging-tracing">08 · Observability (logging, tracing)<a class="headerlink" href="#08-observability-logging-tracing" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 4 · Master.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>Once an app runs as multiple replicas across multiple services (modules 01,
+07), "SSH in and read the log file" stops working. Observability —
+structured logging, distributed tracing, and metrics — is what replaces it.</p>
+<h2 id="structured-logging-with-ilogger">Structured logging with <code>ILogger</code><a class="headerlink" href="#structured-logging-with-ilogger" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">OrderService</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="p">{</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">ILogger</span><span class="o">&lt;</span><span class="n">OrderService</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_logger</span><span class="p">;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nf">OrderService</span><span class="p">(</span><span class="n">ILogger</span><span class="o">&lt;</span><span class="n">OrderService</span><span class="o">&gt;</span><span class="w"> </span><span class="n">logger</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">_logger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">logger</span><span class="p">;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Place</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">customer</span><span class="p">,</span><span class="w"> </span><span class="kt">decimal</span><span class="w"> </span><span class="n">total</span><span class="p">)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">        </span><span class="n">_logger</span><span class="p">.</span><span class="n">LogInformation</span><span class="p">(</span><span class="s">"Placing order for {Customer}, total {Total:C}"</span><span class="p">,</span><span class="w"> </span><span class="n">customer</span><span class="p">,</span><span class="w"> </span><span class="n">total</span><span class="p">);</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">total</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">        </span><span class="p">{</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">            </span><span class="n">_logger</span><span class="p">.</span><span class="n">LogWarning</span><span class="p">(</span><span class="s">"Rejected order for {Customer}: non-positive total {Total}"</span><span class="p">,</span><span class="w"> </span><span class="n">customer</span><span class="p">,</span><span class="w"> </span><span class="n">total</span><span class="p">);</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="nf">ArgumentException</span><span class="p">(</span><span class="s">"Total must be positive."</span><span class="p">);</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddLogging</span><span class="p">(</span><span class="n">logging</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="p">{</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="n">logging</span><span class="p">.</span><span class="n">AddJsonConsole</span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">        </span><span class="n">options</span><span class="p">.</span><span class="n">JsonWriterOptions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">JsonWriterOptions</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Indented</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p">});</span>
+</code></pre></div>
+<p><code>{Customer}</code> and <code>{Total}</code> are <em>named</em> placeholders, not string
+interpolation — the logger keeps <code>Customer</code> and <code>Total</code> as separate
+structured fields in the log record (visible as real JSON keys with
+<code>AddJsonConsole</code>), not just baked into a flat message string. This is the
+difference between a log line you can only <code>grep</code> and one you can query:
+"show me every order over $500" is a structured query against the <code>Total</code>
+field, not a regex against free text.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span><span class="nt">"Timestamp"</span><span class="p">:</span><span class="s2">"2026-08-31T10:15:00Z"</span><span class="p">,</span><span class="nt">"Level"</span><span class="p">:</span><span class="s2">"Information"</span><span class="p">,</span><span class="nt">"Message"</span><span class="p">:</span><span class="s2">"Placing order for Alice, total $49.99"</span><span class="p">,</span><span class="nt">"Customer"</span><span class="p">:</span><span class="s2">"Alice"</span><span class="p">,</span><span class="nt">"Total"</span><span class="p">:</span><span class="mf">49.99</span><span class="p">}</span>
+</code></pre></div>
+<p>Never do <code>_logger.LogInformation($"Placing order for {customer}")</code> — the
+interpolated string collapses the field into text before the logger ever
+sees it, losing the structure entirely (and needlessly allocates the string
+even when the log level is disabled).</p>
+<h2 id="log-levels-and-scopes">Log levels and scopes<a class="headerlink" href="#log-levels-and-scopes" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">using</span><span class="w"> </span><span class="p">(</span><span class="n">_logger</span><span class="p">.</span><span class="n">BeginScope</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Dictionary</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="kt">object</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">[</span><span class="s">"OrderId"</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">orderId</span><span class="w"> </span><span class="p">}))</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="n">_logger</span><span class="p">.</span><span class="n">LogInformation</span><span class="p">(</span><span class="s">"Validating order"</span><span class="p">);</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="n">_logger</span><span class="p">.</span><span class="n">LogInformation</span><span class="p">(</span><span class="s">"Charging payment"</span><span class="p">);</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="c1">// every log line inside this scope automatically includes OrderId</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">}</span>
+</code></pre></div>
+<p><code>BeginScope</code> attaches context (here, <code>OrderId</code>) to every log statement
+written while the scope is active, without threading an <code>orderId</code> parameter
+through every single log call — invaluable for correlating a cluster of log
+lines that all belong to one logical operation.</p>
+<h2 id="distributed-tracing-with-opentelemetry">Distributed tracing with OpenTelemetry<a class="headerlink" href="#distributed-tracing-with-opentelemetry" title="Permanent link">&para;</a></h2>
+<p>A single user request in a microservice architecture (module 01) might
+touch four services. A trace stitches those four services' work into one
+timeline.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>dotnet<span class="w"> </span>add<span class="w"> </span>package<span class="w"> </span>OpenTelemetry.Extensions.Hosting
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>dotnet<span class="w"> </span>add<span class="w"> </span>package<span class="w"> </span>OpenTelemetry.Instrumentation.AspNetCore
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>dotnet<span class="w"> </span>add<span class="w"> </span>package<span class="w"> </span>OpenTelemetry.Instrumentation.Http
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>dotnet<span class="w"> </span>add<span class="w"> </span>package<span class="w"> </span>OpenTelemetry.Exporter.OpenTelemetryProtocol
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddOpenTelemetry</span><span class="p">()</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="p">.</span><span class="n">ConfigureResource</span><span class="p">(</span><span class="n">resource</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">resource</span><span class="p">.</span><span class="n">AddService</span><span class="p">(</span><span class="s">"orders-api"</span><span class="p">))</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="p">.</span><span class="n">WithTracing</span><span class="p">(</span><span class="n">tracing</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">tracing</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">        </span><span class="p">.</span><span class="n">AddAspNetCoreInstrumentation</span><span class="p">()</span><span class="w">   </span><span class="c1">// traces incoming HTTP requests</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">        </span><span class="p">.</span><span class="n">AddHttpClientInstrumentation</span><span class="p">()</span><span class="w">   </span><span class="c1">// traces outgoing HttpClient calls</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">        </span><span class="p">.</span><span class="n">AddOtlpExporter</span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">options</span><span class="p">.</span><span class="n">Endpoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Uri</span><span class="p">(</span><span class="s">"http://otel-collector:4317"</span><span class="p">)))</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="p">.</span><span class="n">WithMetrics</span><span class="p">(</span><span class="n">metrics</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">metrics</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">        </span><span class="p">.</span><span class="n">AddAspNetCoreInstrumentation</span><span class="p">()</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">        </span><span class="p">.</span><span class="n">AddRuntimeInstrumentation</span><span class="p">()</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">        </span><span class="p">.</span><span class="n">AddOtlpExporter</span><span class="p">());</span>
+</code></pre></div>
+<p><code>AddAspNetCoreInstrumentation</code> automatically creates a "span" for every
+incoming request; <code>AddHttpClientInstrumentation</code> creates a child span for
+every outgoing <code>HttpClient</code> call and propagates a trace ID in request
+headers, so the <em>next</em> service's incoming span links back to this one — the
+whole chain becomes one trace, viewable as a single waterfall diagram in a
+backend like Jaeger, Zipkin, or an OTLP-compatible SaaS.</p>
+<h2 id="adding-a-custom-span">Adding a custom span<a class="headerlink" href="#adding-a-custom-span" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">using</span><span class="w"> </span><span class="nn">System.Diagnostics</span><span class="p">;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">ActivitySource</span><span class="w"> </span><span class="n">_activitySource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="s">"OrdersApi"</span><span class="p">);</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">PlaceOrderAsync</span><span class="p">(</span><span class="n">Order</span><span class="w"> </span><span class="n">order</span><span class="p">)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="p">{</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">activity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_activitySource</span><span class="p">.</span><span class="n">StartActivity</span><span class="p">(</span><span class="s">"PlaceOrder"</span><span class="p">);</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span><span class="n">activity</span><span class="o">?.</span><span class="n">SetTag</span><span class="p">(</span><span class="s">"order.customer"</span><span class="p">,</span><span class="w"> </span><span class="n">order</span><span class="p">.</span><span class="n">Customer</span><span class="p">);</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span><span class="n">activity</span><span class="o">?.</span><span class="n">SetTag</span><span class="p">(</span><span class="s">"order.total"</span><span class="p">,</span><span class="w"> </span><span class="n">order</span><span class="p">.</span><span class="n">Total</span><span class="p">);</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nf">ValidateAsync</span><span class="p">(</span><span class="n">order</span><span class="p">);</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nf">SaveAsync</span><span class="p">(</span><span class="n">order</span><span class="p">);</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// Register the custom source so OpenTelemetry picks it up:</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="p">.</span><span class="n">WithTracing</span><span class="p">(</span><span class="n">tracing</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">tracing</span><span class="p">.</span><span class="n">AddSource</span><span class="p">(</span><span class="s">"OrdersApi"</span><span class="p">)</span><span class="w"> </span><span class="cm">/* ...plus the above */</span><span class="p">)</span>
+</code></pre></div>
+<p><code>ActivitySource</code>/<code>Activity</code> are .NET's built-in tracing primitives (part of
+<code>System.Diagnostics</code>, predating and underlying OpenTelemetry's .NET SDK);
+<code>StartActivity</code> creates a span nested under whatever ambient span is active
+(the incoming HTTP request's span, typically), and <code>SetTag</code> attaches
+queryable attributes to it — "show me every trace where <code>order.total &gt;
+1000</code>" becomes possible in the tracing backend.</p>
+<h2 id="metrics">Metrics<a class="headerlink" href="#metrics" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">using</span><span class="w"> </span><span class="nn">System.Diagnostics.Metrics</span><span class="p">;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">Meter</span><span class="w"> </span><span class="n">_meter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="s">"OrdersApi"</span><span class="p">);</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">Counter</span><span class="o">&lt;</span><span class="kt">long</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_ordersPlaced</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_meter</span><span class="p">.</span><span class="n">CreateCounter</span><span class="o">&lt;</span><span class="kt">long</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"orders.placed"</span><span class="p">);</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">Histogram</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_orderTotal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_meter</span><span class="p">.</span><span class="n">CreateHistogram</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"orders.total"</span><span class="p">);</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">RecordOrder</span><span class="p">(</span><span class="kt">decimal</span><span class="w"> </span><span class="n">total</span><span class="p">)</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="p">{</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span><span class="n">_ordersPlaced</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span><span class="n">_orderTotal</span><span class="p">.</span><span class="n">Record</span><span class="p">((</span><span class="kt">double</span><span class="p">)</span><span class="n">total</span><span class="p">);</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="p">}</span>
+</code></pre></div>
+<p>Counters (monotonically increasing counts) and histograms (distributions —
+useful for latency or order-size percentiles) feed dashboards and alerts:
+"page on-call if <code>orders.placed</code> rate drops to zero for 5 minutes" or "alert
+if p99 of <code>http.server.request.duration</code> exceeds 2 seconds."</p>
+<h2 id="correlating-logs-traces-and-metrics">Correlating logs, traces, and metrics<a class="headerlink" href="#correlating-logs-traces-and-metrics" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">_logger</span><span class="p">.</span><span class="n">LogInformation</span><span class="p">(</span><span class="s">"Order placed. TraceId={TraceId}"</span><span class="p">,</span><span class="w"> </span><span class="n">Activity</span><span class="p">.</span><span class="n">Current</span><span class="o">?.</span><span class="n">TraceId</span><span class="p">);</span>
+</code></pre></div>
+<p>Including the active trace ID in log lines lets you jump from "I found a
+slow trace in Jaeger" to "here are the exact log lines from that specific
+request" — the three pillars (logs, metrics, traces) are far more useful
+correlated than viewed in isolation.</p>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<p>Add <code>ILogger</code>-based structured logging to every endpoint in the Level 3 REST
+API project (log the operation and relevant IDs, not raw request bodies).
+Add OpenTelemetry tracing with console export
+(<code>OpenTelemetry.Exporter.Console</code>, simpler to inspect locally than standing
+up a collector) and confirm each <code>GET /books/{id}</code> request produces a span
+in the console output including the route and status code. Add a <code>Counter&lt;long&gt;</code>
+tracking total books created and a <code>Histogram&lt;double&gt;</code> tracking request
+duration for the <code>POST /books</code> endpoint.</p>
 
 
 

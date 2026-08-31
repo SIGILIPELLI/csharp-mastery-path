@@ -1690,6 +1690,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 · Microservices Patterns in .NET
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1706,6 +1724,91 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#typed-http-clients-with-ihttpclientfactory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typed HTTP clients with IHttpClientFactory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resilience-with-polly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resilience with Polly
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-api-gateway-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The API Gateway pattern
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service discovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async-messaging-instead-of-synchronous-calls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Async messaging instead of synchronous calls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2094,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#typed-http-clients-with-ihttpclientfactory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typed HTTP clients with IHttpClientFactory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resilience-with-polly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resilience with Polly
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-api-gateway-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The API Gateway pattern
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-discovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service discovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async-messaging-instead-of-synchronous-calls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Async messaging instead of synchronous calls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2187,144 @@
 
 
 <h1 id="01-microservices-patterns-in-net">01 · Microservices Patterns in .NET<a class="headerlink" href="#01-microservices-patterns-in-net" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 4 · Master.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>A microservice architecture splits one application into independently
+deployable services that communicate over the network. This module covers
+the .NET-specific patterns for making that communication reliable: typed
+HTTP clients, resilience policies, and API composition.</p>
+<h2 id="typed-http-clients-with-ihttpclientfactory">Typed HTTP clients with <code>IHttpClientFactory</code><a class="headerlink" href="#typed-http-clients-with-ihttpclientfactory" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">InventoryClient</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="p">{</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">HttpClient</span><span class="w"> </span><span class="n">_http</span><span class="p">;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nf">InventoryClient</span><span class="p">(</span><span class="n">HttpClient</span><span class="w"> </span><span class="n">http</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">_http</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">http</span><span class="p">;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">GetStockAsync</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">productId</span><span class="p">)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">_http</span><span class="p">.</span><span class="n">GetAsync</span><span class="p">(</span><span class="s">$"/products/{productId}/stock"</span><span class="p">);</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">        </span><span class="n">response</span><span class="p">.</span><span class="n">EnsureSuccessStatusCode</span><span class="p">();</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">response</span><span class="p">.</span><span class="n">Content</span><span class="p">.</span><span class="n">ReadFromJsonAsync</span><span class="o">&lt;</span><span class="n">StockResponse</span><span class="o">&gt;</span><span class="p">();</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">body</span><span class="o">!</span><span class="p">.</span><span class="n">Quantity</span><span class="p">;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="p">}</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="k">public</span><span class="w"> </span><span class="k">record</span><span class="w"> </span><span class="nf">StockResponse</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">Quantity</span><span class="p">);</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddHttpClient</span><span class="o">&lt;</span><span class="n">InventoryClient</span><span class="o">&gt;</span><span class="p">(</span><span class="n">client</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="p">{</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="n">client</span><span class="p">.</span><span class="n">BaseAddress</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Uri</span><span class="p">(</span><span class="s">"https://inventory-service.internal/"</span><span class="p">);</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="n">client</span><span class="p">.</span><span class="n">Timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromSeconds</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">});</span>
+</code></pre></div>
+<p><code>AddHttpClient&lt;T&gt;</code> registers <code>InventoryClient</code> in DI <em>and</em> manages the
+underlying <code>HttpClientHandler</code>/socket pool correctly — creating <code>new
+HttpClient()</code> per request exhausts sockets under load (each one holds a
+connection open); <code>IHttpClientFactory</code> pools and recycles handlers safely
+behind the scenes.</p>
+<h2 id="resilience-with-polly">Resilience with Polly<a class="headerlink" href="#resilience-with-polly" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>dotnet<span class="w"> </span>add<span class="w"> </span>package<span class="w"> </span>Microsoft.Extensions.Http.Resilience
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">using</span><span class="w"> </span><span class="nn">Microsoft.Extensions.Http.Resilience</span><span class="p">;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">using</span><span class="w"> </span><span class="nn">Polly</span><span class="p">;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddHttpClient</span><span class="o">&lt;</span><span class="n">InventoryClient</span><span class="o">&gt;</span><span class="p">(</span><span class="n">client</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">{</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="n">client</span><span class="p">.</span><span class="n">BaseAddress</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Uri</span><span class="p">(</span><span class="s">"https://inventory-service.internal/"</span><span class="p">);</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">})</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">.</span><span class="n">AddResilienceHandler</span><span class="p">(</span><span class="s">"inventory-pipeline"</span><span class="p">,</span><span class="w"> </span><span class="n">pipeline</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">{</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="n">pipeline</span><span class="p">.</span><span class="n">AddRetry</span><span class="p">(</span><span class="k">new</span><span class="p">()</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">        </span><span class="n">MaxRetryAttempts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">        </span><span class="n">Delay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromMilliseconds</span><span class="p">(</span><span class="mi">200</span><span class="p">),</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">        </span><span class="n">BackoffType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DelayBackoffType</span><span class="p">.</span><span class="n">Exponential</span><span class="p">,</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">    </span><span class="n">pipeline</span><span class="p">.</span><span class="n">AddCircuitBreaker</span><span class="p">(</span><span class="k">new</span><span class="p">()</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">        </span><span class="n">FailureRatio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">        </span><span class="n">SamplingDuration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromSeconds</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">        </span><span class="n">MinimumThroughput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">        </span><span class="n">BreakDuration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromSeconds</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">    </span><span class="p">});</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">    </span><span class="n">pipeline</span><span class="p">.</span><span class="n">AddTimeout</span><span class="p">(</span><span class="n">TimeSpan</span><span class="p">.</span><span class="n">FromSeconds</span><span class="p">(</span><span class="mi">3</span><span class="p">));</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="p">});</span>
+</code></pre></div>
+<p>Retry handles transient blips (a dropped connection, a momentary 503) with
+exponential backoff so retries don't hammer a struggling service. The
+circuit breaker trips after a failure ratio threshold within a sampling
+window, failing fast for <code>BreakDuration</code> instead of continuing to pile
+requests onto a service that's clearly down — this protects the <em>caller</em>
+from wasting threads waiting on a dependency that isn't coming back soon.</p>
+<h2 id="the-api-gateway-pattern">The API Gateway pattern<a class="headerlink" href="#the-api-gateway-pattern" title="Permanent link">&para;</a></h2>
+<p>Instead of clients calling five backend services directly, one gateway
+service fronts them:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kt">var</span><span class="w"> </span><span class="n">app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="n">Build</span><span class="p">();</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">app</span><span class="p">.</span><span class="n">MapGet</span><span class="p">(</span><span class="s">"/order-summary/{orderId:int}"</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">orderId</span><span class="p">,</span><span class="w"> </span><span class="n">OrdersClient</span><span class="w"> </span><span class="n">orders</span><span class="p">,</span><span class="w"> </span><span class="n">InventoryClient</span><span class="w"> </span><span class="n">inventory</span><span class="p">,</span><span class="w"> </span><span class="n">PricingClient</span><span class="w"> </span><span class="n">pricing</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">{</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">order</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">orders</span><span class="p">.</span><span class="n">GetAsync</span><span class="p">(</span><span class="n">orderId</span><span class="p">);</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">stockChecks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">Task</span><span class="p">.</span><span class="n">WhenAll</span><span class="p">(</span><span class="n">order</span><span class="p">.</span><span class="n">Items</span><span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">inventory</span><span class="p">.</span><span class="n">GetStockAsync</span><span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="n">ProductId</span><span class="p">)));</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">pricing</span><span class="p">.</span><span class="n">CalculateTotalAsync</span><span class="p">(</span><span class="n">order</span><span class="p">.</span><span class="n">Items</span><span class="p">);</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Results</span><span class="p">.</span><span class="n">Ok</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">order</span><span class="p">.</span><span class="n">Id</span><span class="p">,</span><span class="w"> </span><span class="n">order</span><span class="p">.</span><span class="n">Items</span><span class="p">,</span><span class="w"> </span><span class="n">InStock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stockChecks</span><span class="p">,</span><span class="w"> </span><span class="n">Total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="p">});</span>
+</code></pre></div>
+<p>The gateway composes multiple backend calls (run concurrently with
+<code>Task.WhenAll</code> where they're independent) into one response shaped for the
+caller — clients make one request instead of orchestrating three services
+themselves, and cross-cutting concerns (auth, rate limiting, logging) live
+in one place instead of duplicated across every service.</p>
+<h2 id="service-discovery">Service discovery<a class="headerlink" href="#service-discovery" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddServiceDiscovery</span><span class="p">();</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddHttpClient</span><span class="o">&lt;</span><span class="n">InventoryClient</span><span class="o">&gt;</span><span class="p">(</span><span class="n">client</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="p">{</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="n">client</span><span class="p">.</span><span class="n">BaseAddress</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Uri</span><span class="p">(</span><span class="s">"https+http://inventory-service"</span><span class="p">);</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">})</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">.</span><span class="n">AddServiceDiscovery</span><span class="p">();</span>
+</code></pre></div>
+<p>Hardcoding <code>https://inventory-service.internal:5001</code> breaks the moment that
+service scales to multiple instances or moves. <code>AddServiceDiscovery()</code>
+resolves a logical name (<code>inventory-service</code>) against a discovery backend
+(configuration, Kubernetes DNS, Consul) at request time instead — the same
+typed client code works unchanged from local development through
+production.</p>
+<h2 id="async-messaging-instead-of-synchronous-calls">Async messaging instead of synchronous calls<a class="headerlink" href="#async-messaging-instead-of-synchronous-calls" title="Permanent link">&para;</a></h2>
+<p>Synchronous HTTP creates temporal coupling — both services must be up at
+the same time. An event-driven alternative:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">public</span><span class="w"> </span><span class="k">record</span><span class="w"> </span><span class="nf">OrderPlaced</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">OrderId</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">ProductId</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">Quantity</span><span class="p">);</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">IEventPublisher</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">{</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="n">Task</span><span class="w"> </span><span class="n">PublishAsync</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">T</span><span class="w"> </span><span class="n">@event</span><span class="p">);</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="p">}</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1">// In the Orders service, after saving the order:</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="k">await</span><span class="w"> </span><span class="n">eventPublisher</span><span class="p">.</span><span class="n">PublishAsync</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">OrderPlaced</span><span class="p">(</span><span class="n">order</span><span class="p">.</span><span class="n">Id</span><span class="p">,</span><span class="w"> </span><span class="n">item</span><span class="p">.</span><span class="n">ProductId</span><span class="p">,</span><span class="w"> </span><span class="n">item</span><span class="p">.</span><span class="n">Quantity</span><span class="p">));</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1">// In the Inventory service, a background consumer:</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">OrderPlacedHandler</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="p">{</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">HandleAsync</span><span class="p">(</span><span class="n">OrderPlaced</span><span class="w"> </span><span class="n">e</span><span class="p">)</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">        </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"Reserving {e.Quantity} units of product {e.ProductId}"</span><span class="p">);</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Task</span><span class="p">.</span><span class="n">CompletedTask</span><span class="p">;</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="p">}</span>
+</code></pre></div>
+<p>The Orders service doesn't need Inventory to be reachable (or even running)
+at the moment an order is placed — it publishes an event and moves on; a
+message broker (RabbitMQ, Azure Service Bus, Kafka) durably queues the
+event until a consumer processes it. This trades immediate consistency for
+resilience and looser coupling — the right trade-off for actions that don't
+need an instant response back to the caller.</p>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<p>Build two minimal API services locally: <code>PricingService</code> (returns a fixed
+price per product ID) and <code>CatalogGateway</code> (a gateway that calls
+<code>PricingService</code> via a typed <code>HttpClient</code> registered with
+<code>AddResilienceHandler</code> — retry + circuit breaker). Temporarily stop
+<code>PricingService</code> mid-test and observe the gateway's circuit breaker open
+after enough failures (log each attempt), then restart <code>PricingService</code> and
+confirm the breaker eventually closes again.</p>
 
 
 

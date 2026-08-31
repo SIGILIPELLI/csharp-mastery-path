@@ -1830,6 +1830,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 · Security Best Practices
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1846,6 +1864,113 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#password-hashing-never-store-plaintext-or-use-a-fast-hash" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Password hashing — never store plaintext or use a fast hash
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preventing-sql-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preventing SQL injection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preventing-xss-cross-site-scripting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preventing XSS (Cross-Site Scripting)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#input-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secrets-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secrets management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security headers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cors-only-as-permissive-as-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CORS — only as permissive as needed
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1991,6 +2116,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#password-hashing-never-store-plaintext-or-use-a-fast-hash" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Password hashing — never store plaintext or use a fast hash
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preventing-sql-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preventing SQL injection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preventing-xss-cross-site-scripting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preventing XSS (Cross-Site Scripting)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#input-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secrets-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secrets management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security headers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cors-only-as-permissive-as-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CORS — only as permissive as needed
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2010,8 +2231,150 @@
 
 
 <h1 id="06-security-best-practices">06 · Security Best Practices<a class="headerlink" href="#06-security-best-practices" title="Permanent link">&para;</a></h1>
-<p>This module is part of Level 4 · Master.</p>
-<p>More lessons are on the way — check back soon.</p>
+<p>Module 02 covered authentication mechanics. This module covers the broader
+set of defenses every production .NET web app needs: password storage,
+input validation against injection, secrets management, and the standard
+security headers.</p>
+<h2 id="password-hashing-never-store-plaintext-or-use-a-fast-hash">Password hashing — never store plaintext or use a fast hash<a class="headerlink" href="#password-hashing-never-store-plaintext-or-use-a-fast-hash" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">using</span><span class="w"> </span><span class="nn">Microsoft.AspNetCore.Identity</span><span class="p">;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">PasswordService</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">{</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">PasswordHasher</span><span class="o">&lt;</span><span class="kt">object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_hasher</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">();</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="nf">Hash</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">password</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">_hasher</span><span class="p">.</span><span class="n">HashPassword</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">object</span><span class="p">(),</span><span class="w"> </span><span class="n">password</span><span class="p">);</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">Verify</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">hashedPassword</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">providedPassword</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">        </span><span class="n">_hasher</span><span class="p">.</span><span class="n">VerifyHashedPassword</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">object</span><span class="p">(),</span><span class="w"> </span><span class="n">hashedPassword</span><span class="p">,</span><span class="w"> </span><span class="n">providedPassword</span><span class="p">)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">            </span><span class="k">is</span><span class="w"> </span><span class="n">PasswordVerificationResult</span><span class="p">.</span><span class="n">Success</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">PasswordVerificationResult</span><span class="p">.</span><span class="n">SuccessRehashNeeded</span><span class="p">;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kt">var</span><span class="w"> </span><span class="n">service</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PasswordService</span><span class="p">();</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kt">var</span><span class="w"> </span><span class="n">hash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">service</span><span class="p">.</span><span class="n">Hash</span><span class="p">(</span><span class="s">"correct-horse-battery-staple"</span><span class="p">);</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1">// hash looks like: "AQAAAAIAAYagAAAAEL3f9..." — salted, versioned, one-way</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="kt">bool</span><span class="w"> </span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">service</span><span class="p">.</span><span class="n">Verify</span><span class="p">(</span><span class="n">hash</span><span class="p">,</span><span class="w"> </span><span class="s">"correct-horse-battery-staple"</span><span class="p">);</span><span class="w">   </span><span class="c1">// true</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="kt">bool</span><span class="w"> </span><span class="n">bad</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">service</span><span class="p">.</span><span class="n">Verify</span><span class="p">(</span><span class="n">hash</span><span class="p">,</span><span class="w"> </span><span class="s">"wrong-password"</span><span class="p">);</span><span class="w">                 </span><span class="c1">// false</span>
+</code></pre></div>
+<p><code>PasswordHasher&lt;T&gt;</code> uses PBKDF2 with a random salt per password and a high
+iteration count by default — deliberately <em>slow</em>, unlike <code>SHA256</code>, which is
+fast and therefore bad for passwords (fast hashes let an attacker who steals
+the hash database try billions of guesses per second on cheap hardware).
+<code>SuccessRehashNeeded</code> signals the hasher's parameters were upgraded since
+this hash was created — re-hash and store the new value on next successful
+login.</p>
+<h2 id="preventing-sql-injection">Preventing SQL injection<a class="headerlink" href="#preventing-sql-injection" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// VULNERABLE — string concatenation lets an attacker inject SQL</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kt">string</span><span class="w"> </span><span class="n">sql</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$"SELECT * FROM Users WHERE Name = '{userInput}'"</span><span class="p">;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1">// userInput = "x' OR '1'='1" turns this into a query that returns every row</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1">// SAFE — EF Core LINQ is parameterized automatically</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="kt">var</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">db</span><span class="p">.</span><span class="n">Users</span><span class="p">.</span><span class="n">Where</span><span class="p">(</span><span class="n">u</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">Name</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">userInput</span><span class="p">).</span><span class="n">ToList</span><span class="p">();</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1">// SAFE — raw SQL with parameters, when you need raw SQL</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="kt">var</span><span class="w"> </span><span class="n">users2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">db</span><span class="p">.</span><span class="n">Users</span><span class="p">.</span><span class="n">FromSqlInterpolated</span><span class="p">(</span><span class="s">$"SELECT * FROM Users WHERE Name = {userInput}"</span><span class="p">).</span><span class="n">ToList</span><span class="p">();</span>
+</code></pre></div>
+<p><code>FromSqlInterpolated</code> looks like string interpolation but actually builds a
+parameterized query under the hood — <code>userInput</code> is passed to the database
+as a parameter value, never spliced into the SQL text, so it can't change
+the query's structure no matter what characters it contains. Plain
+<code>FromSqlRaw</code> with manually concatenated strings reintroduces the same
+vulnerability as the first example — never build SQL text from untrusted
+input.</p>
+<h2 id="preventing-xss-cross-site-scripting">Preventing XSS (Cross-Site Scripting)<a class="headerlink" href="#preventing-xss-cross-site-scripting" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// Razor views auto-encode by default:</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1">// @Model.Comment   -- HTML-encoded automatically, safe even if Comment contains "&lt;script&gt;"</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1">// DANGEROUS — explicitly opting out of encoding</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1">// @Html.Raw(Model.Comment)   -- only ever safe if Comment is from a trusted source</span>
+</code></pre></div>
+<p>For APIs returning JSON (not rendering HTML), XSS is primarily the
+<em>consuming</em> frontend's responsibility to encode on render — but an API
+should still validate/sanitize any field that might later be rendered as
+HTML somewhere downstream, and never reflect unescaped user input into an
+<code>text/html</code> response.</p>
+<h2 id="input-validation">Input validation<a class="headerlink" href="#input-validation" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">public</span><span class="w"> </span><span class="k">record</span><span class="w"> </span><span class="nf">CreateUserRequest</span><span class="p">(</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="na">[property: Required, EmailAddress]</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Email</span><span class="p">,</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="na">[property: Required, MinLength(8)]</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Password</span><span class="p">,</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="na">[property: Range(13, 120)]</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">Age</span><span class="p">);</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">app</span><span class="p">.</span><span class="n">MapPost</span><span class="p">(</span><span class="s">"/users"</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">CreateUserRequest</span><span class="w"> </span><span class="n">request</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">{</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ValidationContext</span><span class="p">(</span><span class="n">request</span><span class="p">);</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">results</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">ValidationResult</span><span class="o">&gt;</span><span class="p">();</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">Validator</span><span class="p">.</span><span class="n">TryValidateObject</span><span class="p">(</span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">results</span><span class="p">,</span><span class="w"> </span><span class="n">validateAllProperties</span><span class="p">:</span><span class="w"> </span><span class="k">true</span><span class="p">))</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Results</span><span class="p">.</span><span class="n">BadRequest</span><span class="p">(</span><span class="n">results</span><span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="n">r</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">ErrorMessage</span><span class="p">));</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Results</span><span class="p">.</span><span class="n">Created</span><span class="p">(</span><span class="s">"/users/1"</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">request</span><span class="p">.</span><span class="n">Email</span><span class="w"> </span><span class="p">});</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="p">});</span>
+</code></pre></div>
+<p>Validate at the boundary, before the data touches business logic or
+storage — <code>[EmailAddress]</code>, <code>[Range]</code>, and friends from
+<code>System.ComponentModel.DataAnnotations</code> catch malformed input cheaply and
+consistently rather than relying on ad hoc checks scattered through the
+codebase.</p>
+<h2 id="secrets-management">Secrets management<a class="headerlink" href="#secrets-management" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Local development — never commit secrets to source control</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>dotnet<span class="w"> </span>user-secrets<span class="w"> </span>init
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>dotnet<span class="w"> </span>user-secrets<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="s2">"ConnectionStrings:Default"</span><span class="w"> </span><span class="s2">"Server=...;Password=devonly"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kt">var</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WebApplication</span><span class="p">.</span><span class="n">CreateBuilder</span><span class="p">(</span><span class="n">args</span><span class="p">);</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1">// User secrets are loaded automatically in Development via</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1">// builder.Configuration, no extra code needed.</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="kt">string?</span><span class="w"> </span><span class="n">connectionString</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="n">Configuration</span><span class="p">.</span><span class="n">GetConnectionString</span><span class="p">(</span><span class="s">"Default"</span><span class="p">);</span>
+</code></pre></div>
+<p>In production, secrets come from a managed vault (Azure Key Vault, AWS
+Secrets Manager, HashiCorp Vault) injected as environment variables or
+mounted files at deploy time — never from <code>appsettings.json</code> checked into
+git, and never hardcoded, even "temporarily."</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// Production: Azure Key Vault as a configuration source</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">builder</span><span class="p">.</span><span class="n">Configuration</span><span class="p">.</span><span class="n">AddAzureKeyVault</span><span class="p">(</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">Uri</span><span class="p">(</span><span class="s">"https://my-vault.vault.azure.net/"</span><span class="p">),</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">DefaultAzureCredential</span><span class="p">());</span>
+</code></pre></div>
+<h2 id="security-headers">Security headers<a class="headerlink" href="#security-headers" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">app</span><span class="p">.</span><span class="n">Use</span><span class="p">(</span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">next</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="p">{</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="n">context</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">Headers</span><span class="p">[</span><span class="s">"X-Content-Type-Options"</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"nosniff"</span><span class="p">;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="n">context</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">Headers</span><span class="p">[</span><span class="s">"X-Frame-Options"</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"DENY"</span><span class="p">;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="n">context</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">Headers</span><span class="p">[</span><span class="s">"Content-Security-Policy"</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"default-src 'self'"</span><span class="p">;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="n">context</span><span class="p">.</span><span class="n">Response</span><span class="p">.</span><span class="n">Headers</span><span class="p">[</span><span class="s">"Referrer-Policy"</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"strict-origin-when-cross-origin"</span><span class="p">;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nf">next</span><span class="p">();</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="p">});</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="n">app</span><span class="p">.</span><span class="n">UseHsts</span><span class="p">();</span><span class="w">               </span><span class="c1">// Strict-Transport-Security, production only</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="n">app</span><span class="p">.</span><span class="n">UseHttpsRedirection</span><span class="p">();</span>
+</code></pre></div>
+<p><code>X-Content-Type-Options: nosniff</code> stops browsers from guessing (and
+potentially misinterpreting) content types; <code>X-Frame-Options: DENY</code> blocks
+clickjacking via iframe embedding; a restrictive <code>Content-Security-Policy</code>
+limits what scripts/styles/resources a page is even allowed to load,
+containing the blast radius of any XSS that does slip through.</p>
+<h2 id="cors-only-as-permissive-as-needed">CORS — only as permissive as needed<a class="headerlink" href="#cors-only-as-permissive-as-needed" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddCors</span><span class="p">(</span><span class="n">options</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="p">{</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span><span class="n">options</span><span class="p">.</span><span class="n">AddPolicy</span><span class="p">(</span><span class="s">"AllowedOrigins"</span><span class="p">,</span><span class="w"> </span><span class="n">policy</span><span class="w"> </span><span class="o">=&gt;</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">        </span><span class="n">policy</span><span class="p">.</span><span class="n">WithOrigins</span><span class="p">(</span><span class="s">"https://app.example.com"</span><span class="p">)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">              </span><span class="p">.</span><span class="n">AllowAnyMethod</span><span class="p">()</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">              </span><span class="p">.</span><span class="n">AllowAnyHeader</span><span class="p">());</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="p">});</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="n">app</span><span class="p">.</span><span class="n">UseCors</span><span class="p">(</span><span class="s">"AllowedOrigins"</span><span class="p">);</span>
+</code></pre></div>
+<p><code>AllowAnyOrigin()</code> (permitting every origin) combined with credentials is
+outright rejected by browsers for good reason — it would let any site on
+the internet make authenticated requests to your API using a logged-in
+user's cookies. Always name specific trusted origins.</p>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<p>Add proper authentication to the Level 3 REST API project: hash and store a
+password with <code>PasswordHasher&lt;T&gt;</code> instead of the hardcoded check from module
+02's login example, validate <code>CreateUserRequest</code>-style input with data
+annotations on the book-creation endpoint (non-empty title, year in a sane
+range — module 10 already does this manually; convert it to attributes),
+and add the security headers middleware above. Write an integration test
+confirming a request with <code>Content-Security-Policy</code> and <code>X-Frame-Options</code>
+headers present on every response.</p>
 
 
 
