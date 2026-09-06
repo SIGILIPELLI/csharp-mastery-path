@@ -1008,6 +1008,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2283,6 +2294,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2454,6 +2476,40 @@ concatenation of path segments.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>StreamWriter</code>/<code>StreamReader</code> wrap a <code>FileStream</code>, which wraps an OS file
+  descriptor — and buffer in user space to reduce syscalls.</strong> Every read or
+  write ultimately becomes a system call into the OS kernel, which is orders
+  of magnitude slower than in-memory work. <code>StreamReader</code>/<code>StreamWriter</code>
+  keep an internal character buffer (default 1KB, tunable via a
+  constructor overload) so that calling <code>ReadLine()</code> repeatedly doesn't
+  issue a syscall per line — it issues one syscall to fill the buffer, then
+  serves many <code>ReadLine()</code> calls out of memory until the buffer is
+  exhausted. <code>File.ReadAllText</code>/<code>ReadAllLines</code> do the same buffering
+  internally but hide it, at the cost of holding the <em>entire</em> decoded file
+  in memory at once — fine for small files, a real problem for anything
+  approaching available RAM.</li>
+<li><strong><code>Dispose()</code> on a stream flushes buffered writes before releasing the OS
+  handle.</strong> This is the mechanism-level reason <code>using</code> matters so much for
+  I/O specifically: if you write via <code>StreamWriter</code> and the process crashes
+  (or an exception propagates) before <code>Dispose()</code> runs, buffered-but-not-yet-
+  flushed bytes never reach disk — the file can look truncated or missing
+  your last few writes. <code>using</code> guarantees <code>Dispose()</code> — and therefore the
+  flush — runs via the compiler-generated <code>finally</code> block from Module 7,
+  even on the exception path.</li>
+<li><strong>Text encoding happens at the stream boundary, not in your strings.</strong> A
+  C# <code>string</code> is always UTF-16 in memory; <code>StreamWriter</code>/<code>StreamReader</code>
+  default to UTF-8 on disk (configurable via a constructor overload) and
+  transcode on every read/write. This conversion is why a file written by
+  one encoding and read assuming another silently corrupts non-ASCII
+  characters — the bytes on disk and the <code>char</code>s in memory are never the
+  same representation.</li>
+<li><strong><code>File.ReadAllText</code> internally opens, reads, and disposes a <code>FileStream</code>
+  in one call</strong> — it's not a different I/O mechanism, just a convenience
+  wrapper that saves you writing the <code>using</code> block yourself for the common
+  "read it all now" case.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a program that writes a list of at least five numbers to
 <code>scores.txt</code>, one per line, then reads the file back line by line, parses

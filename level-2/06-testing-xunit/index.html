@@ -1311,6 +1311,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2305,6 +2316,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2499,6 +2521,45 @@ without a separate <code>[SetUp]</code> attribute:</p>
 <a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="w">    </span><span class="p">}</span>
 <a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="p">}</span>
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>xUnit discovers <code>[Fact]</code>/<code>[Theory]</code> methods by scanning your test
+  assembly's metadata via reflection — no code of yours calls them
+  directly.</strong> <code>dotnet test</code> builds your project into a <code>.dll</code>, then a
+  runner (<code>VSTest</code>/<code>xunit.runner</code>) loads that assembly with
+  <code>Assembly.Load</code>, reflects over every public type looking for methods
+  carrying the <code>[Fact]</code>/<code>[Theory]</code> custom attributes, and invokes each one
+  through <code>MethodInfo.Invoke</code> inside its own exception-catching harness —
+  this is exactly why a test method needs no special base class or
+  registration: attributes are just metadata tokens embedded in the
+  compiled IL, discoverable without running any of your code first.</li>
+<li><strong>A fresh instance per test method is a deliberate isolation guarantee,
+  not an implementation detail you can rely on loosely.</strong> xUnit constructs a
+  brand-new <code>OrderWithSetupTests</code> object — running its constructor — for
+  <em>every single</em> <code>[Fact]</code>/<code>[Theory]</code> case, then calls <code>Dispose()</code> (if
+  <code>IDisposable</code>) right after that one test finishes, before moving to the
+  next. This means fields like <code>_order</code> genuinely cannot leak state between
+  tests even if you tried, in contrast to some other test frameworks'
+  shared-fixture-by-default model — the tradeoff being that expensive setup
+  (a database connection, a large object graph) really does re-run per test
+  unless you opt into <code>IClassFixture&lt;T&gt;</code>/<code>ICollectionFixture&lt;T&gt;</code> to share it
+  deliberately.</li>
+<li><strong><code>[Theory]</code>/<code>[InlineData]</code> cases are separate test invocations at the
+  reflection level, not one loop.</strong> The <code>InlineData</code> values are stored as
+  constructor arguments to the attribute, materialized as an <code>object[]</code> per
+  case; the runner calls the theory method once per data row via
+  <code>MethodInfo.Invoke(instance, dataRow)</code>, each treated as its own pass/fail
+  result with its own stack trace on failure — which is why one case failing
+  never suppresses the results of the others, unlike a hand-written
+  <code>foreach</code> loop of assertions in a single <code>[Fact]</code>, where the first failed
+  <code>Assert</code> throws and aborts the remaining iterations.</li>
+<li><strong><code>Assert.Throws&lt;T&gt;</code> executes the lambda and inspects the actual
+  exception's runtime type via the same type-check machinery from Module 1
+  and Module 7</strong> — it wraps the call in <code>try</code>/<code>catch (Exception e)</code>
+  internally, then does an <code>is</code>-style check that <code>e</code>'s runtime type matches
+  (or derives from) <code>T</code>, failing the assertion with a clear message if no
+  exception was thrown at all or the wrong type was thrown.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write <code>Calculator.Tests</code> for a <code>StringUtils.Reverse(string)</code> and
 <code>StringUtils.IsPalindrome(string)</code> you implement yourself. Cover <code>Reverse</code>

@@ -991,6 +991,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2305,6 +2316,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2477,6 +2499,46 @@ chain.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>Where</code>/<code>Select</code> build a chain of iterator objects; nothing runs until
+  enumerated.</strong> Calling <code>numbers.Where(n =&gt; n % 2 == 0)</code> doesn't loop over
+  <code>numbers</code> at all — it returns a small compiler/BCL-generated object (an
+  <code>IEnumerable&lt;T&gt;</code> implementing a state machine, similar in shape to
+  <code>yield return</code>-based iterators) that <em>captures</em> the source sequence and
+  the predicate lambda, but does no work yet. Only when something pulls
+  values out — <code>foreach</code>, <code>string.Join</code>, <code>ToList()</code> — does <code>MoveNext()</code> get
+  called repeatedly, and each <code>MoveNext()</code> call pulls exactly one element
+  through the <em>entire</em> chain (source → <code>Where</code> → <code>Select</code> → ...) before
+  producing the next. This is <strong>deferred, pull-based, streaming execution</strong>:
+  a <code>Where(...).Select(...).OrderBy(...)</code> chain (<code>OrderBy</code> being the
+  exception — it must buffer everything to sort) processes elements one at a
+  time end-to-end rather than materializing an intermediate list after each
+  stage.</li>
+<li><strong>Re-enumerating a lazy query re-runs the whole chain from the source.</strong>
+  If <code>numbers</code> changes between two <code>foreach</code> loops over the same
+  <code>evens</code> variable, the second loop sees the <em>new</em> filtered results — the
+  query is a recipe, not a snapshot. <code>ToList()</code>/<code>ToArray()</code> force one full
+  pass immediately and store the concrete results, which is why they're the
+  fix when you need a stable snapshot or plan to iterate more than once
+  (avoiding redundant recomputation of the whole pipeline).</li>
+<li><strong>Lambdas that close over local variables allocate a closure object.</strong>
+  <code>n =&gt; n % 2 == 0</code> doesn't reference outer state, so the compiler can cache
+  a single delegate instance and reuse it forever. But a lambda like <code>n =&gt;
+  n &gt; threshold</code> (where <code>threshold</code> is a local variable) forces the compiler
+  to generate a hidden class capturing <code>threshold</code> by reference, allocated
+  on the heap once per method invocation — a real, measurable allocation
+  cost in a hot loop, distinct from the delegate itself.</li>
+<li><strong>Query syntax and method syntax compile to identical IL.</strong> <code>from p in
+  people where p.Age &gt; 25 select p.Name</code> is translated by Roslyn, before any
+  further compilation, directly into <code>people.Where(p =&gt; p.Age &gt;
+  25).Select(p =&gt; p.Name)</code> — there is no separate "query engine"; it's pure
+  syntactic transformation to the method-syntax calls you already know.</li>
+<li><strong><code>GroupBy</code> must fully buffer the source</strong> to build its groups (it can't
+  know a group is "done" until the whole sequence has been scanned), unlike
+  <code>Where</code>/<code>Select</code>, which stream — one of the reasons chaining a <code>GroupBy</code>
+  early in a pipeline changes the memory profile of the whole query.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Given a <code>List&lt;(string Name, string Department, double Salary)&gt;</code> of employees,
 use LINQ to print: the names of everyone in <code>"Engineering"</code> earning more

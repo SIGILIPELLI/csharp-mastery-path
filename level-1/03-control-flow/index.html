@@ -829,6 +829,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2261,6 +2272,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2436,6 +2458,38 @@ more powerful than a simple value-equality dispatch.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Switch expressions compile to a decision tree, not sequential tests.</strong>
+  For a <code>switch</code> over an <code>int</code> with many arms, Roslyn emits a <strong>jump table</strong>
+  (IL <code>switch</code> opcode) when the case values are dense enough — the JIT turns
+  this into a single indexed branch, O(1) regardless of how many cases exist,
+  rather than a chain of <code>if</code>/<code>else</code> comparisons. For sparse or non-constant
+  patterns (type patterns, <code>when</code> guards) it falls back to a sequence of
+  conditional branches evaluated top to bottom, which is why arm <em>order</em>
+  matters once <code>when</code> clauses are involved — the compiler can't reorder
+  guarded arms for you.</li>
+<li><strong>Pattern matching on <code>object shape</code> involves a type check, not free.</strong>
+  <code>int i when i &gt; 0</code> compiles to an <code>isinst</code>/<code>unbox.any</code> IL sequence: the CLR
+  checks the object's runtime type handle against <code>System.Int32</code>'s type
+  handle, and only unboxes (copies the boxed value back onto the stack) if it
+  matches. Each arm you add to a type-pattern switch is another type check in
+  sequence for the pattern-chain case, so this style of dispatch does cost
+  more than an integer jump table.</li>
+<li><strong><code>foreach</code> desugars to <code>GetEnumerator()</code>/<code>MoveNext()</code>/<code>Current</code>.</strong> The
+  compiler rewrites <code>foreach (var fruit in fruits)</code> into a <code>try</code>/<code>finally</code>
+  block that calls <code>fruits.GetEnumerator()</code>, loops on <code>MoveNext()</code>, reads
+  <code>Current</code>, and disposes the enumerator in <code>finally</code> if it implements
+  <code>IDisposable</code>. For an array or <code>List&lt;T&gt;</code>, the compiler uses the concrete
+  struct enumerator type directly (not the <code>IEnumerable&lt;T&gt;</code> interface) so the
+  calls can be inlined and no heap allocation or virtual dispatch happens —
+  one reason iterating a <code>List&lt;T&gt;</code> with <code>foreach</code> is cheaper than iterating
+  it through an <code>IEnumerable&lt;T&gt;</code>-typed reference.</li>
+<li><strong><code>break</code>/<code>continue</code> are just labeled <code>br</code> (unconditional jump) IL
+  instructions</strong> inserted at the right place in the compiled loop body — there
+  is no runtime cost beyond the jump itself, unlike exceptions, which unwind
+  the stack.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a program that loops from 1 to 30 with <code>for</code>, and for each number uses
 a <code>switch</code> expression to print <code>"FizzBuzz"</code> if divisible by both 3 and 5,

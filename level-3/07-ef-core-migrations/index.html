@@ -1715,6 +1715,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2305,6 +2316,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2495,6 +2517,54 @@ with it through every environment the migrations run in.</p>
 populated without a second round trip per book (the N+1 query problem);
 without it, accessing <code>book.Author</code> on a detached entity would just be
 <code>null</code>.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>migrations add</code> diffs two in-memory model <em>snapshots</em>, not your current
+  database schema.</strong> EF Core builds a full representation of your current
+  <code>OnModelCreating</code>-configured model (every entity, property, relationship,
+  index) and compares it against a compiler-generated
+  <code>&lt;ContextName&gt;ModelSnapshot.cs</code> file checked into your <code>Migrations/</code>
+  folder representing the model as of the <em>last</em> migration — the diff
+  between those two in-memory graphs, not a live database introspection, is
+  what produces the new migration's <code>Up()</code>/<code>Down()</code> operations. This is
+  exactly why a migration can be generated with no database connection open
+  at all, and why deleting or hand-editing the snapshot file desyncs future
+  <code>migrations add</code> calls from reality.</li>
+<li><strong><code>dotnet ef database update</code> executes each pending migration's <code>Up()</code>
+  inside its own transaction (where the provider supports DDL transactions)
+  and records success in <code>__EFMigrationsHistory</code> only after that
+  migration's SQL completes</strong> — this table is the actual mechanism behind
+  "it knows what's already been applied": each <code>dotnet ef database update</code>
+  invocation queries that history table first, computes the set of
+  migrations present in your <code>Migrations/</code> folder but absent from history,
+  and applies only those, in the order their timestamps sort — nothing more
+  exotic than a database-backed to-do list.</li>
+<li><strong>A migration's <code>Up()</code>/<code>Down()</code> methods are literally C# code compiled
+  into your assembly, not a serialized description interpreted at run
+  time</strong> — <code>migrationBuilder.CreateTable(...)</code>/<code>AddColumn(...)</code> calls are
+  ordinary method calls building up a list of <code>MigrationOperation</code> objects;
+  each database provider (SQLite, SQL Server, PostgreSQL) then translates
+  that provider-agnostic operation list into its own dialect of DDL SQL at
+  <code>database update</code> time — which is why the same <code>Migrations/</code> folder can
+  target different databases just by swapping the provider registered in
+  <code>OnConfiguring</code>/<code>UseSqlite</code>.</li>
+<li><strong><code>HasData</code> seed rows are baked directly into a migration's generated SQL
+  as literal <code>INSERT</code>/<code>DELETE</code> statements at migration-generation time</strong>,
+  not read dynamically from your <code>OnModelCreating</code> code at deploy time —
+  this is why seed data added via <code>HasData</code> "ships with the schema": the
+  actual <code>INSERT INTO Authors (...) VALUES (1, 'Ursula K. Le Guin')</code>
+  statement is committed into the migration file's <code>Up()</code> method as static
+  generated code, reproducible identically wherever that migration runs.</li>
+<li><strong>Adding a <code>nullable: false</code> column to a table with existing <code>NULL</code> rows
+  fails because the generated <code>ALTER TABLE</code>/column-add statement includes a
+  <code>NOT NULL</code> constraint the database engine enforces against every existing
+  row at DDL-execution time</strong> — this is a genuine database-engine-level
+  constraint check, not an EF Core validation, which is exactly why the fix
+  requires a data migration (backfilling a default value into existing rows)
+  strictly before the schema migration that adds the <code>NOT NULL</code> constraint —
+  two separate <code>Up()</code> steps executed in two separate transactions/migrations,
+  not something EF Core can safely collapse into one automatically.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Add a <code>Publisher</code> entity (<code>Id</code>, <code>Name</code>) with a one-to-many relationship to
 <code>Book</code> (a publisher has many books; a book has one publisher, nullable

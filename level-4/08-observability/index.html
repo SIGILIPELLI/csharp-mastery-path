@@ -2108,6 +2108,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2283,6 +2294,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2442,6 +2464,62 @@ if p99 of <code>http.server.request.duration</code> exceeds 2 seconds."</p>
 slow trace in Jaeger" to "here are the exact log lines from that specific
 request" — the three pillars (logs, metrics, traces) are far more useful
 correlated than viewed in isolation.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>_logger.LogInformation("...{Customer}...", customer, total)</code>'s named
+  placeholders are parsed into a message template once and cached, exactly
+  like <code>System.Text.Json</code>'s per-type serialization plan and Roslyn's
+  compiled query patterns elsewhere in this course.</strong> The first time a
+  given format string is logged, the framework parses it into a
+  <code>LogValuesFormatter</code> that knows the placeholder names and positions;
+  subsequent calls with the same template reuse that parsed structure
+  rather than re-parsing the string. Crucially, <code>LogInformation</code> is a
+  regular method call taking <code>object?[]</code> params — if the configured
+  minimum log level is above <code>Information</code>, the framework checks
+  <code>IsEnabled(LogLevel.Information)</code> <em>before</em> doing any formatting work, so
+  a disabled log statement costs only that cheap level check, not string
+  construction — the opposite of <code>$"..."</code> interpolation, which the compiler
+  forces to build the full string unconditionally before the method is even
+  called, wasting the allocation and formatting work even when nothing
+  ends up written.</li>
+<li><strong><code>BeginScope</code> implements its ambient-context propagation via
+  <code>AsyncLocal&lt;T&gt;</code>, the same mechanism .NET uses for flowing state across
+  <code>await</code> boundaries without an explicit parameter.</strong> Because
+  <code>AsyncLocal&lt;T&gt;</code>'s value automatically flows to child async continuations
+  (captured and restored around each <code>await</code>'s state-machine resumption,
+  per Module 04 of Level 2) but not to unrelated concurrent operations, a
+  scope started before an <code>await Task.Delay(...)</code> stays attached to <em>that</em>
+  logical call chain specifically, even though the actual OS thread
+  executing the continuation afterward may be a completely different
+  thread-pool thread than the one that started the scope.</li>
+<li><strong><code>Activity.Current</code> is genuinely the same <code>AsyncLocal&lt;T&gt;</code>-based ambient
+  mechanism as logging scopes — traces and logging scopes solve the same
+  "how do I propagate context across async boundaries" problem with the
+  same underlying .NET primitive</strong>, which is exactly why
+  <code>Activity.Current?.TraceId</code> reliably refers to the <em>currently executing
+  logical operation's</em> trace even from deep inside a chain of <code>await</code>ed
+  calls, without any of those methods needing to receive or pass a trace
+  context parameter explicitly.</li>
+<li><strong>Distributed trace propagation across service boundaries works by
+  serializing <code>Activity</code>'s trace context into an outgoing HTTP header
+  (<code>traceparent</code>, the W3C Trace Context standard) on every <code>HttpClient</code>
+  call <code>AddHttpClientInstrumentation</code> wraps, and the receiving service's
+  <code>AddAspNetCoreInstrumentation</code> middleware reads that same header on the
+  way in to create a <em>child</em> span under the caller's trace rather than a
+  new, disconnected one</strong> — this is why a whole distributed call chain
+  becomes one coherent waterfall: each service's span carries the same
+  trace ID, propagated purely through that one plain-text HTTP header, with
+  no shared database or central coordinator involved.</li>
+<li><strong><code>Counter&lt;long&gt;</code>/<code>Histogram&lt;double&gt;</code> from <code>System.Diagnostics.Metrics</code>
+  aggregate measurements in-process using lock-free or lightly-locked
+  accumulation structures, only exporting periodic summaries (not every
+  individual <code>.Add</code>/<code>.Record</code> call) to the configured exporter</strong> — this is
+  why high-frequency metrics recording (once per request, even at very high
+  throughput) has negligible overhead compared to per-event logging or
+  tracing: the runtime batches and aggregates in memory, exporting
+  pre-aggregated snapshots (sums, counts, histogram buckets) on a timer
+  rather than shipping raw data points for every single measurement.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Add <code>ILogger</code>-based structured logging to every endpoint in the Level 3 REST
 API project (log the operation and relevant IDs, not raw request bodies).

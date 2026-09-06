@@ -1743,6 +1743,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2305,6 +2316,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2528,6 +2550,54 @@ before everything else) means it wraps every downstream middleware and
 endpoint, catching anything they throw — this is essentially what
 <code>UseExceptionHandler</code> provides out of the box, worth building once by hand
 to understand it.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>UseMiddleware&lt;T&gt;()</code> constructs exactly one instance of your middleware
+  class per application startup — not per request — using a compiled
+  factory built via <code>ActivatorUtilities</code>, which is why per-request state
+  must never live in instance fields.</strong> At startup, the framework reflects
+  over <code>RequestTimingMiddleware</code>'s constructor, resolves <code>RequestDelegate
+  next</code> (the already-built rest-of-pipeline delegate at that registration
+  point) and any DI services like <code>ILogger&lt;T&gt;</code> exactly once, and caches the
+  constructed instance for the app's entire lifetime. Only <code>InvokeAsync</code> —
+  never the constructor — runs per incoming request; this singleton-like
+  construction is why the class-based middleware pattern explicitly warns
+  against storing request-specific data in fields (it would leak across
+  concurrent requests) and instead threads everything through the
+  per-request <code>HttpContext</code> parameter.</li>
+<li><strong>The nested-delegate chain built at startup is precisely the same
+  mechanism Module 01 described for <code>app.Use(...)</code> lambdas — class-based
+  middleware just wraps <code>InvokeAsync</code> in a delegate that closes over the
+  constructed instance.</strong> <code>app.UseRequestTiming()</code> calls <code>UseMiddleware&lt;T&gt;</code>,
+  which builds a <code>RequestDelegate</code> (a <code>Func&lt;HttpContext, Task&gt;</code>) that calls
+  <code>instance.InvokeAsync(context)</code>, and stitches it into the nested-delegate
+  pipeline exactly like a raw lambda would — there's no architecturally
+  distinct "class middleware system," just a convenience wrapper generating
+  the same shape.</li>
+<li><strong>Returning without calling <code>_next(context)</code> in <code>ApiKeyMiddleware</code> doesn't
+  throw or signal cancellation — it simply lets that middleware's
+  <code>InvokeAsync</code>/lambda complete, which unwinds back up through every
+  middleware registered before it (running their post-<code>next()</code> code) without
+  ever entering anything registered after it.</strong> This is exactly the "nested
+  function call" model made concrete: skipping <code>next()</code> is equivalent to a
+  nested call simply never happening, so nothing inside that unexecuted call
+  (routing, endpoint execution, later middleware) ever runs, while
+  everything wrapping the current middleware still unwinds normally.</li>
+<li><strong>Endpoint filters (<code>AddEndpointFilter</code>) attach to the specific
+  <code>RequestDelegate</code> the routing middleware ultimately invokes for that one
+  route, not the global pipeline</strong> — they're resolved and composed once per
+  endpoint at startup (another nested-delegate chain, scoped narrowly), which
+  is why a filter added to one <code>MapGet</code> call never runs for a different
+  route, in contrast to <code>app.Use(...)</code> which always wraps every request
+  regardless of which endpoint eventually handles it.</li>
+<li><strong>MVC action filters (<code>OnActionExecuting</code>) run inside the MVC action
+  invocation pipeline, which itself executes as one step deep inside the
+  outer middleware pipeline</strong> — setting <code>context.Result</code> short-circuits only
+  that inner action-invocation pipeline (skipping the actual controller
+  method and remaining action filters) while the outer middleware chain
+  still unwinds normally afterward, the same nested-scope relationship
+  <code>AddEndpointFilter</code> has to the top-level pipeline in minimal APIs.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a <code>RateLimitingMiddleware</code> that tracks request counts per client IP
 (a <code>ConcurrentDictionary&lt;string, (int count, DateTime windowStart)&gt;</code> is

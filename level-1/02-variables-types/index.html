@@ -812,6 +812,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2283,6 +2294,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2482,6 +2504,42 @@ with them) in depth.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Value types and reference types aren't just a naming convention — they
+describe two genuinely different memory layouts, and understanding the split
+explains most of the "gotchas" in this module.</p>
+<ul>
+<li><strong>Stack vs. heap.</strong> A local <code>int</code>, <code>double</code>, <code>bool</code>, or <code>char</code> variable is
+  stored directly in the method's <strong>stack frame</strong> — no separate allocation,
+  no garbage collection involved, freed automatically when the method
+  returns. A <code>string</code> (and any <code>class</code> instance) is a reference type: the
+  variable on the stack holds a pointer, and the actual UTF-16 character data
+  lives as an object on the <strong>managed heap</strong>, tracked by the garbage
+  collector. This is why <code>string</code> is called out as "behaves like a value" in
+  the table above but isn't one — comparing two <code>string</code>s with <code>==</code> compares
+  <em>contents</em> (because <code>string</code> overrides <code>Equals</code>/<code>==</code>), but assigning one
+  <code>string</code> variable to another copies the reference, not the characters.</li>
+<li><strong><code>decimal</code> is not hardware floating point.</strong> <code>double</code>/<code>float</code> are IEEE 754
+  binary floating point — fast (native FPU instructions) but unable to
+  represent values like <code>0.1</code> exactly in binary, which is why repeated
+  <code>double</code> arithmetic drifts. <code>decimal</code> is a 128-bit struct that stores a
+  base-10 mantissa and scale, evaluated in software by the CLR — slower, but
+  exact for the decimal fractions money uses. This is a real runtime
+  trade-off, not just a "nicer default."</li>
+<li><strong><code>checked</code>/<code>unchecked</code> compiles to different IL.</strong> The C# compiler emits
+  the <code>add.ovf</code> (overflow-checking add) IL opcode inside a <code>checked</code> context
+  and plain <code>add</code> otherwise. <code>OverflowException</code> is thrown directly by the
+  JIT-compiled native instruction sequence the CLR generates for <code>add.ovf</code> —
+  there's no runtime "check a flag" step, the different opcode <em>is</em> the
+  check.</li>
+<li><strong><code>int?</code> is <code>Nullable&lt;int&gt;</code> under the hood</strong> — a small struct (<code>System.Nullable&lt;T&gt;</code>)
+  holding a <code>bool hasValue</code> field alongside the <code>int value</code> field. It is
+  still a value type (allocated inline, not on the heap), which is why
+  <code>int?</code> costs a few extra bytes over <code>int</code> rather than the pointer
+  indirection and heap allocation a reference type would need. The compiler
+  rewrites <code>??</code> and <code>.Value</code>/<code>.HasValue</code> into direct field access on that
+  struct — there's no boxing unless you assign an <code>int?</code> to an <code>object</code>.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a program that declares an <code>int</code> <code>totalCents</code> (e.g. <code>12345</code>), and
 computes dollars and remaining cents using integer division and the modulo

@@ -1569,6 +1569,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2349,6 +2360,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2499,6 +2521,55 @@ runs.</p>
 <p>Minimal API handlers can request any registered service as a parameter — the
 framework resolves it from the DI container per request. Module 03
 (Dependency Injection Deep Dive) covers lifetimes and patterns in depth.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>The middleware pipeline is a chain of nested delegates built once at
+  startup, not re-evaluated per request.</strong> Each <code>app.Use(...)</code> call wraps
+  the <em>current</em> pipeline delegate inside a new one that captures it as
+  <code>next</code> — by the time <code>app.Run()</code> is called, you have one deeply nested
+  <code>RequestDelegate</code> closure (middleware N wraps middleware N-1 wraps ... wraps
+  the terminal routing/endpoint delegate). A single incoming request calls
+  the outermost delegate once, and <code>await next()</code> inside your logging
+  middleware is a normal <code>await</code> (Module 4's state machine mechanism)
+  suspending that middleware's continuation until everything nested inside
+  it — routing, model binding, your endpoint handler, and any middleware
+  after it — completes and returns control back up the chain. This is
+  exactly why code before <code>await next()</code> runs on the way in and code after
+  it runs on the way out, mirroring nested function calls precisely because
+  that's the literal generated structure.</li>
+<li><strong>Kestrel is a managed, cross-platform HTTP server built on the same
+  <code>Socket</code>/async I/O primitives your own code could use</strong> — it's not a
+  wrapper around IIS or a native web server. Requests arrive as raw bytes
+  on a <code>Socket</code>, get parsed into an <code>HttpRequest</code> object by Kestrel's own
+  HTTP/1.1 and HTTP/2 parsers (built on the low-allocation <code>PipeReader</code>/
+  <code>PipeWriter</code> APIs to minimize buffer copies under load), and are handed
+  into the middleware chain — the entire pipeline from socket bytes to your
+  <code>MapGet</code> lambda executing is managed C# code running through the same JIT-
+  compiled, GC-managed execution model as everything else in this course.</li>
+<li><strong>Route matching compiles route templates into a tree/trie-like structure
+  at startup, not string comparison per request.</strong> <code>MapGet("/products/{id:int}",
+  ...)</code> is parsed once into a route pattern with typed constraints; at
+  request time, the routing middleware walks a matcher built from every
+  registered route to find the best match in roughly O(segment count) time,
+  not by testing each registered route string in sequence — this is what
+  lets a real application register hundreds of routes without routing
+  becoming the bottleneck.</li>
+<li><strong>Minimal API parameter binding uses source-generated (or reflection-based,
+  pre–.NET 8) code built from your lambda's parameter list, resolved once
+  per endpoint registration</strong> — the framework inspects <code>(int a, int b) =&gt;
+  ...</code> at <code>MapGet</code> call time, decides <code>a</code>/<code>b</code> come from the route (matching
+  <code>{a:int}</code>/<code>{b:int}</code>), and generates the extraction/conversion code ahead
+  of time rather than re-inspecting the lambda's signature via reflection on
+  every incoming request — directly analogous to <code>System.Text.Json</code>'s
+  cached serialization plan from Module 7.</li>
+<li><strong>DI-resolved parameters like <code>IClock clock</code> are pulled from a per-request
+  <code>IServiceScope</code></strong> created and disposed automatically around each request
+  by ASP.NET Core's hosting infrastructure — this scope is what makes
+  <code>AddScoped</code> services (Module 3) genuinely per-request rather than
+  per-process, and it's torn down (running <code>Dispose()</code> on any
+  <code>IDisposable</code> scoped services) as part of the pipeline's final unwind,
+  the same <code>finally</code>-based cleanup guarantee from Module 7 of Level 1.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Build a minimal API with an in-memory <code>List&lt;Product&gt;</code> "database" (a static
 list is fine for this exercise) exposing <code>GET /products</code>, <code>GET

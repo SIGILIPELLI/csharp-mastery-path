@@ -1940,6 +1940,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2283,6 +2294,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2468,6 +2490,54 @@ way an untyped REST client can produce.</p>
 <p>Server streaming keeps one HTTP/2 connection open and pushes multiple
 responses over it — useful for live progress updates, tailing logs, or
 any producer/consumer relationship that isn't a single request/response.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>UseAuthentication()</code> is middleware (Module 08 of Level 3's nested
+  pipeline) that runs the JWT handler against the incoming <code>Authorization</code>
+  header and populates <code>HttpContext.User</code> before anything downstream
+  executes.</strong> The <code>JwtBearerHandler</code> splits the token into its three
+  base64url segments, verifies the signature over header+payload using
+  <code>IssuerSigningKey</code> (an HMAC computation for <code>HmacSha256</code>, run against the
+  raw bytes of the token — a real cryptographic operation, not a lookup),
+  and only if that passes does it deserialize the payload's claims into a
+  <code>ClaimsPrincipal</code> and attach it to the context. <code>ValidateLifetime</code>,
+  <code>ValidateIssuer</code>, <code>ValidateAudience</code> are each independent checks run
+  against plain fields in the decoded JSON payload — none of them require
+  a database round trip, which is exactly why JWTs are popular for
+  stateless, horizontally-scaled auth: any server holding the shared signing
+  key can validate a token without a central session store.</li>
+<li><strong><code>RequireAuthorization("AdminOnly")</code> is enforced by an authorization
+  <em>filter</em>, running inside the endpoint-invocation pipeline after routing
+  has matched — the same nested-filter-inside-middleware relationship
+  Module 08 of Level 3 described for MVC action filters.</strong> It reads the
+  <code>ClaimsPrincipal</code> <code>UseAuthentication()</code> already populated, evaluates the
+  named policy's <code>RequireRole("Admin")</code> requirement against that user's
+  claims, and short-circuits with a 403 if it fails — never reaching your
+  endpoint's lambda body at all, exactly like <code>context.Result</code> short-
+  circuiting an MVC action filter.</li>
+<li><strong>gRPC's typed contract is generated C# code produced by the Protobuf
+  compiler (<code>protoc</code>) as an MSBuild step, not reflection over the <code>.proto</code>
+  file at run time.</strong> <code>dotnet build</code> invokes <code>protoc</code> (bundled via the
+  <code>Grpc.Tools</code> package) against every <code>.proto</code> file, emitting
+  <code>Greeter.GreeterBase</code>, <code>HelloRequest</code>, <code>HelloReply</code> as ordinary compiled
+  C# classes with <code>partial</code> message types backed by efficient binary
+  serialization code (Protobuf's own wire format, not <code>System.Text.Json</code>) —
+  this is why a typo in a field name is a compile error: the generated code
+  is real, statically-typed C# checked by Roslyn like anything else in your
+  project.</li>
+<li><strong>gRPC calls run over a single persistent HTTP/2 connection using stream
+  multiplexing, which is the mechanism behind both efficient unary calls
+  and true server streaming.</strong> Unlike HTTP/1.1 (one request per connection
+  round-trip, or limited pipelining), HTTP/2 lets many logical
+  request/response exchanges share one TCP connection as independent
+  "streams," identified by a stream ID in each frame — <code>StreamGreetings</code>'s
+  <code>IServerStreamWriter.WriteAsync</code> writes successive Protobuf-framed
+  messages onto the <em>same</em> HTTP/2 stream without closing the underlying
+  connection, and <code>ReadAllAsync()</code> on the client is an <code>IAsyncEnumerable&lt;T&gt;</code>
+  (Module 4-adjacent async iterator machinery) pulling frames off that
+  stream as they arrive, suspending between them exactly like <code>await
+  Task.Delay</code> suspends — no polling, no separate connection per message.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Add JWT authentication to the REST API project from Level 3 module 10: a
 <code>POST /login</code> endpoint issuing a token for a hardcoded user, <code>[Authorize]</code>

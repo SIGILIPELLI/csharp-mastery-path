@@ -2091,6 +2091,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2305,6 +2316,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2487,6 +2509,53 @@ runaway pod can't starve its neighbors on the same node.</p>
 deployed image a traceable, immutable identity — <code>kubectl rollout undo</code>
 or a manual rollback can target an exact previous build instead of hoping
 <code>latest</code> still points at something known-good.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>The <code>aspnet:8.0</code> runtime image contains exactly the CLR + JIT +
+  ASP.NET Core shared framework needed to load and run a <code>.dll</code> — it has
+  no Roslyn compiler at all, because none of the CLR's execution machinery
+  from Module 01 (assembly loading, JIT compilation of IL, GC) requires the
+  compiler to be present.</strong> <code>dotnet publish</code> in the <code>build</code> stage already
+  did the Roslyn compile-to-IL step (Module 01's "compile happens once, at
+  build time" story) and wrote the resulting IL assemblies plus a
+  <code>MyApi.runtimeconfig.json</code>/<code>MyApi.deps.json</code> (Module 09 of Level 2's
+  dependency manifest) into <code>/app/publish</code>; the runtime image only needs the
+  host (<code>dotnet</code>), the CLR, and the framework's own assemblies to load and
+  JIT-execute that already-compiled IL — which is exactly why it can be a
+  fraction of the SDK image's size.</li>
+<li><strong>Docker's layer cache invalidates from the first changed instruction
+  onward, which is a content-hash comparison per layer, not a
+  file-timestamp check</strong> — this is the real mechanism behind "copying just
+  <code>*.csproj</code> before the rest of the source" working: Docker hashes the
+  copied files' contents to decide whether a <code>COPY</code>/<code>RUN</code> layer can be
+  reused from a previous build; as long as the <code>.csproj</code> bytes are
+  unchanged, the <code>dotnet restore</code> layer's cached result (every downloaded
+  NuGet package, per Module 09 of Level 2) is reused verbatim regardless of
+  how much application <code>.cs</code> code changed afterward, since those changes
+  land in a later <code>COPY . .</code> layer that gets rebuilt independently.</li>
+<li><strong><code>ConnectionStrings__Default</code> maps to <code>Configuration["ConnectionStrings:Default"]</code>
+  because .NET's configuration system is a merged tree of named providers,
+  each translating its own source's key format into the same colon-delimited
+  internal representation.</strong> The environment-variable configuration
+  provider specifically maps <code>__</code> to <code>:</code> (since most shells don't allow
+  colons in environment variable names) when it enumerates
+  <code>Environment.GetEnvironmentVariables()</code> at startup — this is why moving a
+  setting from <code>appsettings.json</code> to an env var needs no code change: both
+  providers ultimately populate the exact same in-memory key-value
+  configuration tree that <code>builder.Configuration</code> exposes, with later-added
+  providers overriding earlier ones for the same key.</li>
+<li><strong><code>livenessProbe</code>/<code>readinessProbe</code> are genuinely separate HTTP requests
+  Kubernetes' kubelet issues on its own schedule against the container's
+  network namespace — they exercise the exact same middleware pipeline
+  (Module 01/08 of Level 3) and health-check aggregation (Module 03) a real
+  client request would</strong>, just filtered by the <code>Predicate</code> shown there. A
+  pod that fails <code>livenessProbe</code> gets its container process sent <code>SIGTERM</code>
+  (then <code>SIGKILL</code> after a grace period) by the kubelet and a fresh container
+  started — which is why liveness checks should only fail for a genuinely
+  unrecoverable process state (deadlock, corrupted internal state), never
+  for a slow downstream dependency the process itself is fine, which
+  belongs in readiness instead.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a multi-stage Dockerfile for the Level 3 REST API project, build it,
 and run it with <code>docker run</code>, confirming <code>curl localhost:8080/books</code> works

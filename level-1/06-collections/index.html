@@ -924,6 +924,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2283,6 +2294,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2463,6 +2485,43 @@ index — it always throws. Exception handling is covered fully in Module 7.</p>
 </table>
 <p>* <code>Dictionary&lt;K,V&gt;</code> iteration order is not guaranteed by the language spec,
 even though it often appears insertion-ordered in practice.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>List&lt;T&gt;</code> is a growable array under the hood, with amortized doubling.</strong>
+  Internally it wraps a plain <code>T[]</code> field. When <code>Add</code> overflows the current
+  capacity, <code>List&lt;T&gt;</code> allocates a <em>new</em> backing array — typically double the
+  size — and copies every existing element into it before adding the new
+  one. This makes most <code>Add</code> calls O(1), but occasionally an <code>Add</code> is O(n)
+  when a resize happens; over many additions this averages out to O(1)
+  amortized. If you know the eventual size up front, <code>new List&lt;T&gt;(capacity)</code>
+  avoids the repeated reallocation/copy entirely — genuinely faster for
+  large lists built in a loop.</li>
+<li><strong><code>Dictionary&lt;K,V&gt;</code> is a hash table with open addressing via buckets and a
+  chained overflow.</strong> Each key's <code>GetHashCode()</code> is reduced modulo the
+  bucket array size to find a starting slot; collisions are resolved by
+  chaining entries through an internal <code>next</code> index rather than separate
+  linked-list nodes, keeping everything in one contiguous array for cache
+  locality. This is why a poor <code>GetHashCode()</code> override (or none, relying on
+  the default reference-identity hash for a custom key type) degrades
+  <code>Dictionary&lt;K,V&gt;</code> from its expected O(1) lookup toward O(n) — every lookup
+  has to walk a long collision chain.</li>
+<li><strong><code>HashSet&lt;T&gt;</code> shares the same bucket implementation as <code>Dictionary&lt;K,V&gt;</code></strong>
+  (both descend from the same internal hash-table code in the BCL) — it's
+  effectively a dictionary storing only keys, no values, which is exactly why
+  <code>Contains</code> is O(1) average like dictionary lookup rather than the O(n)
+  linear scan <code>List&lt;T&gt;.Contains</code> performs.</li>
+<li><strong><code>IndexOutOfRangeException</code> comes from a JIT-inserted bounds check, not a
+  hardware fault.</strong> Every array element access the JIT compiles includes an
+  implicit "is index &lt; array length" check before the memory read — this is
+  part of what makes managed code memory-safe compared to raw pointer
+  arithmetic in C/C++. The JIT can sometimes eliminate <em>repeated</em> bounds
+  checks in a tight loop (bounds-check elimination) when it can prove the
+  index stays in range, but it never removes the check that protects against
+  a genuinely out-of-range access like <code>arr[10]</code> on a 3-element array.</li>
+<li><strong><code>foreach</code> over <code>Dictionary&lt;K,V&gt;</code> allocates no extra objects</strong> for the
+  <code>KeyValuePair&lt;TKey,TValue&gt;</code> — it's a <code>struct</code>, so <code>kvp</code> in the loop body
+  lives on the stack, not the heap, each iteration.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a program that builds a <code>Dictionary&lt;string, List&lt;int&gt;&gt;</code> mapping each
 student's name to a list of their test scores. Populate it for three

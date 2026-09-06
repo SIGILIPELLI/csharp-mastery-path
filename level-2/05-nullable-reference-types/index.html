@@ -1283,6 +1283,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2305,6 +2316,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2475,6 +2497,44 @@ this predates NRT and works the same whether the feature is on or off:</p>
 <a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="c1">// a@example.com / 555-0100</span>
 <a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="c1">// b@example.com / (no phone)</span>
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Nullability annotations are metadata Roslyn attaches to IL, invisible to
+  the CLR at run time.</strong> <code>string</code> and <code>string?</code> truly compile to the exact
+  same IL type reference (<code>System.String</code>) — the compiler embeds nullability
+  facts as <code>[Nullable]</code>/<code>[NullableContext]</code> attributes on the assembly's
+  metadata purely for <em>other compilations</em> (and IDEs) to read back, so a
+  library you build with NRT enabled can inform a consumer's compiler about
+  its API's nullability even across assembly boundaries. This is exactly why
+  a <code>!</code>-suppressed warning that's actually wrong still throws
+  <code>NullReferenceException</code> at run time: there is zero runtime enforcement,
+  only a static analysis pass baked into the compiler's flow analysis.</li>
+<li><strong>The flow analysis is a genuine dataflow algorithm, not a pattern-
+  matcher.</strong> The compiler tracks a "null state" (not-null / maybe-null /
+  unknown) for each variable through every branch of your code, merging
+  states at control-flow joins — this is why <code>if (maybeName is not null) {
+  ... }</code> narrows <code>maybeName</code> to non-null <em>inside</em> that block specifically
+  (the compiler's flow state for that variable changes at that branch) but
+  the narrowing doesn't survive a subsequent reassignment or a call to
+  another method that could plausibly null it out again, unless that method
+  is itself annotated (<code>[NotNullWhen]</code>, <code>[MemberNotNull]</code>, etc.) to describe
+  its own null-narrowing contract to the analysis.</li>
+<li><strong><code>Nullable&lt;T&gt;</code> (<code>int?</code>) is unrelated machinery from a completely different
+  era of the language</strong> — a real generic struct (Module 2's specialization
+  applies: <code>Nullable&lt;int&gt;</code> gets its own JIT-compiled layout) with a <code>bool
+  hasValue</code> field and a <code>T value</code> field, existing since C# 2.0, long before
+  nullable <em>reference</em> types (C# 8.0) were conceived. This is why <code>int?</code>
+  behaves identically whether <code>&lt;Nullable&gt;enable&lt;/Nullable&gt;</code> is on or off in
+  the <code>.csproj</code> — that setting only toggles the reference-type static
+  analysis, never touching <code>Nullable&lt;T&gt;</code>'s actual runtime representation.</li>
+<li><strong><code>required</code> members are enforced by the compiler at every construction
+  site, via a hidden <code>RequiredMemberAttribute</code> and <code>SetsRequiredMembers</code>
+  checks</strong> — <code>new Order()</code> without setting <code>CustomerName</code> fails to compile
+  because Roslyn inserts a compile-time-only obligation check, not because
+  the CLR's object-construction path itself understands "required"; a
+  reflection-based object creation path (e.g. deserializers, DI containers)
+  can still bypass it unless it explicitly honors the same attribute.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Model a <code>Book</code> class with <code>required string Title</code>, <code>string? Subtitle</code>, and
 <code>string? Isbn</code>. Write a <code>Describe(Book book)</code> method that returns

@@ -1597,6 +1597,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2349,6 +2360,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2522,6 +2544,49 @@ separate "update" call to make.</p>
 <p><code>AsNoTracking()</code> skips change-tracking overhead for data you're only going to
 read and display — a meaningful performance win on larger read-heavy
 queries.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>db.Books.Where(...)</code> builds an <code>IQueryable&lt;T&gt;</code> expression tree, not an
+  in-memory LINQ chain — a genuinely different code path than Level 1's
+  LINQ.</strong> <code>DbSet&lt;T&gt;</code> implements <code>IQueryable&lt;T&gt;</code>, whose lambdas are captured
+  by the compiler as <code>Expression&lt;Func&lt;...&gt;&gt;</code> — a data structure <em>describing</em>
+  the lambda (an AST-like object graph) rather than compiled, executable
+  delegate code. EF Core's LINQ provider walks that expression tree at
+  enumeration time and translates it into a SQL <code>SELECT</code> statement, sends it
+  to SQLite/SQL Server/Postgres over the actual database connection, and
+  materializes the returned rows back into <code>Book</code> objects. This is why not
+  every C# construct works inside an EF Core query — the provider must be
+  able to translate the expression into SQL, and anything it can't (an
+  arbitrary local method call, for instance) throws at translation time,
+  not compile time.</li>
+<li><strong><code>DbContext</code> maintains a change tracker: a dictionary of tracked entities
+  and a per-property snapshot of their original values.</strong> When you load
+  <code>book</code> via <code>db.Books.First(...)</code>, EF Core stores a copy of its property
+  values alongside the live object. Setting <code>book.Year = 2009</code> doesn't
+  trigger anything immediately — <code>SaveChanges()</code> is what walks every tracked
+  entity, diffs current values against the stored snapshot, and generates
+  an <code>UPDATE ... SET Year = 2009 WHERE Id = ...</code> only for entities and
+  columns that actually changed. This snapshot-and-diff design is exactly
+  why a plain property mutation is enough to "trigger" a database update —
+  there's no property-changed event wiring involved, just a comparison run
+  at <code>SaveChanges()</code> time.</li>
+<li><strong><code>SaveChanges()</code> wraps every pending insert/update/delete in a single
+  database transaction by default</strong>, and topologically sorts the operations
+  by foreign-key dependency (inserting the <code>Author</code> before its <code>Book</code>s, as
+  the text notes) so the generated SQL statements execute in an order the
+  database's foreign-key constraints will actually accept — a real
+  dependency-graph computation over your object graph, not simple insertion
+  order.</li>
+<li><strong><code>Include</code> triggers either a SQL <code>JOIN</code> or a second query, decided by EF
+  Core's query compiler</strong> — without it, the generated <code>SELECT</code> for
+  <code>Authors</code> never mentions the <code>Books</code> table at all, so <code>a.Books</code> really is
+  never populated, not merely "not eagerly loaded" — accessing it returns
+  whatever the empty, un-materialized navigation collection default is.
+  <code>AsNoTracking()</code> skips creating change-tracker snapshots entirely for the
+  returned entities, which is real, measurable saved work (memory for the
+  snapshots, CPU for the diff at <code>SaveChanges()</code> time) that read-only
+  reporting/display queries never needed in the first place.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Model a <code>Student</code> / <code>Course</code> many-to-many relationship (a student can enroll
 in many courses, a course can have many students) using a join entity

@@ -1036,6 +1036,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2283,6 +2294,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2567,6 +2589,42 @@ round-trips correctly, not just that the in-memory <code>List&lt;TaskItem&gt;</c
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>enum Priority</code> is a value type backed by an <code>int</code>, not a distinct
+  runtime concept.</strong> <code>Priority.High</code> is just the integer <code>2</code> (declaration
+  order gives <code>Low = 0, Medium = 1, High = 2</code> by default) wearing a type
+  name — <code>Enum.Parse&lt;Priority&gt;</code> and <code>ToString()</code> work by consulting compiler-
+  generated metadata mapping names to those underlying integers. This is
+  exactly why <code>OrderBy(t =&gt; t.Done).ThenByDescending(t =&gt; t.Priority)</code>
+  sorts by priority correctly: it's comparing the underlying integers
+  (<code>High=2 &gt; Medium=1 &gt; Low=0</code>), not the display strings. It's also why an
+  invalid cast like <code>(Priority)99</code> compiles and runs without throwing —
+  enums aren't range-checked by the CLR unless you explicitly validate them
+  (as <code>ParsePriority</code>'s <code>switch</code> does for the string form).</li>
+<li><strong><code>tasks.Max(t =&gt; t.Id)</code> walks the whole list every call — an O(n) scan,
+  not a cached value.</strong> LINQ's <code>Max</code> has no memory of previous calls; each
+  invocation of <code>RunCommand("add", ...)</code> re-scans every existing task to
+  find the highest id. For this console app's scale that's irrelevant, but
+  it's the same deferred-evaluation cost model from Module 8 — worth
+  recognizing before reaching for <code>tasks.Max(...)</code> inside a genuinely large
+  or frequently-called loop.</li>
+<li><strong><code>RemoveAll</code> compacts the list's backing array in place</strong>, shifting
+  surviving elements down to fill gaps left by removed ones — a single O(n)
+  pass, not one array-shrink per removed element the way calling <code>Remove</code> in
+  a loop while iterating would be (which would also throw
+  <code>InvalidOperationException</code> for mutating a collection during
+  enumeration — a collection's enumerator checks a version counter on every
+  <code>MoveNext()</code> and throws the moment it detects the underlying list changed
+  mid-iteration).</li>
+<li><strong>The object initializer <code>{ Done = done }</code> compiles to a plain property
+  assignment after the constructor returns</strong> — <code>new TaskItem(id, title,
+  priority) { Done = done }</code> is exactly equivalent to constructing the
+  object, storing it in a compiler-generated temporary, calling
+  <code>set_Done(done)</code> on it, then yielding that temporary as the expression's
+  value. There's no special object-construction path involved beyond the
+  ordinary property setter call from Module 5.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Extend the task manager with an <code>"edit|&lt;id&gt;|&lt;newTitle&gt;"</code> command that
 changes a task's title in place (you'll need to make <code>Title</code> settable, or add

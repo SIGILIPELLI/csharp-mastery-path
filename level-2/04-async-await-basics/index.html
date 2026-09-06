@@ -1244,6 +1244,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2283,6 +2294,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2448,6 +2470,61 @@ deadlock. Prefer <code>await</code> all the way up the call stack.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>async</code> methods are rewritten by the compiler into a state machine
+  struct, before any JIT compilation happens.</strong> Roslyn transforms
+  <code>GetGreetingAsync</code> into a hidden <code>struct</code> implementing
+  <code>IAsyncStateMachine</code>, with a <code>MoveNext()</code> method containing your method
+  body split into numbered states at each <code>await</code>. Local variables that must
+  survive across an <code>await</code> (anything still "live" after resuming) become
+  fields of that struct instead of stack locals — because when the method
+  suspends, its actual stack frame is popped and the thread is freed; there
+  is no stack frame left to hold them. This is the real mechanism behind
+  "await suspends without blocking a thread": the method's state is moved
+  into a heap-allocated (usually) object, the calling thread returns
+  immediately with an incomplete <code>Task</code>, and <code>MoveNext()</code> gets called again
+  later — from a thread-pool thread — to resume execution from the saved
+  state.</li>
+<li><strong><code>await</code> compiles to registering a continuation on the awaited task's
+  <code>awaiter</code>, not a busy-wait or a blocking call.</strong> <code>await Task.Delay(1000)</code>
+  calls <code>GetAwaiter()</code> on the task, checks <code>IsCompleted</code>, and if not yet
+  complete, calls <code>OnCompleted(continuation)</code> — where <code>continuation</code> is a
+  delegate wrapping <code>MoveNext()</code> on the state machine — then returns control
+  to the caller. <code>Task.Delay</code>'s internal timer, when it fires, invokes that
+  continuation, which schedules <code>MoveNext()</code> to run on a thread-pool thread
+  via <code>SynchronizationContext.Post</code> (in UI apps) or directly on the thread
+  pool (console/server apps, where there's no captured sync context) —
+  explaining exactly why <code>Task.Delay(1000)</code> doesn't tie up a thread for a
+  second: no thread exists between the <code>await</code> and the timer callback.</li>
+<li><strong><code>Task&lt;T&gt;</code> wraps a result <em>and</em> a captured exception, replayed at <code>await</code>
+  time.</strong> When <code>DivideAsync</code> throws, the exception is caught by the compiler-
+  generated state machine and stored on the <code>Task</code> (marking it <code>Faulted</code>)
+  rather than propagating immediately. <code>await</code>ing a faulted task re-throws
+  that stored exception (unwrapped from its internal <code>AggregateException</code>
+  wrapper specifically by <code>await</code>, unlike <code>.Result</code>, which surfaces the raw
+  <code>AggregateException</code>) — this is the mechanism, not magic, behind "an
+  exception thrown inside an awaited async method surfaces at the await call
+  site like a normal throw."</li>
+<li><strong><code>Task.WhenAll</code> returns a single task that completes once every input
+  task's continuation has fired — concurrency comes from the tasks already
+  running, not from <code>WhenAll</code> itself.</strong> Each <code>FetchLengthAsync(url)</code> call
+  starts running (and hits its own <code>await Task.Delay</code>) the instant it's
+  invoked in the <code>Select</code>, before <code>WhenAll</code> is ever called — <code>WhenAll</code> merely
+  subscribes one continuation to fire when the last of the already-in-flight
+  tasks finishes, which is why the three 200ms delays overlap into roughly
+  200ms total rather than serializing to 600ms.</li>
+<li><strong>Blocking with <code>.Result</code>/<code>.Wait()</code> can deadlock specifically because of
+  the captured <code>SynchronizationContext</code>.</strong> In WPF/WinForms/classic ASP.NET,
+  <code>await</code> by default captures the current <code>SynchronizationContext</code> and
+  schedules the continuation back onto it (typically the UI thread or an
+  ASP.NET request thread) — if that same thread is currently blocked calling
+  <code>.Result</code> and waiting for the task to finish, the continuation that would
+  complete the task can never run on that occupied thread, and the two sides
+  deadlock permanently. <code>ConfigureAwait(false)</code> — commonly seen in library
+  code — tells the state machine not to capture that context, avoiding the
+  deadlock at the cost of resuming on an arbitrary thread-pool thread instead.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write <code>DownloadAllAsync(string[] urls)</code> that simulates downloading each URL
 (via <code>Task.Delay</code> proportional to the URL's length) and returns a

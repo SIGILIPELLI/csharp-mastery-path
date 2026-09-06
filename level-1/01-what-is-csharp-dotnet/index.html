@@ -784,6 +784,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2283,6 +2294,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2474,6 +2496,40 @@ debugging, and refactoring — pick one and move on.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>"Compile and run" hides three distinct stages, each worth knowing:</p>
+<ol>
+<li><strong>Roslyn (the C# compiler) → IL.</strong> <code>dotnet build</code> invokes Roslyn, which
+   parses your <code>.cs</code> files, type-checks them, and emits <strong>IL</strong> (Intermediate
+   Language, also called MSIL/CIL) plus metadata into an <strong>assembly</strong> — the
+   <code>.dll</code> you saw in <code>bin/Debug/net8.0/</code>. IL is a stack-based bytecode, not
+   machine code — the same <code>HelloWorld.dll</code> could in principle run on any CPU
+   architecture the CLR supports, because the CPU-specific step hasn't
+   happened yet.</li>
+<li><strong>CLR startup.</strong> When you run <code>dotnet bin/Debug/net8.0/HelloWorld.dll</code>, the
+   <code>dotnet</code> executable is really a generic host (<code>hostfxr</code>) that locates the
+   matching CLR (<code>coreclr</code>) version from your installed runtimes, loads it
+   into the process, and hands it the assembly. The CLR reads the assembly's
+   metadata to find the entry point method your top-level statements compiled
+   into (a hidden <code>&lt;Main&gt;$</code> method on a compiler-generated <code>Program</code> class —
+   this is why the "explicit" and "top-level" forms are interchangeable at
+   the IL level).</li>
+<li><strong>JIT compilation, method by method.</strong> The CLR does not translate the
+   whole assembly to native code up front. Each method is JIT-compiled the
+   <em>first time it's called</em> — <code>Console.WriteLine</code>'s IL is turned into x86-64
+   or ARM64 machine code on that first call, and the CLR patches the call
+   site so subsequent calls jump straight to the cached native code. This is
+   why a program's very first line can feel marginally slower than later
+   lines doing similar work, and it's the reason <strong>ReadyToRun (R2R)</strong> and
+   <strong>Native AOT</strong> publishing modes exist — they move some or all of this
+   translation to build time instead of paying for it on every process
+   start.</li>
+</ol>
+<p>The <code>.csproj</code> file matters here too: its <code>&lt;TargetFramework&gt;net8.0&lt;/TargetFramework&gt;</code>
+element is what tells the compiler which reference assemblies (the framework's
+API surface) to compile against, and what tells the host which CLR version to
+load at run time — a mismatch between the two is where "it builds but won't
+run" errors come from.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Create a new console project called <code>Greeter</code>. Write a program using
 top-level statements that reads command-line arguments and prints

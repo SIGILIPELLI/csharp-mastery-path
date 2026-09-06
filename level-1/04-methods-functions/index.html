@@ -890,6 +890,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2327,6 +2338,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2501,6 +2523,35 @@ the call site — no need for a custom class just to return two values.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>ref</code>/<code>out</code> pass a managed pointer, not a copy.</strong> Under the hood both
+  compile to the same IL mechanism — a byref parameter — the difference
+  between them (<code>out</code> must be assigned, <code>ref</code> must be initialized first) is
+  purely a <strong>compile-time definite-assignment rule</strong> enforced by Roslyn; the
+  JIT-generated code for <code>ref int x</code> and <code>out int x</code> is identical. This is
+  why <code>ref</code>/<code>out</code> avoid copying a large <code>struct</code> on every call: the callee
+  operates on the caller's actual stack slot through a pointer, instead of
+  the value being pushed onto the callee's frame by value.</li>
+<li><strong><code>params</code> allocates an array at the call site.</strong> <code>Average(1, 2, 3, 4, 5)</code>
+  is rewritten by the compiler into <code>Average(new int[] { 1, 2, 3, 4, 5 })</code> —
+  a real heap allocation happens on every call unless you pass an
+  already-existing array. In hot paths this is a known source of GC
+  pressure, which is why performance-sensitive framework APIs increasingly
+  offer <code>ReadOnlySpan&lt;T&gt;</code>-based overloads instead of <code>params T[]</code>.</li>
+<li><strong>Tuples (<code>(int min, int max)</code>) are a <code>System.ValueTuple</code> struct, not a
+  class.</strong> Because it's a value type, returning <code>(mn, mx)</code> copies the two
+  ints inline in the return value — no heap allocation, unlike the older
+  <code>Tuple&lt;T1,T2&gt;</code> reference type it replaced. The element names (<code>min</code>,
+  <code>max</code>) exist only in compiler metadata (<code>TupleElementNamesAttribute</code>) for
+  IntelliSense and readability; at the IL level the fields are just
+  <code>Item1</code>/<code>Item2</code>, which is why tuple field names don't survive across
+  assembly boundaries without that attribute being present.</li>
+<li><strong>Expression-bodied members (<code>=&gt;</code>) are purely syntactic sugar</strong> — Roslyn
+  emits the exact same method body IL as the equivalent <code>{ return ...; }</code>
+  block. There is no runtime distinction between the two forms; choosing one
+  over the other is a readability decision only.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a method <code>TryDivide(int a, int b, out int result)</code> that returns <code>false</code>
 and sets <code>result</code> to <code>0</code> if <code>b</code> is zero, otherwise returns <code>true</code> with the

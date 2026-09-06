@@ -1749,6 +1749,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2261,6 +2272,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2424,6 +2446,58 @@ measurably reduces GC pressure.</p>
 strings), <code>UsingSpan</code> shows dramatically less. Never trust a performance
 claim (including this module's) without a benchmark like this backing it up
 on your actual workload.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Every <code>class</code> array allocation the GC must "track individually" refers
+  to a real, concrete cost: the generational garbage collector walks live
+  object graphs to decide what survives a collection.</strong> A Gen 0 collection
+  (Module 5's generational model) works by tracing reachability from
+  "roots" — stack references, statics, CPU registers — through every live
+  object graph; 1000 separate <code>PointClass</code> heap objects means 1000 nodes the
+  tracer visits (plus following any references <em>they</em> hold), whereas a
+  <code>PointStruct[1000]</code> array is a single object as far as the GC is
+  concerned — its fields are inlined bytes with no independent identity to
+  trace. This is the mechanism-level reason "GC pressure" is a real,
+  measurable thing, not a vague concern: more live objects means more nodes
+  a collection cycle has to walk.</li>
+<li><strong><code>Span&lt;T&gt;</code> is a <code>ref struct</code> specifically so the compiler can guarantee it
+  never outlives the memory it points into.</strong> A <code>ref struct</code> can only ever
+  live on the stack — the compiler forbids it as a field of a heap-allocated
+  class, as a generic type argument, or as the state captured by an async
+  state machine (Module 4 of Level 2), because none of those could safely
+  guarantee the underlying buffer (a stack frame, or <code>stackalloc</code> memory)
+  still exists when the <code>Span</code> is eventually used. This restriction is what
+  lets <code>Span&lt;T&gt;</code> internally hold a raw, unmanaged-style pointer plus a
+  length with zero runtime safety overhead beyond ordinary array bounds
+  checks — the type system itself, not a runtime check, prevents dangling
+  references.</li>
+<li><strong><code>stackalloc int[] { 1, 2, 3 }</code> allocates directly on the current
+  method's stack frame, memory the CLR never asks the GC to manage at
+  all.</strong> This is qualitatively different from <code>new int[3]</code>, which is always
+  a heap allocation tracked by the collector; <code>stackalloc</code> memory is
+  reclaimed the instant the method returns, the same automatic, zero-cost
+  cleanup ordinary local variables get — which is exactly why it can only be
+  wrapped in a <code>Span&lt;T&gt;</code>/<code>ReadOnlySpan&lt;T&gt;</code> (never returned as a raw pointer
+  from the method, and never boxed into an <code>object</code>) — nothing else in the
+  type system can safely represent "valid only until this stack frame
+  pops."</li>
+<li><strong><code>in BigStruct s</code> avoids the copy but the JIT sometimes still defensively
+  copies internally</strong> — as covered for <code>readonly struct</code> in Module 5 of
+  Level 1, if the struct isn't marked <code>readonly</code> and the callee calls any
+  instance method on <code>s</code>, the JIT can't prove that method won't mutate the
+  referenced data, so it silently copies the struct into a local before the
+  call anyway — meaning <code>in</code> on a non-<code>readonly</code> struct with method calls
+  inside the callee can, counter-intuitively, still pay the full copy cost
+  it was meant to avoid.</li>
+<li><strong>BenchmarkDotNet's <code>[MemoryDiagnoser]</code> reads allocation counts from the
+  CLR's own GC instrumentation (<code>GC.GetAllocatedBytesForCurrentThread()</code>),
+  not from static code analysis</strong> — it runs each benchmark method many
+  times in an isolated process, snapshotting the thread's allocated-byte
+  counter before and after, which is precisely why it can report the exact
+  difference between <code>Split</code>'s array-plus-strings allocation and the
+  span-based version's near-zero allocation: it's measuring the real
+  garbage collector's bookkeeping, not estimating from source code.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a method <code>CountWords(ReadOnlySpan&lt;char&gt; text)</code> that counts
 whitespace-separated words without calling <code>Split</code> (walk the span,

@@ -1149,6 +1149,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2261,6 +2272,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2460,6 +2482,42 @@ null check.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Every interface call and <code>virtual</code>/<code>override</code> call is a <code>callvirt</code> — a
+  vtable lookup, not a direct jump.</strong> For a <code>virtual</code> method, each type's
+  method table (created once per type when it's first loaded) has a slot for
+  that method, and <code>Dog</code>/<code>Cat</code> overriding <code>Speak()</code> just means their method
+  tables point that slot at their own implementation. Calling <code>pet.Speak()</code>
+  through an <code>Animal</code>-typed reference compiles to: read the object's method
+  table pointer (stored in its object header), index into the slot, jump to
+  whatever address is there — resolved at run time based on the object's
+  <em>actual</em> type, not the reference's declared type. This indirection is
+  what makes runtime polymorphism possible, and it's marginally slower than
+  a non-virtual call (an extra memory read) — usually irrelevant, but the
+  reason <code>sealed</code> classes/methods exist: they let the JIT skip the vtable
+  lookup and inline or devirtualize the call when it can prove the concrete
+  type statically.</li>
+<li><strong>Interfaces use a separate interface-method-table mechanism, since a
+  class can implement many interfaces but has only one class hierarchy.</strong>
+  The CLR maintains, per type, a mapping from each implemented interface's
+  methods to that type's concrete implementations — dispatching
+  <code>shape.Area()</code> through an <code>IShape</code>-typed reference looks up <code>Circle</code>'s (or
+  <code>Rectangle</code>'s) interface map to find the right vtable slot, then jumps
+  there, same as the class case but through one more level of indirection.</li>
+<li><strong>Default interface methods are compiled directly into the interface's own
+  method table, called via a distinct <code>constrained.callvirt</code> sequence</strong> —
+  <code>ConsoleLogger</code> genuinely has no <code>LogError</code> method of its own; the CLR
+  routes the call to <code>ILogger</code>'s default implementation only when no
+  overriding implementation exists on the concrete type, resolved once at
+  JIT time per call site (not re-checked on every call).</li>
+<li><strong><code>is Circle c</code> compiles to an <code>isinst</code> type check followed by a
+  conditional store</strong>, exactly like the pattern-matching Module 3 covered —
+  the CLR walks the object's type-hierarchy metadata (and interface map, for
+  interface type tests) to answer "is this object's runtime type <code>Circle</code>
+  or a <code>Circle</code>-derived type," which is a genuine runtime cost proportional
+  to hierarchy depth, unlike a non-polymorphic direct field/method access.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Define an <code>IPayable</code> interface with <code>decimal CalculatePay()</code>. Implement it
 on <code>SalariedEmployee</code> (fixed monthly salary) and <code>HourlyEmployee</code> (hours

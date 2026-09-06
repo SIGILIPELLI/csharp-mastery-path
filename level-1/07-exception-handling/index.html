@@ -952,6 +952,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2283,6 +2294,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2494,6 +2516,46 @@ in more depth.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Throwing an exception is expensive — much more than a <code>return</code> or a
+  bool-based <code>TryX</code> failure.</strong> When <code>throw</code> executes, the CLR captures a
+  stack trace by walking the call stack frame by frame, allocates the
+  exception object on the heap, and then performs <strong>two-pass exception
+  handling</strong>: pass one walks up the stack looking for a matching <code>catch</code>
+  filter (evaluating <code>when</code> clauses as it goes, without unwinding anything
+  yet), and only once a handler is found does pass two actually unwind the
+  stack, running <code>finally</code> blocks along the way, down to that handler. This
+  two-pass design is <em>why</em> <code>catch (Exception e) when (...)</code> can inspect state
+  from deeper frames before the stack is torn down — those frames are still
+  alive during the search pass. It's also why hot-path "expected failure"
+  logic (parsing user input, probing a dictionary) should prefer <code>TryParse</code>/
+  <code>TryGetValue</code> over <code>try</code>/<code>catch</code> — the exception path costs orders of
+  magnitude more CPU than a bool check.</li>
+<li><strong><code>finally</code> blocks are protected regions in the CLR's exception table</strong>,
+  not something the JIT re-derives from control flow — the compiled method
+  carries metadata describing which IL ranges are <code>try</code> regions and which
+  <code>finally</code>/<code>catch</code> handler each maps to. This is also why you can't safely
+  <code>return</code> out of a <code>finally</code> in most languages that support this pattern —
+  C# disallows a bare <code>goto</code>/<code>return</code> jumping <em>into</em> a try region, and any
+  jump <em>out</em> of one triggers the runtime to still run intervening <code>finally</code>
+  blocks before completing.</li>
+<li><strong><code>using</code> compiles to a <code>try</code>/<code>finally</code> calling <code>Dispose()</code>.</strong> The compiler
+  desugars <code>using (var writer = ...)  { ... }</code> into <code>try { ... } finally {
+  if (writer != null) writer.Dispose(); }</code> — literally the same IL you'd get
+  writing that by hand. <code>Dispose()</code> is a deterministic, synchronous cleanup
+  hook the CLR itself does not call automatically; it exists specifically
+  for unmanaged resources (file handles, sockets, database connections) that
+  the garbage collector doesn't know how to reclaim promptly, since the GC
+  only tracks managed memory pressure, not OS handles.</li>
+<li><strong>Custom exceptions add virtual dispatch overhead to <code>catch</code> matching.</strong>
+  When the CLR searches for a matching handler, it checks the exception's
+  runtime type against each <code>catch</code> clause's declared type using the same
+  <code>isinst</code> type-check machinery as pattern matching (Module 3) — walking the
+  inheritance chain from your <code>InsufficientFundsException</code> up through
+  <code>Exception</code> until it finds (or fails to find) a match, in source order,
+  top to bottom.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a method <code>SafeDivide(int a, int b)</code> that returns the division result,
 but catches <code>DivideByZeroException</code> internally and returns <code>0</code> instead of

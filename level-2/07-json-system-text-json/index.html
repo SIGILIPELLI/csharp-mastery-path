@@ -1350,6 +1350,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2327,6 +2338,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2501,6 +2523,50 @@ to model fully:</p>
 </code></pre></div>
 <p><code>JsonSerializer</code> throws <code>JsonException</code> (not a generic exception) on invalid
 input, so you can catch it specifically without swallowing unrelated bugs.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>System.Text.Json</code> is built on <code>Utf8JsonReader</code>/<code>Utf8JsonWriter</code>, which
+  parse and emit UTF-8 bytes directly — never decoding to a UTF-16 <code>string</code>
+  intermediate.</strong> Most JSON libraries historically read bytes, decoded them
+  to <code>string</code>/<code>char</code> (UTF-16 in .NET), then parsed that string. <code>Utf8JsonReader</code>
+  is a <code>ref struct</code> state machine that scans raw UTF-8 byte spans token by
+  token (<code>{</code>, <code>"key"</code>, <code>:</code>, numbers, ...) with zero allocation for the
+  reader itself — this is the specific design decision behind
+  <code>System.Text.Json</code>'s performance advantage over older reflection-and-
+  string-based JSON libraries, and why it's a <code>ref struct</code> at all: that
+  restricts it to stack-only use, which is precisely what lets it hold a
+  <code>Span&lt;byte&gt;</code> over the input safely without the GC needing to track it.</li>
+<li><strong><code>JsonSerializer.Serialize&lt;T&gt;</code> compiles a reflection-based (or, with
+  source generators, compile-time-generated) property accessor plan once per
+  type, then reuses it.</strong> The first time you serialize a given <code>Person</code>
+  shape, the serializer inspects its properties via reflection, builds and
+  caches metadata describing how to read each one — subsequent calls reuse
+  that cached plan rather than re-reflecting every time. <code>record</code> types get
+  this metadata essentially for free because the compiler already generates
+  public positional properties with backing fields, which is exactly what
+  the serializer's reflection walk is looking for.</li>
+<li><strong><code>[JsonPropertyName]</code>/<code>[JsonIgnore]</code> are read once during that metadata-
+  building pass, not re-checked per property per call</strong> — the compiled
+  serialization plan bakes in the renamed key or the "skip this member"
+  decision at plan-build time, so attribute lookup cost is paid once per
+  type, not once per object instance serialized.</li>
+<li><strong><code>JsonDocument.Parse</code> builds a lazy, immutable DOM over a <em>pooled</em> byte
+  buffer, which is why it implements <code>IDisposable</code>.</strong> Unlike deserializing
+  into your own class (which copies data into new managed objects),
+  <code>JsonDocument</code> keeps the underlying UTF-8 bytes it parsed in a rented
+  buffer from <code>ArrayPool&lt;byte&gt;</code> and hands back <code>JsonElement</code> structs that
+  are thin views into that buffer — <code>GetString()</code>/<code>GetInt32()</code> decode lazily
+  on access rather than up front. <code>Dispose()</code> returns the rented buffer to
+  the pool; forgetting the <code>using</code> doesn't corrupt anything immediately
+  (the GC eventually reclaims it) but does prevent that buffer from being
+  reused, adding avoidable allocation pressure under load.</li>
+<li><strong>Deserialization failures throw <code>JsonException</code> from deep inside the
+  <code>Utf8JsonReader</code> state machine</strong> the moment a byte sequence doesn't match
+  any valid JSON token transition — the exception's <code>Path</code>/<code>LineNumber</code>/
+  <code>BytePositionInLine</code> properties come directly from the reader's own
+  position tracking as it scanned, which is why JSON parse errors in .NET
+  can point precisely at the offending character.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Model a small <code>Recipe</code> record with <code>Name</code>, <code>int ServingSize</code>, and
 <code>List&lt;string&gt; Ingredients</code>. Serialize a list of three recipes to a pretty

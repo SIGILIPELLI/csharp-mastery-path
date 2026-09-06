@@ -1996,6 +1996,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2283,6 +2294,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2480,6 +2502,50 @@ time; parsing the coverage summary and failing the build below a threshold
 <p><code>[Trait]</code> tags let developers run just the fast unit suite locally
 (sub-second feedback) while CI still runs the full pyramid including slower
 container-backed integration tests.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>[CollectionDefinition]</code>/<code>[Collection("Database")]</code> change xUnit's
+  fundamental parallelization unit, not just fixture sharing.</strong> By default,
+  xUnit runs different test <em>classes</em> in parallel (each on its own
+  thread-pool worker) but tests within one class sequentially; putting
+  multiple classes in the same named <code>[Collection]</code> forces xUnit to run all
+  of them sequentially, on the same logical test-runner thread, specifically
+  so they can safely share one <code>DatabaseFixture</code>/container instance without
+  racing on <code>IAsyncLifetime.InitializeAsync()</code>/<code>DisposeAsync()</code> — this is a
+  real scheduling decision inside the xUnit runner, not just documentation
+  of intended usage, which is why forgetting to add classes to a shared
+  collection when they truly share state is a common source of flaky,
+  order-dependent test failures.</li>
+<li><strong><code>IAsyncLifetime</code> on a fixture is xUnit's async-aware alternative to a
+  constructor/<code>Dispose()</code>, needed because starting a Testcontainers
+  container is inherently an async operation.</strong> xUnit special-cases any
+  fixture implementing <code>IAsyncLifetime</code> and <code>await</code>s <code>InitializeAsync()</code>
+  before running any test depending on it, and <code>DisposeAsync()</code> after the
+  last one finishes — internally, <code>PostgreSqlContainer.StartAsync()</code> talks
+  to the local Docker daemon's HTTP API (create container, start it, poll
+  until the exposed port accepts connections) using ordinary async I/O, the
+  same suspension-and-resume state-machine mechanism from Module 04 of
+  Level 2, just against a Docker socket instead of a network request.</li>
+<li><strong><code>dotnet test --collect:"XPlat Code Coverage"</code> instruments your compiled
+  IL at test-run time via a data collector plugged into <code>dotnet test</code>'s
+  hosting process, tracking which IL instructions actually executed.</strong> The
+  coverage collector (Coverlet, under the hood of the XPlat integration)
+  hooks into the CLR's profiling APIs to record, per method and per branch,
+  whether it was hit during the test run — this is why coverage numbers can
+  differ subtly between a <code>Debug</code> and <code>Release</code> build: the JIT's inlining
+  and dead-code elimination in <code>Release</code> mode can make certain branches
+  genuinely unreachable in the compiled output, changing what "100% branch
+  coverage" even means for that build configuration.</li>
+<li><strong><code>--filter "Category=Unit"</code> filters at test-discovery time, before any
+  test class is even constructed</strong> — the VSTest/xunit runner reads each
+  test method's <code>[Trait]</code> metadata (attribute data embedded in the compiled
+  assembly, discoverable via reflection exactly like <code>[Fact]</code>/<code>[Theory]</code>
+  from Module 06 of Level 3) and excludes non-matching tests from the run
+  entirely, so a slow <code>BookRepositoryTests</code> fixture's <code>InitializeAsync()</code>
+  (starting a whole Postgres container) never runs at all when filtered out
+  — the cost savings come from never constructing the fixture, not from
+  skipping already-started work.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Add a GitHub Actions workflow to the Level 3 REST API project (module 10)
 that restores, builds, and runs <code>dotnet test</code> on every push and pull

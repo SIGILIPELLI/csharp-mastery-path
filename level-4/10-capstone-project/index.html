@@ -2162,6 +2162,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2274,6 +2285,17 @@
     <span class="md-ellipsis">
       
         What this capstone demonstrates, module by module
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
       
     </span>
   </a>
@@ -2529,6 +2551,56 @@ real SQLite/Postgres instance for the outbox flow.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>The <code>Orders API</code> and <code>Inventory Worker</code> are two entirely separate CLR
+  processes with independent GCs, JIT-compiled code, and memory heaps —
+  there is zero shared managed state between them, which is exactly why the
+  outbox pattern (persisting intent to a shared <em>database</em>, not shared
+  memory) is the only safe way to hand off work across that boundary.</strong>
+  Everything Module 05 of Level 3 and Module 05 of Level 4 covered about one
+  process's generational GC, thread pool, and allocation behavior applies
+  independently to each container — a GC pause in <code>Inventory Worker</code> has no
+  effect whatsoever on <code>Orders API</code>'s request latency, and vice versa,
+  because they don't share an address space at all.</li>
+<li><strong><code>OutboxPublisherService.ExecuteAsync</code>'s <code>_scopeFactory.CreateScope()</code>
+  inside the polling loop creates a fresh <code>IServiceScope</code> — and therefore a
+  fresh <code>OrdersDbContext</code> — on every single poll iteration, deliberately.</strong>
+  Per Module 03 of Level 3, <code>DbContext</code> is scoped and not thread-safe/
+  long-lived-safe; a <code>BackgroundService</code> has no per-request scope handed to
+  it automatically (there's no HTTP request driving it), so it must
+  construct and dispose its own scope explicitly each iteration — this is
+  the captive-dependency problem from Module 03, solved the same way: never
+  hold a scoped service across the <code>BackgroundService</code>'s entire (effectively
+  singleton) lifetime.</li>
+<li><strong><code>RequireAuthorization()</code> on <code>POST /orders</code> and its absence on <code>GET
+  /orders/{id}</code> means the JWT validation middleware (Module 02's signature/
+  claims verification) only actually executes its enforcement step for the
+  protected route — <code>UseAuthentication()</code> still runs for every request
+  (populating <code>HttpContext.User</code> if a valid token is present), but only the
+  authorization filter attached to the <code>POST</code> endpoint's pipeline
+  short-circuits an unauthenticated call</strong>, which is precisely why the test
+  <code>PostOrder_WithoutAuth_ReturnsUnauthorized</code> targets <code>POST</code> specifically —
+  a matching test against the unprotected <code>GET</code> would (correctly) never see
+  a 401 no matter what credentials are supplied.</li>
+<li><strong>The Docker Compose <code>depends_on: [orders-api]</code> only sequences container
+  <em>start</em>, not the SQLite file or migrations being ready — this is the same
+  ordering-versus-readiness gap Module 07 called out for Postgres</strong>, and
+  it's why a genuinely reliable version of this capstone needs the
+  <code>Inventory Worker</code>'s first poll iteration to tolerate a not-yet-existing
+  <code>orders.db</code> (a caught exception and retry-after-delay, or an explicit
+  readiness dependency) rather than assuming the file exists the instant
+  its own container process starts.</li>
+<li><strong>Swapping outbox-polling for a real message broker changes the delivery
+  <em>timing</em> guarantee from "eventually, bounded by poll interval" to
+  "near-immediately, push-based," but the atomicity guarantee underpinning
+  correctness — the order row and its associated event committing together
+  in one database transaction (Module 03) — stays identical either way</strong>;
+  the broker only replaces the <em>transport</em> between "durably recorded intent
+  to publish" and "consumer receives it," which is exactly why outbox-based
+  designs migrate to a real broker without redesigning the write path, only
+  the publisher that drains the outbox table.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Build the two services and the Docker Compose file described above end to
 end: <code>POST /orders</code> on the Orders API (with a valid JWT from a <code>/login</code>

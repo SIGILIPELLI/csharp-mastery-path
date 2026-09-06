@@ -1788,6 +1788,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2283,6 +2294,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2480,6 +2502,55 @@ call, rather than assigning each field by hand.</p>
 <a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">    </span><span class="p">}</span>
 <a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="p">}</span>
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>Book</code> being a <code>record</code> with <code>init</code>-only properties makes <code>book with { Id
+  = 0 }</code> allocate a genuinely new object per request — the copy-constructor
+  mechanism from Module 8 of Level 2 running on every single <code>AddAsync</code>
+  call.</strong> Because each incoming request gets its own deserialized <code>Book</code>
+  (<code>System.Text.Json</code>'s per-type cached plan from Module 07 materializing a
+  fresh instance from the request body), and <code>with</code> always clones rather
+  than mutates, there's no shared mutable state between concurrent requests
+  even under heavy load — a property this API gets essentially for free from
+  choosing <code>record</code> over a mutable <code>class</code>.</li>
+<li><strong><code>AddDbContext&lt;LibraryDbContext&gt;</code> registers the context as <code>Scoped</code> by
+  default — one instance per HTTP request, matching the "scope per request"
+  mechanism from Module 03.</strong> This is exactly why <code>EfBookRepository</code>,
+  itself registered <code>AddScoped</code>, safely shares one <code>_db</code> across the whole
+  request without any locking: nothing else touches that specific
+  <code>DbContext</code> instance concurrently, since ASP.NET Core guarantees each
+  request gets its own isolated scope and therefore its own <code>DbContext</code>.
+  This also means <code>DbContext</code> is <em>not</em> thread-safe by design and must never
+  be captured into a singleton — the exact "captive dependency" trap Module
+  03 covered, just with <code>DbContext</code> as the scoped service being captured.</li>
+<li><strong><code>_db.Books.FindAsync(id)</code> checks the context's own change-tracker cache
+  before touching the database at all.</strong> <code>FindAsync</code> (unlike <code>FirstOrDefaultAsync</code>)
+  first looks for an already-tracked entity with that primary key in the
+  current <code>DbContext</code>'s in-memory identity map (Module 02's change-tracker
+  snapshot mechanism); only on a cache miss does it issue a real <code>SELECT ...
+  WHERE Id = @id</code> against SQLite. Within a single request that calls
+  <code>FindAsync</code> once and later <code>SaveChangesAsync()</code>, this identity map is what
+  guarantees you're mutating the <em>same</em> tracked object the SQL update will
+  be diffed against.</li>
+<li><strong><code>CurrentValues.SetValues(book with { Id = id })</code> copies scalar property
+  values into the tracked entity's shadow state without replacing the
+  tracked object reference</strong> — this is a targeted API operating directly on
+  EF Core's change-tracking snapshot (the same mechanism from Module 02),
+  which is why it correctly triggers <code>SaveChangesAsync()</code> to emit an
+  <code>UPDATE</code> only for columns whose values actually differ, rather than
+  detaching the old entity and attaching a wholesale replacement (which
+  would confuse the tracker about what changed).</li>
+<li><strong>The middleware-wraps-routing-wraps-repository-call chain here is the
+  full pipeline from Module 01 and Module 08 composed end to end</strong> — the
+  request-logging <code>app.Use(...)</code> lambda is the outermost nested delegate;
+  it calls <code>next()</code>, which runs routing, model binding, and finally your
+  <code>MapPost</code> lambda, which itself <code>await</code>s into <code>EfBookRepository.AddAsync</code>
+  — an async call suspending and resuming per Module 04's state-machine
+  mechanism — before control unwinds back out through routing and finally
+  back to the logging middleware's <code>Stopwatch.ElapsedMilliseconds</code>
+  read, which only sees an accurate elapsed time because it genuinely waited
+  for that entire nested chain to complete via <code>await next()</code>.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Extend the API with a <code>GET /books/search?author=&amp;fromYear=&amp;toYear=</code> endpoint
 that filters using LINQ (<code>Where</code> clauses composed conditionally based on

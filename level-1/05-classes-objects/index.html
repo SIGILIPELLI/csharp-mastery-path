@@ -885,6 +885,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2261,6 +2272,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2468,6 +2490,44 @@ shared across every object:</p>
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>new Person(...)</code> triggers a heap allocation from the GC's "generation 0"
+  budget.</strong> The CLR's garbage collector organizes the heap into generations
+  (0, 1, 2, plus a separate Large Object Heap for objects ≥ 85,000 bytes).
+  New objects — <code>alice</code>, <code>bob</code>, every <code>Counter</code> — are allocated in <strong>Gen 0</strong>,
+  a small, fast-to-collect region. A Gen 0 collection is cheap precisely
+  because most objects (like short-lived <code>Person</code> instances in a loop) die
+  young and never get promoted; objects that survive a collection are
+  promoted to Gen 1, then Gen 2, on the theory (borne out empirically) that
+  an object that's lived a while is likely to keep living. Your <code>Person</code>
+  fields (<code>Name</code>, <code>Age</code>) live inside that one heap block, laid out
+  sequentially after an object header (containing a sync block index and a
+  method table pointer).</li>
+<li><strong>Auto-properties compile to a field plus two methods.</strong> <code>public double
+  Balance { get; private set; }</code> is not a language-level concept the CLR
+  understands — Roslyn generates a <code>private double &lt;Balance&gt;k__BackingField</code>
+  and two ordinary methods, <code>get_Balance()</code> and <code>set_Balance(double value)</code>,
+  each marked with the <code>specialname</code> IL flag so tools display them as a
+  property. Reading <code>account.Balance</code> from outside the class compiles to a
+  <code>callvirt get_Balance()</code> — a real (virtual, unless sealed/non-virtual)
+  method call, not direct field access, which is why properties can add
+  validation or logging later without breaking callers.</li>
+<li><strong><code>readonly struct Point</code> avoids defensive copies.</strong> Without <code>readonly</code>,
+  the JIT must assume any method call on a <code>struct</code> field or parameter could
+  mutate it, and — when the struct is accessed through a <code>readonly</code>
+  <em>reference</em> (e.g. <code>in</code> parameters, or a <code>readonly</code> field of another type)
+  — it defensively copies the whole struct before calling any instance
+  method on it, just in case. Marking the struct itself <code>readonly</code> tells the
+  compiler no method mutates state, eliminating those hidden copies.</li>
+<li><strong><code>struct</code> vs <code>class</code> changes where <code>Rectangle r = other;</code> copies data.</strong>
+  Assigning one <code>class</code> variable to another copies a 4- or 8-byte reference;
+  assigning one <code>struct</code> variable to another copies every field, bitwise.
+  For a large <code>struct</code> passed around by value repeatedly, that's real
+  work the JIT has to do on every assignment and every method call — the
+  reason the framework's own guidance caps "should be a struct" at roughly
+  16 bytes.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a <code>Book</code> class with private-set properties <code>Title</code>, <code>Author</code>, and
 <code>PagesRead</code> (starting at 0), a constructor taking <code>title</code> and <code>author</code>, a

@@ -1676,6 +1676,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2283,6 +2294,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2496,6 +2518,56 @@ middleware, DI container — in memory, backed by an in-process <code>TestServer
 repository, an external email sender) with in-memory fakes before the app
 boots, so integration tests stay hermetic — no real database or network
 calls needed.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>Mock&lt;IOrderRepository&gt;()</code> generates a real class implementing
+  <code>IOrderRepository</code> at run time, using <code>System.Reflection.Emit</code> (or
+  <code>DispatchProxy</code>-style dynamic type generation) — Moq is not simulating
+  the interface, it is compiling one on the fly.</strong> The first time you mock a
+  given interface, Moq's <code>Castle.DynamicProxy</code> dependency emits IL for a new
+  type into a dynamically generated assembly loaded into your process,
+  implementing every interface member by forwarding into Moq's own
+  interception logic; <code>.Object</code> hands you an actual instance of that
+  generated type. This is exactly why Moq can only mock interfaces and
+  non-sealed classes with virtual members — it needs a real vtable slot
+  (Module 1's dispatch mechanism) to intercept, and <code>sealed</code>/non-virtual
+  members give it nothing to override.</li>
+<li><strong><code>Setup(...)</code> and <code>Verify(...)</code> both work against a recorded call log,
+  matched by the same expression-tree machinery EF Core's <code>IQueryable</code>
+  relies on.</strong> <code>r =&gt; r.Find(existing.Id)</code> is captured as an
+  <code>Expression&lt;Func&lt;...&gt;&gt;</code>, not executed directly — Moq walks that expression
+  to identify which method and argument pattern you're describing, then
+  configures the dynamically generated proxy to recognize matching calls at
+  invocation time and return the stubbed value. <code>Verify</code> replays the same
+  matching logic against Moq's internal invocation history (every call the
+  proxy actually received, recorded as it happened) to check the count
+  matches <code>Times.Once</code>/<code>Times.Never</code>.</li>
+<li><strong><code>WebApplicationFactory&lt;Program&gt;</code> builds and hosts a genuine, in-memory
+  ASP.NET Core <code>TestServer</code> — the same middleware pipeline construction from
+  Module 1, just fed requests through an in-memory transport instead of a
+  real Kestrel socket.</strong> <code>CreateClient()</code> returns an <code>HttpClient</code> wired to a
+  custom <code>HttpMessageHandler</code> that hands requests directly to <code>TestServer</code>'s
+  in-process pipeline, bypassing TCP/sockets entirely — every route match,
+  DI resolution, and middleware execution genuinely happens, just without
+  the network layer, which is why integration tests through it exercise real
+  bugs (a broken route constraint, a misconfigured DI registration) that a
+  pure unit test mocking everything out could never catch.</li>
+<li><strong><code>IClassFixture&lt;T&gt;</code> triggers the factory's construction exactly once for
+  the whole test class</strong>, unlike the per-test-method constructor behavior
+  covered in Module 06 of Level 2 — xUnit recognizes the <code>IClassFixture&lt;T&gt;</code>
+  interface specifically and special-cases fixture lifetime to span the
+  class, calling <code>Dispose()</code> on the fixture only after every test in the
+  class has run, which is the real reason "the app starts once, not per
+  test" and is measurably faster for a suite with many integration tests
+  sharing one hosted app.</li>
+<li><strong><code>RemoveAll&lt;IProductRepository&gt;()</code> mutates the <code>IServiceCollection</code> before
+  <code>Build()</code> runs</strong>, replacing the registration descriptor entirely — this
+  works because DI registrations are just data (a list of service-type →
+  implementation/factory/lifetime descriptors) until <code>Build()</code> compiles them
+  into the resolvable container Module 03 described; swapping a descriptor
+  before that point changes what the finished container will ever construct
+  for that interface.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Given an <code>IPaymentGateway</code> interface with <code>Task&lt;bool&gt; ChargeAsync(decimal
 amount)</code>, write unit tests for a <code>CheckoutService</code> that: (1) mocks a

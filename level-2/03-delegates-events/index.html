@@ -1205,6 +1205,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2261,6 +2272,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2429,6 +2451,45 @@ object:</p>
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>A delegate instance is a small object holding a method pointer <em>and</em> a
+  target reference.</strong> <code>Operation op = Add</code> allocates a <code>Delegate</code>-derived
+  object on the heap with two key fields: the method's compiled-code entry
+  point, and (for instance methods) a reference to the target object the
+  method should run against — this is how <code>op(3, 4)</code> knows both <em>what</em> code
+  to jump to and <em>which</em> <code>this</code> to use, if any. A <code>static</code> method target
+  like <code>Add</code> leaves that second field null. Assigning <code>op = Multiply</code> isn't
+  mutating the delegate — it creates a brand-new delegate object and
+  rebinds the variable to it, since delegates are immutable once created.</li>
+<li><strong>Multicasting is implemented as a linked list of single-cast delegates,
+  wrapped in a <code>MulticastDelegate</code>.</strong> <code>notify += ...</code> doesn't append to some
+  internal array — it allocates a <em>new</em> <code>MulticastDelegate</code> whose invocation
+  list is the old list plus the new delegate, and reassigns <code>notify</code> to
+  point at it (delegates being immutable, exactly like <code>string</code>
+  concatenation building a new string rather than mutating in place).
+  Invoking a multicast delegate walks that list and calls each entry in
+  order, synchronously, on the calling thread — which is exactly why a
+  <code>Func&lt;T,TResult&gt;</code> multicast only surfaces the last method's return value:
+  the CLR's generated invoke loop simply discards every intermediate result
+  except the final one.</li>
+<li><strong><code>event</code> is a language-level access restriction over an ordinary delegate
+  field, enforced by the compiler, not the CLR.</strong> Under <code>public event
+  Action&lt;string&gt;? Shipped;</code>, the compiler generates a private backing
+  delegate field plus <code>add_Shipped</code>/<code>remove_Shipped</code> accessor methods (again
+  the <code>specialname</code> pattern from properties). Code inside <code>Order</code> can use
+  <code>Shipped</code> as a plain field (including calling <code>Invoke</code> on it directly);
+  code outside the class can only call <code>+=</code>/<code>-=</code>, which the compiler routes
+  through those accessor methods — there is no way to reach the raw field or
+  call <code>=</code> to replace the whole list from outside, because the compiler
+  simply refuses to emit that access, not because the CLR blocks it.</li>
+<li><strong><code>?.Invoke(...)</code> reads the delegate field into a local exactly once</strong>
+  before checking null and invoking — this null-safety pattern exists
+  specifically because a multi-threaded unsubscribe (<code>-=</code>) between the null
+  check and the call could otherwise race and null out the field mid-call;
+  capturing it into a temporary first (which is what <code>?.</code> compiles to)
+  avoids that particular <code>NullReferenceException</code> race.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Build a <code>Stopwatch</code>-like <code>Timer</code> class with an <code>event Action&lt;int&gt; Tick</code> that
 fires once per second (simulate this with a loop calling a private method,

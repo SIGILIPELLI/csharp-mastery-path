@@ -1581,6 +1581,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2261,6 +2272,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2463,6 +2485,51 @@ scope on demand instead:</p>
 <a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span><span class="p">}</span>
 <a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="p">}</span>
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>The container resolves a dependency graph by walking constructor
+  parameters via reflection, once per resolution (with caching for the
+  metadata, not the instances).</strong> <code>GetRequiredService&lt;OrderService&gt;()</code>
+  reflects over <code>OrderService</code>'s constructor, sees it needs <code>IOrderRepository</code>
+  and <code>IClock</code>, recursively resolves each of <em>those</em> by consulting the
+  registration table (a dictionary from service type to a descriptor holding
+  the implementation type/factory and lifetime), and only then calls <code>new
+  OrderService(repo, clock)</code> via a compiled expression tree the container
+  builds and caches after the first resolution — subsequent resolutions of
+  the same service type reuse that compiled factory rather than
+  re-reflecting every time, the same "build once, reuse" pattern as
+  <code>System.Text.Json</code>'s serialization plan.</li>
+<li><strong>Lifetimes are implemented as three different storage/lookup strategies
+  inside the container, not a label.</strong> Singleton instances are stored once
+  in the root <code>IServiceProvider</code>'s own instance cache and handed out for
+  every future request, from any scope. Scoped instances live in a
+  dictionary owned by the <em>current</em> <code>IServiceScope</code> — ASP.NET Core creates
+  exactly one such scope per incoming HTTP request (wired in during request
+  processing, as Module 01 covered) and disposes it — running <code>Dispose()</code> on
+  every <code>IDisposable</code> scoped instance it created — when the request
+  finishes. Transient services are never cached anywhere; every resolution
+  runs the constructor-injection factory fresh, which is exactly why <code>a</code> and
+  <code>b</code> above are different objects even resolved in the same request.</li>
+<li><strong>The captive-dependency check is a real graph traversal run at
+  <code>app.Build()</code> (in Development) or the first resolution, not a documentation
+  warning.</strong> ASP.NET Core's validation walks every registered singleton's
+  constructor dependencies transitively and flags any path that reaches a
+  scoped or transient-holding-scoped registration — this is a genuine static
+  analysis over the DI registration graph, catching the bug before a single
+  request runs, rather than relying on you noticing stale data in production.
+  <code>IServiceScopeFactory.CreateScope()</code> sidesteps the rule legitimately by
+  creating an independent, short-lived scope on demand — its own separate
+  dictionary of scoped instances, disposed when the <code>using</code> block ends,
+  exactly like the request-scoped one but created manually instead of by
+  the framework.</li>
+<li><strong><code>IOptions&lt;T&gt;</code> binding uses reflection once at startup to map
+  configuration keys to POCO properties</strong> (case-insensitively, walking
+  nested sections for nested objects) and caches the bound instance as a
+  singleton — <code>IOptionsSnapshot&lt;T&gt;</code>/<code>IOptionsMonitor&lt;T&gt;</code> differ only in
+  <em>when</em> that binding re-runs (per-scope, or on a file-change/reload
+  notification), not in the underlying reflection-based binding mechanism
+  itself.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Build a console-hosted DI container (<code>Host.CreateApplicationBuilder(args)</code>)
 registering an <code>INotifier</code> interface with two implementations

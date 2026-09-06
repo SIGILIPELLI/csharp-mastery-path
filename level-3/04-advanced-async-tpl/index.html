@@ -1620,6 +1620,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2283,6 +2294,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2467,6 +2489,57 @@ the way a <code>Task</code> can, so misuse causes subtle bugs.</p>
 Framework code — but they still tie up a thread-pool thread and defeat the
 point of being async. Treat <code>.Result</code> and <code>.Wait()</code> on a <code>Task</code> as a code
 smell everywhere.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>CancellationToken</code> is a cooperative signaling struct wrapping a shared,
+  heap-allocated <code>CancellationTokenSource</code> state object — cancellation is
+  never preemptive.</strong> Calling <code>cts.Cancel()</code> (or the timer firing after
+  <code>TimeSpan timeout</code>) flips an internal flag and synchronously invokes every
+  callback registered via <code>token.Register(...)</code> — which is exactly the
+  mechanism <code>Task.Delay(ms, token)</code> uses internally: it registers a callback
+  that, when fired, transitions the delay's <code>Task</code> to the <code>Canceled</code> state
+  and throws <code>OperationCanceledException</code> from the awaiting code's resumed
+  state machine. <code>ThrowIfCancellationRequested()</code> is just a manual flag
+  check plus throw — nothing stops a tight, non-awaiting, non-checking loop
+  from ignoring cancellation entirely, which is why cooperative APIs must
+  check the token or pass it down to something that does.</li>
+<li><strong><code>Task.WhenAll</code> swallows all-but-one exception into the awaited result but
+  preserves every one on the <code>Task</code> object itself.</strong> Internally, <code>WhenAll</code>
+  creates one aggregate <code>Task</code> that completes only once every input task has
+  completed (successfully, faulted, or cancelled); if multiple faulted, it
+  wraps <em>all</em> their exceptions in one <code>AggregateException</code> stored on that
+  task, but <code>await</code>ing it (per the unwrapping behavior from Module 4 of
+  Level 2) only re-throws the <em>first</em> one — which is exactly why the text
+  above calls out inspecting <code>Task.Exception</code> on the array directly when you
+  need every failure, not just the first.</li>
+<li><strong><code>SemaphoreSlim.WaitAsync()</code> queues a continuation rather than blocking a
+  thread when the semaphore is full.</strong> Unlike the older <code>Semaphore</code> (backed
+  by an OS kernel object), <code>SemaphoreSlim</code> is designed for the async case
+  specifically: when no slot is free, <code>WaitAsync()</code> returns an incomplete
+  <code>Task</code> and registers the caller in an internal wait queue; <code>Release()</code>
+  pops the next waiter and completes its task, resuming that continuation on
+  a thread-pool thread — no thread sits blocked waiting for a semaphore slot,
+  which is the entire point of throttling <em>async</em> work this way rather than
+  with a blocking <code>Semaphore.Wait()</code>.</li>
+<li><strong><code>ValueTask&lt;T&gt;</code> is a discriminated-union struct over "already have a
+  result" or "wraps a real Task," specifically to avoid heap allocation on
+  synchronous-completion hot paths.</strong> A <code>Task&lt;T&gt;</code> is always a heap object
+  (it has to be, to be awaited/observed from multiple places); <code>ValueTask&lt;T&gt;</code>
+  is a value type that either stores the result inline (the cache-hit
+  branch above allocates nothing at all) or stores a reference to a real
+  <code>Task&lt;T&gt;</code>/<code>IValueTaskSource&lt;T&gt;</code> for the async-path branch. The "can't
+  await twice" restriction comes directly from this design: once a
+  <code>ValueTask</code> backed by an <code>IValueTaskSource</code> is awaited, its underlying
+  resource may be pooled and reused for a completely different operation —
+  awaiting it again could observe someone else's result.</li>
+<li><strong><code>Parallel.ForEachAsync</code> partitions the input sequence internally and
+  bounds concurrency by running at most <code>MaxDegreeOfParallelism</code> bodies at
+  once via its own internal scheduling</strong>, functionally similar to the hand-
+  rolled <code>SemaphoreSlim</code> gate above but implemented without per-item
+  semaphore acquire/release overhead — it schedules the next partition's
+  work directly as a prior body's task completes, rather than every
+  iteration contending on a shared semaphore object.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a program that downloads the byte length of 8 URLs (use
 <code>https://httpbin.org/delay/1</code> repeated, or any list you like) using

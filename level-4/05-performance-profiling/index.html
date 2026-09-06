@@ -2035,6 +2035,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2305,6 +2316,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2449,6 +2471,62 @@ unreadable code with no measured benefit.</p>
 or even a simple parallel loop of <code>HttpClient</code> calls) hitting representative
 endpoints, so the CPU/memory data reflects production-shaped concurrency
 rather than a single request.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>dotnet-trace</code> doesn't inject any instrumentation into your code — it
+  attaches to the CLR's built-in EventPipe, the same low-overhead tracing
+  infrastructure the runtime itself uses for diagnostics.</strong> The
+  <code>Microsoft-DotNETCore-SampleProfiler</code> provider periodically (roughly
+  every millisecond) pauses each managed thread's execution just long
+  enough to walk its native call stack — using the same stack-frame
+  metadata the JIT already emits for exception handling and debugging — and
+  records which method was executing. A flame graph is simply an aggregate
+  of thousands of these stack-sample snapshots; the "hot" methods are the
+  ones that show up in the highest proportion of samples, which is why
+  profiling requires realistic load — sampling an idle process just
+  captures thousands of identical "waiting for work" stacks.</li>
+<li><strong><code>dotnet-counters</code>' GC and thread-pool metrics are read directly from the
+  runtime's own <code>EventCounter</code>/<code>Meter</code> APIs, updated by the GC and
+  thread-pool scheduler as they run</strong> — <code>System.Runtime</code>'s <code>gen-0-gc-count</code>
+  counter increments exactly when the GC actually performs a Gen 0
+  collection (Module 5's generational collector, running whenever the Gen 0
+  budget fills), and <code>threadpool-queue-length</code> reflects the live count of
+  queued work items the thread-pool scheduler hasn't yet dispatched to a
+  worker thread. A sustained nonzero queue length under load means the pool
+  is creating new threads slower than work arrives (by design — the pool
+  grows conservatively to avoid oversubscribing cores) or existing threads
+  are blocked and unavailable — exactly what a rogue <code>.Result</code> call
+  produces, since it occupies a thread-pool thread for the call's entire
+  duration instead of yielding it back during the <code>await</code>.</li>
+<li><strong><code>GC.GetTotalAllocatedBytes()</code> reads the same per-thread allocation
+  counters BenchmarkDotNet's <code>[MemoryDiagnoser]</code> uses (Module 09 of Level
+  3)</strong> — the CLR increments a running total every time it hands out memory
+  from the Gen 0 allocation budget (a simple bump-pointer allocator: Gen 0
+  is a contiguous region, and allocating there is usually just advancing a
+  pointer and checking against the budget limit, which is what makes .NET
+  allocation so cheap compared to, say, <code>malloc</code>) — this is why the number
+  reported is exact, not estimated.</li>
+<li><strong>The <code>ReportWidget</code> leak is a direct, mechanical consequence of the GC's
+  reachability tracing described in Module 09 of Level 3</strong> —
+  <code>_ticker.PriceChanged += OnPriceChanged</code> stores a delegate referencing
+  <code>this</code> inside <code>StockTicker</code>'s multicast invocation list (Module 03 of
+  Level 2's delegate-chain mechanism); as long as <code>StockTicker</code> itself is
+  reachable from a GC root, every <code>ReportWidget</code> in its subscriber list is
+  transitively reachable too, and the collector — correctly, by its own
+  rules — refuses to reclaim memory that's still referenced. This is
+  exactly why <code>dotnet-gcdump</code>'s object-count diff surfaces it: the leaked
+  type's instance count keeps climbing because each one really is still
+  alive, root-reachable, and doing its job as a mechanically-followed
+  reference chain, not a bug the GC could ever detect on its own.</li>
+<li><strong>Server GC vs. Workstation GC is a choice between multiple independent
+  heaps-with-dedicated-threads (one per core, running collections in
+  parallel) versus a single heap collected by the thread that triggered the
+  collection</strong> — this is a genuine structural difference in how the
+  collector partitions and traces the managed heap, not a tuning flag over
+  identical machinery, which is why mismatching it to the workload shows up
+  as measurably different GC pause characteristics rather than a subtle
+  statistical shift.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Take the Level 3 REST API project (module 10), run it under load (a simple
 console app firing 200 concurrent <code>GET /books</code> requests with

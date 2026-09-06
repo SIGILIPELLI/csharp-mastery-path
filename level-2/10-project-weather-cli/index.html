@@ -1456,6 +1456,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2371,6 +2382,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2591,6 +2613,42 @@ behavior they need — including one that returns <code>null</code> on demand:</
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>Result&lt;T&gt;.Fail</code> returning <code>default(T)</code> for <code>Value</code> is safe here
+  precisely because <code>T</code> is unconstrained and <code>Value</code> is typed <code>T?</code></strong> — for a
+  reference type like <code>WeatherReading</code>, <code>default(T)</code> is <code>null</code> (matching the
+  <code>T?</code> annotation); had <code>Result&lt;int&gt;</code> been used instead, <code>default(T)</code> would
+  be <code>0</code>, which is why the generic constraint story from Module 2 matters:
+  without a <code>where T : ...</code> constraint, the compiler can only ever offer you
+  <code>default(T)</code>, not a more specific "empty" value, because it has no
+  guarantee about what operations or defaults <code>T</code> actually supports.</li>
+<li><strong><code>GetCurrentAsync</code>'s <code>await Task.Delay(50)</code> genuinely suspends the async
+  state machine described in Module 4</strong> — even though this is entirely
+  simulated (no real socket, no real HTTP request), the mechanism is
+  identical to a real network call: the method returns an incomplete <code>Task</code>
+  to <code>LookupAsync</code>, which itself is <code>async</code> and suspends at its own <code>await
+  _provider.GetCurrentAsync(city)</code>, propagating the suspension up through
+  <code>Main</code>'s compiler-generated state machine, all the way to whatever awaits
+  the top-level <code>foreach</code> loop's <code>await service.LookupAsync(city)</code> calls in
+  sequence — each iteration's suspension and resumption is a real, if tiny,
+  round trip through the thread pool's continuation-scheduling machinery.</li>
+<li><strong><code>JsonDocument.Parse</code> inside <code>FakeWeatherProvider</code> allocates a pooled
+  buffer per call, as covered in Module 7</strong> — calling <code>GetCurrentAsync</code>
+  three times against known cities means three separate <code>Utf8JsonReader</code>
+  parses and three rented-then-returned buffers; because the <code>using var doc</code>
+  disposes it before the method returns, none of that buffer state survives
+  past the single lookup, keeping the fake provider's per-call cost
+  predictable and small.</li>
+<li><strong>Testing against <code>IWeatherProvider</code> rather than <code>FakeWeatherProvider</code>
+  concretely works because <code>WeatherService</code>'s field is declared as the
+  interface type, so every call site compiles to the interface-dispatch
+  mechanism from Module 1</strong> — swapping <code>FakeWeatherProvider</code> for
+  <code>NullProvider</code> in a test changes <em>which</em> interface-map entry the CLR
+  resolves <code>GetCurrentAsync</code> to at run time, with <code>WeatherService</code>'s own
+  compiled IL never needing to change or even know which implementation it
+  will eventually be handed.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Add an <code>event Action&lt;WeatherReading&gt;? OnLookupSucceeded</code> to <code>WeatherService</code>,
 raised right before returning a successful <code>Result</code>. Subscribe to it from the

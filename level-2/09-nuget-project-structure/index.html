@@ -1406,6 +1406,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2327,6 +2338,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2494,6 +2516,55 @@ duplicating it.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>dotnet<span class="w"> </span>nuget<span class="w"> </span>locals<span class="w"> </span>global-packages<span class="w"> </span>--list
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># global-packages: /Users/you/.nuget/packages</span>
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>dotnet build</code>/<code>dotnet restore</code> are MSBuild invocations — the <code>.csproj</code>
+  is an MSBuild XML script, not a passive manifest.</strong> <code>&lt;PropertyGroup&gt;</code> and
+  <code>&lt;ItemGroup&gt;</code> are literally MSBuild's variable and list syntax; the SDK-
+  style <code>&lt;Project Sdk="Microsoft.NET.Sdk"&gt;</code> line imports a large set of
+  <code>.targets</code>/<code>.props</code> files installed with the SDK that define <em>how</em> to
+  compile C# into IL, run the compiler, and copy outputs — this is the
+  actual mechanism behind "no <code>&lt;Compile Include&gt;</code> needed": the imported SDK
+  targets glob <code>**/*.cs</code> automatically. Every <code>dotnet build</code> is really
+  MSBuild resolving that whole import graph and executing a dependency-
+  ordered series of build targets (<code>Restore</code> → <code>Compile</code> → <code>CoreCompile</code>
+  invoking Roslyn → <code>CopyFilesToOutputDirectory</code>, and more).
+  <code>Directory.Build.props</code>/<code>Directory.Build.targets</code> work by MSBuild
+  automatically probing parent directories for those exact filenames and
+  importing them early/late in the build, which is why they apply to every
+  <code>.csproj</code> beneath them with zero explicit reference.</li>
+<li><strong>A <code>PackageReference</code> resolves to a set of assembly <code>.dll</code> files copied
+  into your output directory — this is real assembly loading at run time.</strong>
+  At restore time, NuGet computes a dependency graph (including transitive
+  package dependencies) and writes it into <code>obj/project.assets.json</code>; at
+  build time, MSBuild reads that file to know exactly which assemblies to
+  reference for compilation and which ones to copy next to your <code>.dll</code> in
+  <code>bin/</code>. At run time, the CLR's assembly loader resolves each <code>using</code>d
+  type's containing assembly by consulting a generated <code>.deps.json</code>
+  manifest (listing every dependency and its expected version) plus a
+  <code>.runtimeconfig.json</code> describing which shared framework to bind against —
+  a version mismatch between what was compiled against and what's
+  physically present at run time is what produces
+  <code>FileNotFoundException</code>/<code>FileLoadException</code> at the moment a type from that
+  assembly is first touched (consistent with the JIT's lazy, per-method
+  compilation model from Module 1: assembly loading is similarly deferred
+  until something actually needs a type from it).</li>
+<li><strong>The global NuGet cache (<code>~/.nuget/packages</code>) is what the <em>build</em> reads
+  from, not what ships.</strong> MSBuild's restore step resolves package
+  references against that shared cache and then hard-links or copies the
+  specific assemblies your project needs into its own <code>bin/</code> output — this
+  is why ten projects referencing the same package version share one cached
+  copy on disk during development, but each project's <em>published</em> output
+  still carries its own independent copy of the assemblies it actually
+  needs at run time.</li>
+<li><strong><code>global.json</code>'s SDK pinning affects which MSBuild/Roslyn toolchain
+  runs, not which CLR your compiled app targets at run time</strong> — those are
+  two independent version knobs: <code>global.json</code> picks the <em>build-time</em> SDK
+  (compiler, MSBuild version), while <code>&lt;TargetFramework&gt;net8.0&lt;/TargetFramework&gt;</code>
+  picks the runtime/API surface the compiled assembly targets — a project
+  can be built with a newer SDK while still targeting an older
+  <code>TargetFramework</code>.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Build a two-project solution: <code>MyLib.Core</code> (a class library with a
 <code>StringUtils</code> static class exposing <code>SlugifyTitle(string)</code> that lowercases

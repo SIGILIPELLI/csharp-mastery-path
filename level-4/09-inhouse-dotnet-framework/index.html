@@ -2125,6 +2125,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2254,6 +2265,17 @@
     <span class="md-ellipsis">
       
         Guarding against overreach
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
       
     </span>
   </a>
@@ -2426,6 +2448,49 @@ genuinely identical across teams (health check conventions, error shape,
 required security headers) — leave anything domain-specific
 (business logic, entity models, team-specific validation) entirely out of
 the shared package.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><code>Result&lt;T&gt;</code> being a <code>readonly struct</code> rather than a <code>class</code> is a
+  deliberate cost decision, not stylistic — it avoids a heap allocation on
+  every method call that would otherwise return one.</strong> Per Module 5 of
+  Level 1's stack-vs-heap split, a struct returned by value is copied
+  inline into the caller's stack frame or, for an <code>async Task&lt;Result&lt;T&gt;&gt;</code>,
+  inline into the compiler-generated state machine's fields (Module 04 of
+  Level 2) — no GC-tracked object is created at all for the success/failure
+  wrapper itself, only for whatever <code>T</code> genuinely needs to live on the heap.
+  Contrast this with throwing an <code>Exception</code> for the same "expected
+  failure" case: Module 07 of Level 1 covered the real cost of exception
+  throwing (stack-trace capture, heap allocation, two-pass unwinding) — a
+  <code>Result&lt;T&gt;</code> struct sidesteps all of that for outcomes that aren't
+  actually exceptional.</li>
+<li><strong><code>Match</code>'s two <code>Func&lt;...&gt;</code> parameters each cost a delegate allocation per
+  call site unless the compiler can prove they're non-capturing</strong> — per
+  Module 03 of Level 2, <code>onSuccess: order =&gt; Results.Created(...)</code> closes
+  over nothing external here, so the compiler can (and typically does)
+  cache a single static delegate instance across calls; a lambda that
+  captured a local variable instead would allocate a closure object on
+  every <code>Match</code> invocation, a subtle cost worth knowing about if <code>Match</code> is
+  called in a genuinely hot path.</li>
+<li><strong><code>AddCompanyDefaults</code>/<code>UseCompanyDefaults</code> are ordinary extension
+  methods — static methods with no different calling mechanism than any
+  other C# method — resolved entirely at compile time by Roslyn's extension-
+  method lookup, not a runtime plugin or reflection-based discovery
+  mechanism.</strong> <code>services.AddCompanyDefaults(config)</code> compiles to a plain
+  static method call <code>ServiceCollectionExtensions.AddCompanyDefaults(services,
+  config)</code>; this is precisely why "one line pulls in every shared
+  convention" works with zero runtime indirection — it's the same
+  extension-method mechanism behind <code>.Where()</code>/<code>.Select()</code> from Module 08
+  of Level 1, just registering DI services and configuring middleware
+  instead of filtering a sequence.</li>
+<li><strong><code>dotnet pack</code> builds a <code>.nupkg</code> — a renamed <code>.zip</code> archive — containing
+  the compiled assembly, a <code>.nuspec</code> manifest describing the package
+  metadata/dependencies, and (if configured) source/symbol files</strong>, exactly
+  the same artifact format any public NuGet package uses; publishing to an
+  internal feed versus nuget.org is purely a difference in the target URL
+  <code>dotnet nuget push</code> sends the package to — the restore/resolution
+  mechanism consuming teams rely on (Module 09 of Level 2's
+  <code>project.assets.json</code>/<code>.deps.json</code> machinery) is identical either way.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Extract a <code>Result&lt;T&gt;</code> type and the <code>ProblemResults</code> helpers above into a
 separate class library project, reference it from the Level 3 REST API

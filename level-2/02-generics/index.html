@@ -1177,6 +1177,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2261,6 +2272,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2421,6 +2443,45 @@ different closed generic types:</p>
 as a parameter), it's safe to treat an <code>IEnumerable&lt;string&gt;</code> as an
 <code>IEnumerable&lt;object&gt;</code>. A mutable <code>IList&lt;T&gt;</code> is not covariant, because it
 also accepts <code>T</code> values through <code>Add</code>.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Generics are erased at the IL level but reified again by the CLR at run
+  time — a genuinely unusual design compared to Java's type erasure.</strong>
+  <code>Box&lt;T&gt;</code> compiles to <em>one</em> generic IL type definition. What happens next
+  depends on <code>T</code>: for a <strong>value type</strong> like <code>Box&lt;int&gt;</code>, the CLR JIT-compiles
+  a distinct, specialized native code path per value-type argument the first
+  time it's used — <code>Box&lt;int&gt;</code> and <code>Box&lt;double&gt;</code> each get their own compiled
+  machine code with <code>T</code> truly replaced by the concrete type, laid out inline
+  with no boxing and no indirection. For <strong>reference types</strong>, the CLR shares
+  <em>one</em> compiled implementation across all of them (<code>Box&lt;string&gt;</code>,
+  <code>Box&lt;Product&gt;</code>, etc. all reuse the same native code), because every
+  reference type is the same size (a pointer) and the shared code just
+  treats <code>T</code> as <code>object</code> internally, dispatching to the right type through
+  the object's own method table when needed. This "specialize for value
+  types, share for reference types" strategy is why <code>List&lt;int&gt;</code> never boxes
+  its elements — unlike, say, an old non-generic <code>ArrayList</code> would — while
+  still not bloating the assembly with a separate compiled method body per
+  reference type you ever use.</li>
+<li><strong>Constraints exist so the JIT/compiler can verify operations at
+  compile time — they cost nothing extra at run time beyond the operation
+  itself.</strong> <code>where T : IComparable&lt;T&gt;</code> lets <code>a.CompareTo(b)</code> compile as an
+  interface dispatch (the vtable/interface-map lookup from Module 1); without
+  the constraint, the compiler has no proof <code>T</code> supports <code>CompareTo</code> and
+  refuses to compile the call at all. <code>where T : new()</code> similarly lets <code>new
+  T()</code> compile to a call through a special CLR-generated "activator" path
+  (<code>Activator.CreateInstance&lt;T&gt;</code> semantics under the hood) rather than a
+  literal constructor call, since the compiler doesn't know which
+  constructor to invoke until <code>T</code> is substituted.</li>
+<li><strong>Variance (<code>in</code>/<code>out</code>) is a compile-time-checked promise about how the
+  type parameter is used, verified once when the interface is declared.</strong>
+  <code>IEnumerable&lt;out T&gt;</code> is only legal because the C# compiler can prove <code>T</code>
+  appears solely in "output" positions (return types, not parameters) across
+  every member of <code>IEnumerable&lt;T&gt;</code> — this lets the CLR treat
+  <code>IEnumerable&lt;string&gt;</code> and <code>IEnumerable&lt;object&gt;</code> as reference-compatible at
+  the type-system level (a cast that succeeds instantly, no runtime
+  conversion of elements happens), whereas <code>IList&lt;T&gt;</code> can't offer the same
+  guarantee since <code>Add(T item)</code> uses <code>T</code> as an input.</li>
+</ul>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a generic <code>Stack&lt;T&gt;</code> from scratch (backed by a <code>List&lt;T&gt;</code>) with
 <code>Push(T item)</code>, <code>T Pop()</code>, <code>T Peek()</code>, and <code>bool IsEmpty</code>. Add a constraint
