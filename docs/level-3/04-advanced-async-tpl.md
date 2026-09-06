@@ -186,6 +186,57 @@ Framework code — but they still tie up a thread-pool thread and defeat the
 point of being async. Treat `.Result` and `.Wait()` on a `Task` as a code
 smell everywhere.
 
+## How It Actually Works
+
+- **`CancellationToken` is a cooperative signaling struct wrapping a shared,
+  heap-allocated `CancellationTokenSource` state object — cancellation is
+  never preemptive.** Calling `cts.Cancel()` (or the timer firing after
+  `TimeSpan timeout`) flips an internal flag and synchronously invokes every
+  callback registered via `token.Register(...)` — which is exactly the
+  mechanism `Task.Delay(ms, token)` uses internally: it registers a callback
+  that, when fired, transitions the delay's `Task` to the `Canceled` state
+  and throws `OperationCanceledException` from the awaiting code's resumed
+  state machine. `ThrowIfCancellationRequested()` is just a manual flag
+  check plus throw — nothing stops a tight, non-awaiting, non-checking loop
+  from ignoring cancellation entirely, which is why cooperative APIs must
+  check the token or pass it down to something that does.
+- **`Task.WhenAll` swallows all-but-one exception into the awaited result but
+  preserves every one on the `Task` object itself.** Internally, `WhenAll`
+  creates one aggregate `Task` that completes only once every input task has
+  completed (successfully, faulted, or cancelled); if multiple faulted, it
+  wraps *all* their exceptions in one `AggregateException` stored on that
+  task, but `await`ing it (per the unwrapping behavior from Module 4 of
+  Level 2) only re-throws the *first* one — which is exactly why the text
+  above calls out inspecting `Task.Exception` on the array directly when you
+  need every failure, not just the first.
+- **`SemaphoreSlim.WaitAsync()` queues a continuation rather than blocking a
+  thread when the semaphore is full.** Unlike the older `Semaphore` (backed
+  by an OS kernel object), `SemaphoreSlim` is designed for the async case
+  specifically: when no slot is free, `WaitAsync()` returns an incomplete
+  `Task` and registers the caller in an internal wait queue; `Release()`
+  pops the next waiter and completes its task, resuming that continuation on
+  a thread-pool thread — no thread sits blocked waiting for a semaphore slot,
+  which is the entire point of throttling *async* work this way rather than
+  with a blocking `Semaphore.Wait()`.
+- **`ValueTask<T>` is a discriminated-union struct over "already have a
+  result" or "wraps a real Task," specifically to avoid heap allocation on
+  synchronous-completion hot paths.** A `Task<T>` is always a heap object
+  (it has to be, to be awaited/observed from multiple places); `ValueTask<T>`
+  is a value type that either stores the result inline (the cache-hit
+  branch above allocates nothing at all) or stores a reference to a real
+  `Task<T>`/`IValueTaskSource<T>` for the async-path branch. The "can't
+  await twice" restriction comes directly from this design: once a
+  `ValueTask` backed by an `IValueTaskSource` is awaited, its underlying
+  resource may be pooled and reused for a completely different operation —
+  awaiting it again could observe someone else's result.
+- **`Parallel.ForEachAsync` partitions the input sequence internally and
+  bounds concurrency by running at most `MaxDegreeOfParallelism` bodies at
+  once via its own internal scheduling**, functionally similar to the hand-
+  rolled `SemaphoreSlim` gate above but implemented without per-item
+  semaphore acquire/release overhead — it schedules the next partition's
+  work directly as a prior body's task completes, rather than every
+  iteration contending on a shared semaphore object.
+
 ## Exercise
 
 Write a program that downloads the byte length of 8 URLs (use

@@ -174,6 +174,47 @@ foreach (var s in new[] { 95, 82, 71, 55 })
 // 55 -> F
 ```
 
+## How It Actually Works
+
+- **`record` generates real, ordinary CLR members — value equality is not a
+  runtime feature, it's compiler-synthesized `Equals`/`GetHashCode`.** For
+  `record Point(int X, int Y)`, Roslyn emits an `Equals(Point? other)`
+  override that compares every declared property field by field, a matching
+  `GetHashCode()` combining those fields' hash codes, `==`/`!=` operators
+  calling that `Equals`, and a `ToString()` that reflects over the same
+  property list to build the `Point { X = 3, Y = 4 }` text — all of it
+  ordinary generated IL, indistinguishable at the CLR level from a class you
+  wrote all that boilerplate into by hand. This is exactly why
+  `record class` still allocates on the heap like any class — records are a
+  reference type by default; only `record struct` changes the allocation
+  story.
+- **`with` compiles to a compiler-generated "copy constructor" plus property
+  assignments, not reflection.** Every record gets a hidden constructor
+  taking the record's own type (`protected Point(Point original)`) that
+  copies each field, and `with { Salary = ... }` compiles to: call that
+  copy constructor to clone the object, then assign the overridden
+  properties on the clone. This is a real, separate heap allocation each
+  time — `original with { ... }` never touches `original`'s memory, matching
+  the "non-destructive mutation" framing exactly.
+- **Pattern-matching `switch` expressions with type patterns compile to a
+  sequence of `isinst`/property-read checks, evaluated top to bottom — not
+  a jump table**, unlike the dense-integer case from Module 3's switch
+  discussion. `Circle(var r) => ...` deconstructs via the record's
+  compiler-generated `Deconstruct` method (every positional record gets one
+  automatically), so a positional pattern match is really: `isinst Circle`,
+  then call `Deconstruct(out r)`, then bind `r` — three real operations per
+  arm tested, in source order, until one matches.
+- **Exhaustiveness checking against a closed hierarchy is a compile-time-only
+  static analysis over your type's declared subtypes** — the compiler
+  doesn't consult the CLR's type hierarchy at run time to know `Shape`'s
+  subtypes are limited to `Circle`/`Rectangle`/`Triangle`; it reads that
+  from the same-assembly declarations available during compilation. A
+  hierarchy `sealed`/closed only within one assembly can still be extended
+  by a different, unrelated assembly at run time (unless the base is
+  literally `sealed`), which is why the exhaustiveness warning is a
+  best-effort hint, not the same runtime-enforced guarantee a `sealed`
+  keyword gives you.
+
 ## Exercise
 
 Define a record hierarchy `abstract record Vehicle`, with `record

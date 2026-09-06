@@ -134,6 +134,43 @@ with them) in depth.
 | `T?` on a value type | Nullable value type (`int?`, `bool?`, ...) |
 | `??` | Null-coalescing — fallback value when the left side is `null` |
 
+## How It Actually Works
+
+Value types and reference types aren't just a naming convention — they
+describe two genuinely different memory layouts, and understanding the split
+explains most of the "gotchas" in this module.
+
+- **Stack vs. heap.** A local `int`, `double`, `bool`, or `char` variable is
+  stored directly in the method's **stack frame** — no separate allocation,
+  no garbage collection involved, freed automatically when the method
+  returns. A `string` (and any `class` instance) is a reference type: the
+  variable on the stack holds a pointer, and the actual UTF-16 character data
+  lives as an object on the **managed heap**, tracked by the garbage
+  collector. This is why `string` is called out as "behaves like a value" in
+  the table above but isn't one — comparing two `string`s with `==` compares
+  *contents* (because `string` overrides `Equals`/`==`), but assigning one
+  `string` variable to another copies the reference, not the characters.
+- **`decimal` is not hardware floating point.** `double`/`float` are IEEE 754
+  binary floating point — fast (native FPU instructions) but unable to
+  represent values like `0.1` exactly in binary, which is why repeated
+  `double` arithmetic drifts. `decimal` is a 128-bit struct that stores a
+  base-10 mantissa and scale, evaluated in software by the CLR — slower, but
+  exact for the decimal fractions money uses. This is a real runtime
+  trade-off, not just a "nicer default."
+- **`checked`/`unchecked` compiles to different IL.** The C# compiler emits
+  the `add.ovf` (overflow-checking add) IL opcode inside a `checked` context
+  and plain `add` otherwise. `OverflowException` is thrown directly by the
+  JIT-compiled native instruction sequence the CLR generates for `add.ovf` —
+  there's no runtime "check a flag" step, the different opcode *is* the
+  check.
+- **`int?` is `Nullable<int>` under the hood** — a small struct (`System.Nullable<T>`)
+  holding a `bool hasValue` field alongside the `int value` field. It is
+  still a value type (allocated inline, not on the heap), which is why
+  `int?` costs a few extra bytes over `int` rather than the pointer
+  indirection and heap allocation a reference type would need. The compiler
+  rewrites `??` and `.Value`/`.HasValue` into direct field access on that
+  struct — there's no boxing unless you assign an `int?` to an `object`.
+
 ## Exercise
 
 Write a program that declares an `int` `totalCents` (e.g. `12345`), and

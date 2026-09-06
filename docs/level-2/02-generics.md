@@ -127,6 +127,45 @@ as a parameter), it's safe to treat an `IEnumerable<string>` as an
 `IEnumerable<object>`. A mutable `IList<T>` is not covariant, because it
 also accepts `T` values through `Add`.
 
+## How It Actually Works
+
+- **Generics are erased at the IL level but reified again by the CLR at run
+  time — a genuinely unusual design compared to Java's type erasure.**
+  `Box<T>` compiles to *one* generic IL type definition. What happens next
+  depends on `T`: for a **value type** like `Box<int>`, the CLR JIT-compiles
+  a distinct, specialized native code path per value-type argument the first
+  time it's used — `Box<int>` and `Box<double>` each get their own compiled
+  machine code with `T` truly replaced by the concrete type, laid out inline
+  with no boxing and no indirection. For **reference types**, the CLR shares
+  *one* compiled implementation across all of them (`Box<string>`,
+  `Box<Product>`, etc. all reuse the same native code), because every
+  reference type is the same size (a pointer) and the shared code just
+  treats `T` as `object` internally, dispatching to the right type through
+  the object's own method table when needed. This "specialize for value
+  types, share for reference types" strategy is why `List<int>` never boxes
+  its elements — unlike, say, an old non-generic `ArrayList` would — while
+  still not bloating the assembly with a separate compiled method body per
+  reference type you ever use.
+- **Constraints exist so the JIT/compiler can verify operations at
+  compile time — they cost nothing extra at run time beyond the operation
+  itself.** `where T : IComparable<T>` lets `a.CompareTo(b)` compile as an
+  interface dispatch (the vtable/interface-map lookup from Module 1); without
+  the constraint, the compiler has no proof `T` supports `CompareTo` and
+  refuses to compile the call at all. `where T : new()` similarly lets `new
+  T()` compile to a call through a special CLR-generated "activator" path
+  (`Activator.CreateInstance<T>` semantics under the hood) rather than a
+  literal constructor call, since the compiler doesn't know which
+  constructor to invoke until `T` is substituted.
+- **Variance (`in`/`out`) is a compile-time-checked promise about how the
+  type parameter is used, verified once when the interface is declared.**
+  `IEnumerable<out T>` is only legal because the C# compiler can prove `T`
+  appears solely in "output" positions (return types, not parameters) across
+  every member of `IEnumerable<T>` — this lets the CLR treat
+  `IEnumerable<string>` and `IEnumerable<object>` as reference-compatible at
+  the type-system level (a cast that succeeds instantly, no runtime
+  conversion of elements happens), whereas `IList<T>` can't offer the same
+  guarantee since `Add(T item)` uses `T` as an input.
+
 ## Exercise
 
 Write a generic `Stack<T>` from scratch (backed by a `List<T>`) with

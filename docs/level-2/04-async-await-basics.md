@@ -134,6 +134,61 @@ deadlock. Prefer `await` all the way up the call stack.
 | `Task.WhenAll` | Waits for multiple tasks concurrently |
 | `.Result` / `.Wait()` | Blocking — avoid in async code |
 
+## How It Actually Works
+
+- **`async` methods are rewritten by the compiler into a state machine
+  struct, before any JIT compilation happens.** Roslyn transforms
+  `GetGreetingAsync` into a hidden `struct` implementing
+  `IAsyncStateMachine`, with a `MoveNext()` method containing your method
+  body split into numbered states at each `await`. Local variables that must
+  survive across an `await` (anything still "live" after resuming) become
+  fields of that struct instead of stack locals — because when the method
+  suspends, its actual stack frame is popped and the thread is freed; there
+  is no stack frame left to hold them. This is the real mechanism behind
+  "await suspends without blocking a thread": the method's state is moved
+  into a heap-allocated (usually) object, the calling thread returns
+  immediately with an incomplete `Task`, and `MoveNext()` gets called again
+  later — from a thread-pool thread — to resume execution from the saved
+  state.
+- **`await` compiles to registering a continuation on the awaited task's
+  `awaiter`, not a busy-wait or a blocking call.** `await Task.Delay(1000)`
+  calls `GetAwaiter()` on the task, checks `IsCompleted`, and if not yet
+  complete, calls `OnCompleted(continuation)` — where `continuation` is a
+  delegate wrapping `MoveNext()` on the state machine — then returns control
+  to the caller. `Task.Delay`'s internal timer, when it fires, invokes that
+  continuation, which schedules `MoveNext()` to run on a thread-pool thread
+  via `SynchronizationContext.Post` (in UI apps) or directly on the thread
+  pool (console/server apps, where there's no captured sync context) —
+  explaining exactly why `Task.Delay(1000)` doesn't tie up a thread for a
+  second: no thread exists between the `await` and the timer callback.
+- **`Task<T>` wraps a result *and* a captured exception, replayed at `await`
+  time.** When `DivideAsync` throws, the exception is caught by the compiler-
+  generated state machine and stored on the `Task` (marking it `Faulted`)
+  rather than propagating immediately. `await`ing a faulted task re-throws
+  that stored exception (unwrapped from its internal `AggregateException`
+  wrapper specifically by `await`, unlike `.Result`, which surfaces the raw
+  `AggregateException`) — this is the mechanism, not magic, behind "an
+  exception thrown inside an awaited async method surfaces at the await call
+  site like a normal throw."
+- **`Task.WhenAll` returns a single task that completes once every input
+  task's continuation has fired — concurrency comes from the tasks already
+  running, not from `WhenAll` itself.** Each `FetchLengthAsync(url)` call
+  starts running (and hits its own `await Task.Delay`) the instant it's
+  invoked in the `Select`, before `WhenAll` is ever called — `WhenAll` merely
+  subscribes one continuation to fire when the last of the already-in-flight
+  tasks finishes, which is why the three 200ms delays overlap into roughly
+  200ms total rather than serializing to 600ms.
+- **Blocking with `.Result`/`.Wait()` can deadlock specifically because of
+  the captured `SynchronizationContext`.** In WPF/WinForms/classic ASP.NET,
+  `await` by default captures the current `SynchronizationContext` and
+  schedules the continuation back onto it (typically the UI thread or an
+  ASP.NET request thread) — if that same thread is currently blocked calling
+  `.Result` and waiting for the task to finish, the continuation that would
+  complete the task can never run on that occupied thread, and the two sides
+  deadlock permanently. `ConfigureAwait(false)` — commonly seen in library
+  code — tells the state machine not to capture that context, avoiding the
+  deadlock at the cost of resuming on an arbitrary thread-pool thread instead.
+
 ## Exercise
 
 Write `DownloadAllAsync(string[] urls)` that simulates downloading each URL

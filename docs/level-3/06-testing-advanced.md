@@ -212,6 +212,56 @@ repository, an external email sender) with in-memory fakes before the app
 boots, so integration tests stay hermetic — no real database or network
 calls needed.
 
+## How It Actually Works
+
+- **`Mock<IOrderRepository>()` generates a real class implementing
+  `IOrderRepository` at run time, using `System.Reflection.Emit` (or
+  `DispatchProxy`-style dynamic type generation) — Moq is not simulating
+  the interface, it is compiling one on the fly.** The first time you mock a
+  given interface, Moq's `Castle.DynamicProxy` dependency emits IL for a new
+  type into a dynamically generated assembly loaded into your process,
+  implementing every interface member by forwarding into Moq's own
+  interception logic; `.Object` hands you an actual instance of that
+  generated type. This is exactly why Moq can only mock interfaces and
+  non-sealed classes with virtual members — it needs a real vtable slot
+  (Module 1's dispatch mechanism) to intercept, and `sealed`/non-virtual
+  members give it nothing to override.
+- **`Setup(...)` and `Verify(...)` both work against a recorded call log,
+  matched by the same expression-tree machinery EF Core's `IQueryable`
+  relies on.** `r => r.Find(existing.Id)` is captured as an
+  `Expression<Func<...>>`, not executed directly — Moq walks that expression
+  to identify which method and argument pattern you're describing, then
+  configures the dynamically generated proxy to recognize matching calls at
+  invocation time and return the stubbed value. `Verify` replays the same
+  matching logic against Moq's internal invocation history (every call the
+  proxy actually received, recorded as it happened) to check the count
+  matches `Times.Once`/`Times.Never`.
+- **`WebApplicationFactory<Program>` builds and hosts a genuine, in-memory
+  ASP.NET Core `TestServer` — the same middleware pipeline construction from
+  Module 1, just fed requests through an in-memory transport instead of a
+  real Kestrel socket.** `CreateClient()` returns an `HttpClient` wired to a
+  custom `HttpMessageHandler` that hands requests directly to `TestServer`'s
+  in-process pipeline, bypassing TCP/sockets entirely — every route match,
+  DI resolution, and middleware execution genuinely happens, just without
+  the network layer, which is why integration tests through it exercise real
+  bugs (a broken route constraint, a misconfigured DI registration) that a
+  pure unit test mocking everything out could never catch.
+- **`IClassFixture<T>` triggers the factory's construction exactly once for
+  the whole test class**, unlike the per-test-method constructor behavior
+  covered in Module 06 of Level 2 — xUnit recognizes the `IClassFixture<T>`
+  interface specifically and special-cases fixture lifetime to span the
+  class, calling `Dispose()` on the fixture only after every test in the
+  class has run, which is the real reason "the app starts once, not per
+  test" and is measurably faster for a suite with many integration tests
+  sharing one hosted app.
+- **`RemoveAll<IProductRepository>()` mutates the `IServiceCollection` before
+  `Build()` runs**, replacing the registration descriptor entirely — this
+  works because DI registrations are just data (a list of service-type →
+  implementation/factory/lifetime descriptors) until `Build()` compiles them
+  into the resolvable container Module 03 described; swapping a descriptor
+  before that point changes what the finished container will ever construct
+  for that interface.
+
 ## Exercise
 
 Given an `IPaymentGateway` interface with `Task<bool> ChargeAsync(decimal

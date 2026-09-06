@@ -184,6 +184,53 @@ deployed image a traceable, immutable identity — `kubectl rollout undo`
 or a manual rollback can target an exact previous build instead of hoping
 `latest` still points at something known-good.
 
+## How It Actually Works
+
+- **The `aspnet:8.0` runtime image contains exactly the CLR + JIT +
+  ASP.NET Core shared framework needed to load and run a `.dll` — it has
+  no Roslyn compiler at all, because none of the CLR's execution machinery
+  from Module 01 (assembly loading, JIT compilation of IL, GC) requires the
+  compiler to be present.** `dotnet publish` in the `build` stage already
+  did the Roslyn compile-to-IL step (Module 01's "compile happens once, at
+  build time" story) and wrote the resulting IL assemblies plus a
+  `MyApi.runtimeconfig.json`/`MyApi.deps.json` (Module 09 of Level 2's
+  dependency manifest) into `/app/publish`; the runtime image only needs the
+  host (`dotnet`), the CLR, and the framework's own assemblies to load and
+  JIT-execute that already-compiled IL — which is exactly why it can be a
+  fraction of the SDK image's size.
+- **Docker's layer cache invalidates from the first changed instruction
+  onward, which is a content-hash comparison per layer, not a
+  file-timestamp check** — this is the real mechanism behind "copying just
+  `*.csproj` before the rest of the source" working: Docker hashes the
+  copied files' contents to decide whether a `COPY`/`RUN` layer can be
+  reused from a previous build; as long as the `.csproj` bytes are
+  unchanged, the `dotnet restore` layer's cached result (every downloaded
+  NuGet package, per Module 09 of Level 2) is reused verbatim regardless of
+  how much application `.cs` code changed afterward, since those changes
+  land in a later `COPY . .` layer that gets rebuilt independently.
+- **`ConnectionStrings__Default` maps to `Configuration["ConnectionStrings:Default"]`
+  because .NET's configuration system is a merged tree of named providers,
+  each translating its own source's key format into the same colon-delimited
+  internal representation.** The environment-variable configuration
+  provider specifically maps `__` to `:` (since most shells don't allow
+  colons in environment variable names) when it enumerates
+  `Environment.GetEnvironmentVariables()` at startup — this is why moving a
+  setting from `appsettings.json` to an env var needs no code change: both
+  providers ultimately populate the exact same in-memory key-value
+  configuration tree that `builder.Configuration` exposes, with later-added
+  providers overriding earlier ones for the same key.
+- **`livenessProbe`/`readinessProbe` are genuinely separate HTTP requests
+  Kubernetes' kubelet issues on its own schedule against the container's
+  network namespace — they exercise the exact same middleware pipeline
+  (Module 01/08 of Level 3) and health-check aggregation (Module 03) a real
+  client request would**, just filtered by the `Predicate` shown there. A
+  pod that fails `livenessProbe` gets its container process sent `SIGTERM`
+  (then `SIGKILL` after a grace period) by the kubelet and a fresh container
+  started — which is why liveness checks should only fail for a genuinely
+  unrecoverable process state (deadlock, corrupted internal state), never
+  for a slow downstream dependency the process itself is fine, which
+  belongs in readiness instead.
+
 ## Exercise
 
 Write a multi-stage Dockerfile for the Level 3 REST API project, build it,

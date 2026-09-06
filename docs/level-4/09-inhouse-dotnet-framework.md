@@ -159,6 +159,49 @@ required security headers) — leave anything domain-specific
 (business logic, entity models, team-specific validation) entirely out of
 the shared package.
 
+## How It Actually Works
+
+- **`Result<T>` being a `readonly struct` rather than a `class` is a
+  deliberate cost decision, not stylistic — it avoids a heap allocation on
+  every method call that would otherwise return one.** Per Module 5 of
+  Level 1's stack-vs-heap split, a struct returned by value is copied
+  inline into the caller's stack frame or, for an `async Task<Result<T>>`,
+  inline into the compiler-generated state machine's fields (Module 04 of
+  Level 2) — no GC-tracked object is created at all for the success/failure
+  wrapper itself, only for whatever `T` genuinely needs to live on the heap.
+  Contrast this with throwing an `Exception` for the same "expected
+  failure" case: Module 07 of Level 1 covered the real cost of exception
+  throwing (stack-trace capture, heap allocation, two-pass unwinding) — a
+  `Result<T>` struct sidesteps all of that for outcomes that aren't
+  actually exceptional.
+- **`Match`'s two `Func<...>` parameters each cost a delegate allocation per
+  call site unless the compiler can prove they're non-capturing** — per
+  Module 03 of Level 2, `onSuccess: order => Results.Created(...)` closes
+  over nothing external here, so the compiler can (and typically does)
+  cache a single static delegate instance across calls; a lambda that
+  captured a local variable instead would allocate a closure object on
+  every `Match` invocation, a subtle cost worth knowing about if `Match` is
+  called in a genuinely hot path.
+- **`AddCompanyDefaults`/`UseCompanyDefaults` are ordinary extension
+  methods — static methods with no different calling mechanism than any
+  other C# method — resolved entirely at compile time by Roslyn's extension-
+  method lookup, not a runtime plugin or reflection-based discovery
+  mechanism.** `services.AddCompanyDefaults(config)` compiles to a plain
+  static method call `ServiceCollectionExtensions.AddCompanyDefaults(services,
+  config)`; this is precisely why "one line pulls in every shared
+  convention" works with zero runtime indirection — it's the same
+  extension-method mechanism behind `.Where()`/`.Select()` from Module 08
+  of Level 1, just registering DI services and configuring middleware
+  instead of filtering a sequence.
+- **`dotnet pack` builds a `.nupkg` — a renamed `.zip` archive — containing
+  the compiled assembly, a `.nuspec` manifest describing the package
+  metadata/dependencies, and (if configured) source/symbol files**, exactly
+  the same artifact format any public NuGet package uses; publishing to an
+  internal feed versus nuget.org is purely a difference in the target URL
+  `dotnet nuget push` sends the package to — the restore/resolution
+  mechanism consuming teams rely on (Module 09 of Level 2's
+  `project.assets.json`/`.deps.json` machinery) is identical either way.
+
 ## Exercise
 
 Extract a `Result<T>` type and the `ProblemResults` helpers above into a

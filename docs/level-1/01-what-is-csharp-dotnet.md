@@ -161,6 +161,42 @@ debugging, and refactoring — pick one and move on.
 | `dotnet build` | Compile without running |
 | Top-level statements | Modern shorthand — no explicit `class`/`Main` needed |
 
+## How It Actually Works
+
+"Compile and run" hides three distinct stages, each worth knowing:
+
+1. **Roslyn (the C# compiler) → IL.** `dotnet build` invokes Roslyn, which
+   parses your `.cs` files, type-checks them, and emits **IL** (Intermediate
+   Language, also called MSIL/CIL) plus metadata into an **assembly** — the
+   `.dll` you saw in `bin/Debug/net8.0/`. IL is a stack-based bytecode, not
+   machine code — the same `HelloWorld.dll` could in principle run on any CPU
+   architecture the CLR supports, because the CPU-specific step hasn't
+   happened yet.
+2. **CLR startup.** When you run `dotnet bin/Debug/net8.0/HelloWorld.dll`, the
+   `dotnet` executable is really a generic host (`hostfxr`) that locates the
+   matching CLR (`coreclr`) version from your installed runtimes, loads it
+   into the process, and hands it the assembly. The CLR reads the assembly's
+   metadata to find the entry point method your top-level statements compiled
+   into (a hidden `<Main>$` method on a compiler-generated `Program` class —
+   this is why the "explicit" and "top-level" forms are interchangeable at
+   the IL level).
+3. **JIT compilation, method by method.** The CLR does not translate the
+   whole assembly to native code up front. Each method is JIT-compiled the
+   *first time it's called* — `Console.WriteLine`'s IL is turned into x86-64
+   or ARM64 machine code on that first call, and the CLR patches the call
+   site so subsequent calls jump straight to the cached native code. This is
+   why a program's very first line can feel marginally slower than later
+   lines doing similar work, and it's the reason **ReadyToRun (R2R)** and
+   **Native AOT** publishing modes exist — they move some or all of this
+   translation to build time instead of paying for it on every process
+   start.
+
+The `.csproj` file matters here too: its `<TargetFramework>net8.0</TargetFramework>`
+element is what tells the compiler which reference assemblies (the framework's
+API surface) to compile against, and what tells the host which CLR version to
+load at run time — a mismatch between the two is where "it builds but won't
+run" errors come from.
+
 ## Exercise
 
 Create a new console project called `Greeter`. Write a program using

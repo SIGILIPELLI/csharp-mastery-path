@@ -180,6 +180,49 @@ var titles = db.Books
 read and display — a meaningful performance win on larger read-heavy
 queries.
 
+## How It Actually Works
+
+- **`db.Books.Where(...)` builds an `IQueryable<T>` expression tree, not an
+  in-memory LINQ chain — a genuinely different code path than Level 1's
+  LINQ.** `DbSet<T>` implements `IQueryable<T>`, whose lambdas are captured
+  by the compiler as `Expression<Func<...>>` — a data structure *describing*
+  the lambda (an AST-like object graph) rather than compiled, executable
+  delegate code. EF Core's LINQ provider walks that expression tree at
+  enumeration time and translates it into a SQL `SELECT` statement, sends it
+  to SQLite/SQL Server/Postgres over the actual database connection, and
+  materializes the returned rows back into `Book` objects. This is why not
+  every C# construct works inside an EF Core query — the provider must be
+  able to translate the expression into SQL, and anything it can't (an
+  arbitrary local method call, for instance) throws at translation time,
+  not compile time.
+- **`DbContext` maintains a change tracker: a dictionary of tracked entities
+  and a per-property snapshot of their original values.** When you load
+  `book` via `db.Books.First(...)`, EF Core stores a copy of its property
+  values alongside the live object. Setting `book.Year = 2009` doesn't
+  trigger anything immediately — `SaveChanges()` is what walks every tracked
+  entity, diffs current values against the stored snapshot, and generates
+  an `UPDATE ... SET Year = 2009 WHERE Id = ...` only for entities and
+  columns that actually changed. This snapshot-and-diff design is exactly
+  why a plain property mutation is enough to "trigger" a database update —
+  there's no property-changed event wiring involved, just a comparison run
+  at `SaveChanges()` time.
+- **`SaveChanges()` wraps every pending insert/update/delete in a single
+  database transaction by default**, and topologically sorts the operations
+  by foreign-key dependency (inserting the `Author` before its `Book`s, as
+  the text notes) so the generated SQL statements execute in an order the
+  database's foreign-key constraints will actually accept — a real
+  dependency-graph computation over your object graph, not simple insertion
+  order.
+- **`Include` triggers either a SQL `JOIN` or a second query, decided by EF
+  Core's query compiler** — without it, the generated `SELECT` for
+  `Authors` never mentions the `Books` table at all, so `a.Books` really is
+  never populated, not merely "not eagerly loaded" — accessing it returns
+  whatever the empty, un-materialized navigation collection default is.
+  `AsNoTracking()` skips creating change-tracker snapshots entirely for the
+  returned entities, which is real, measurable saved work (memory for the
+  snapshots, CPU for the diff at `SaveChanges()` time) that read-only
+  reporting/display queries never needed in the first place.
+
 ## Exercise
 
 Model a `Student` / `Course` many-to-many relationship (a student can enroll

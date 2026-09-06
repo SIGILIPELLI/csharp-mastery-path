@@ -157,6 +157,55 @@ Minimal API handlers can request any registered service as a parameter — the
 framework resolves it from the DI container per request. Module 03
 (Dependency Injection Deep Dive) covers lifetimes and patterns in depth.
 
+## How It Actually Works
+
+- **The middleware pipeline is a chain of nested delegates built once at
+  startup, not re-evaluated per request.** Each `app.Use(...)` call wraps
+  the *current* pipeline delegate inside a new one that captures it as
+  `next` — by the time `app.Run()` is called, you have one deeply nested
+  `RequestDelegate` closure (middleware N wraps middleware N-1 wraps ... wraps
+  the terminal routing/endpoint delegate). A single incoming request calls
+  the outermost delegate once, and `await next()` inside your logging
+  middleware is a normal `await` (Module 4's state machine mechanism)
+  suspending that middleware's continuation until everything nested inside
+  it — routing, model binding, your endpoint handler, and any middleware
+  after it — completes and returns control back up the chain. This is
+  exactly why code before `await next()` runs on the way in and code after
+  it runs on the way out, mirroring nested function calls precisely because
+  that's the literal generated structure.
+- **Kestrel is a managed, cross-platform HTTP server built on the same
+  `Socket`/async I/O primitives your own code could use** — it's not a
+  wrapper around IIS or a native web server. Requests arrive as raw bytes
+  on a `Socket`, get parsed into an `HttpRequest` object by Kestrel's own
+  HTTP/1.1 and HTTP/2 parsers (built on the low-allocation `PipeReader`/
+  `PipeWriter` APIs to minimize buffer copies under load), and are handed
+  into the middleware chain — the entire pipeline from socket bytes to your
+  `MapGet` lambda executing is managed C# code running through the same JIT-
+  compiled, GC-managed execution model as everything else in this course.
+- **Route matching compiles route templates into a tree/trie-like structure
+  at startup, not string comparison per request.** `MapGet("/products/{id:int}",
+  ...)` is parsed once into a route pattern with typed constraints; at
+  request time, the routing middleware walks a matcher built from every
+  registered route to find the best match in roughly O(segment count) time,
+  not by testing each registered route string in sequence — this is what
+  lets a real application register hundreds of routes without routing
+  becoming the bottleneck.
+- **Minimal API parameter binding uses source-generated (or reflection-based,
+  pre–.NET 8) code built from your lambda's parameter list, resolved once
+  per endpoint registration** — the framework inspects `(int a, int b) =>
+  ...` at `MapGet` call time, decides `a`/`b` come from the route (matching
+  `{a:int}`/`{b:int}`), and generates the extraction/conversion code ahead
+  of time rather than re-inspecting the lambda's signature via reflection on
+  every incoming request — directly analogous to `System.Text.Json`'s
+  cached serialization plan from Module 7.
+- **DI-resolved parameters like `IClock clock` are pulled from a per-request
+  `IServiceScope`** created and disposed automatically around each request
+  by ASP.NET Core's hosting infrastructure — this scope is what makes
+  `AddScoped` services (Module 3) genuinely per-request rather than
+  per-process, and it's torn down (running `Dispose()` on any
+  `IDisposable` scoped services) as part of the pipeline's final unwind,
+  the same `finally`-based cleanup guarantee from Module 7 of Level 1.
+
 ## Exercise
 
 Build a minimal API with an in-memory `List<Product>` "database" (a static

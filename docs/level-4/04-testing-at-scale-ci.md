@@ -198,6 +198,50 @@ dotnet test                                    # everything, in CI
 (sub-second feedback) while CI still runs the full pyramid including slower
 container-backed integration tests.
 
+## How It Actually Works
+
+- **`[CollectionDefinition]`/`[Collection("Database")]` change xUnit's
+  fundamental parallelization unit, not just fixture sharing.** By default,
+  xUnit runs different test *classes* in parallel (each on its own
+  thread-pool worker) but tests within one class sequentially; putting
+  multiple classes in the same named `[Collection]` forces xUnit to run all
+  of them sequentially, on the same logical test-runner thread, specifically
+  so they can safely share one `DatabaseFixture`/container instance without
+  racing on `IAsyncLifetime.InitializeAsync()`/`DisposeAsync()` — this is a
+  real scheduling decision inside the xUnit runner, not just documentation
+  of intended usage, which is why forgetting to add classes to a shared
+  collection when they truly share state is a common source of flaky,
+  order-dependent test failures.
+- **`IAsyncLifetime` on a fixture is xUnit's async-aware alternative to a
+  constructor/`Dispose()`, needed because starting a Testcontainers
+  container is inherently an async operation.** xUnit special-cases any
+  fixture implementing `IAsyncLifetime` and `await`s `InitializeAsync()`
+  before running any test depending on it, and `DisposeAsync()` after the
+  last one finishes — internally, `PostgreSqlContainer.StartAsync()` talks
+  to the local Docker daemon's HTTP API (create container, start it, poll
+  until the exposed port accepts connections) using ordinary async I/O, the
+  same suspension-and-resume state-machine mechanism from Module 04 of
+  Level 2, just against a Docker socket instead of a network request.
+- **`dotnet test --collect:"XPlat Code Coverage"` instruments your compiled
+  IL at test-run time via a data collector plugged into `dotnet test`'s
+  hosting process, tracking which IL instructions actually executed.** The
+  coverage collector (Coverlet, under the hood of the XPlat integration)
+  hooks into the CLR's profiling APIs to record, per method and per branch,
+  whether it was hit during the test run — this is why coverage numbers can
+  differ subtly between a `Debug` and `Release` build: the JIT's inlining
+  and dead-code elimination in `Release` mode can make certain branches
+  genuinely unreachable in the compiled output, changing what "100% branch
+  coverage" even means for that build configuration.
+- **`--filter "Category=Unit"` filters at test-discovery time, before any
+  test class is even constructed** — the VSTest/xunit runner reads each
+  test method's `[Trait]` metadata (attribute data embedded in the compiled
+  assembly, discoverable via reflection exactly like `[Fact]`/`[Theory]`
+  from Module 06 of Level 3) and excludes non-matching tests from the run
+  entirely, so a slow `BookRepositoryTests` fixture's `InitializeAsync()`
+  (starting a whole Postgres container) never runs at all when filtered out
+  — the cost savings come from never constructing the fixture, not from
+  skipping already-started work.
+
 ## Exercise
 
 Add a GitHub Actions workflow to the Level 3 REST API project (module 10)

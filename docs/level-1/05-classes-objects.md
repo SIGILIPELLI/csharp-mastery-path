@@ -170,6 +170,44 @@ Note `Counter.InstanceCount` is accessed on the type, not on an instance.
 | `: this(...)` | Constructor overload delegating to another constructor |
 | `static` | Member belongs to the type, shared across all instances |
 
+## How It Actually Works
+
+- **`new Person(...)` triggers a heap allocation from the GC's "generation 0"
+  budget.** The CLR's garbage collector organizes the heap into generations
+  (0, 1, 2, plus a separate Large Object Heap for objects ≥ 85,000 bytes).
+  New objects — `alice`, `bob`, every `Counter` — are allocated in **Gen 0**,
+  a small, fast-to-collect region. A Gen 0 collection is cheap precisely
+  because most objects (like short-lived `Person` instances in a loop) die
+  young and never get promoted; objects that survive a collection are
+  promoted to Gen 1, then Gen 2, on the theory (borne out empirically) that
+  an object that's lived a while is likely to keep living. Your `Person`
+  fields (`Name`, `Age`) live inside that one heap block, laid out
+  sequentially after an object header (containing a sync block index and a
+  method table pointer).
+- **Auto-properties compile to a field plus two methods.** `public double
+  Balance { get; private set; }` is not a language-level concept the CLR
+  understands — Roslyn generates a `private double <Balance>k__BackingField`
+  and two ordinary methods, `get_Balance()` and `set_Balance(double value)`,
+  each marked with the `specialname` IL flag so tools display them as a
+  property. Reading `account.Balance` from outside the class compiles to a
+  `callvirt get_Balance()` — a real (virtual, unless sealed/non-virtual)
+  method call, not direct field access, which is why properties can add
+  validation or logging later without breaking callers.
+- **`readonly struct Point` avoids defensive copies.** Without `readonly`,
+  the JIT must assume any method call on a `struct` field or parameter could
+  mutate it, and — when the struct is accessed through a `readonly`
+  *reference* (e.g. `in` parameters, or a `readonly` field of another type)
+  — it defensively copies the whole struct before calling any instance
+  method on it, just in case. Marking the struct itself `readonly` tells the
+  compiler no method mutates state, eliminating those hidden copies.
+- **`struct` vs `class` changes where `Rectangle r = other;` copies data.**
+  Assigning one `class` variable to another copies a 4- or 8-byte reference;
+  assigning one `struct` variable to another copies every field, bitwise.
+  For a large `struct` passed around by value repeatedly, that's real
+  work the JIT has to do on every assignment and every method call — the
+  reason the framework's own guidance caps "should be a struct" at roughly
+  16 bytes.
+
 ## Exercise
 
 Write a `Book` class with private-set properties `Title`, `Author`, and

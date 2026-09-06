@@ -193,6 +193,54 @@ populated without a second round trip per book (the N+1 query problem);
 without it, accessing `book.Author` on a detached entity would just be
 `null`.
 
+## How It Actually Works
+
+- **`migrations add` diffs two in-memory model *snapshots*, not your current
+  database schema.** EF Core builds a full representation of your current
+  `OnModelCreating`-configured model (every entity, property, relationship,
+  index) and compares it against a compiler-generated
+  `<ContextName>ModelSnapshot.cs` file checked into your `Migrations/`
+  folder representing the model as of the *last* migration — the diff
+  between those two in-memory graphs, not a live database introspection, is
+  what produces the new migration's `Up()`/`Down()` operations. This is
+  exactly why a migration can be generated with no database connection open
+  at all, and why deleting or hand-editing the snapshot file desyncs future
+  `migrations add` calls from reality.
+- **`dotnet ef database update` executes each pending migration's `Up()`
+  inside its own transaction (where the provider supports DDL transactions)
+  and records success in `__EFMigrationsHistory` only after that
+  migration's SQL completes** — this table is the actual mechanism behind
+  "it knows what's already been applied": each `dotnet ef database update`
+  invocation queries that history table first, computes the set of
+  migrations present in your `Migrations/` folder but absent from history,
+  and applies only those, in the order their timestamps sort — nothing more
+  exotic than a database-backed to-do list.
+- **A migration's `Up()`/`Down()` methods are literally C# code compiled
+  into your assembly, not a serialized description interpreted at run
+  time** — `migrationBuilder.CreateTable(...)`/`AddColumn(...)` calls are
+  ordinary method calls building up a list of `MigrationOperation` objects;
+  each database provider (SQLite, SQL Server, PostgreSQL) then translates
+  that provider-agnostic operation list into its own dialect of DDL SQL at
+  `database update` time — which is why the same `Migrations/` folder can
+  target different databases just by swapping the provider registered in
+  `OnConfiguring`/`UseSqlite`.
+- **`HasData` seed rows are baked directly into a migration's generated SQL
+  as literal `INSERT`/`DELETE` statements at migration-generation time**,
+  not read dynamically from your `OnModelCreating` code at deploy time —
+  this is why seed data added via `HasData` "ships with the schema": the
+  actual `INSERT INTO Authors (...) VALUES (1, 'Ursula K. Le Guin')`
+  statement is committed into the migration file's `Up()` method as static
+  generated code, reproducible identically wherever that migration runs.
+- **Adding a `nullable: false` column to a table with existing `NULL` rows
+  fails because the generated `ALTER TABLE`/column-add statement includes a
+  `NOT NULL` constraint the database engine enforces against every existing
+  row at DDL-execution time** — this is a genuine database-engine-level
+  constraint check, not an EF Core validation, which is exactly why the fix
+  requires a data migration (backfilling a default value into existing rows)
+  strictly before the schema migration that adds the `NOT NULL` constraint —
+  two separate `Up()` steps executed in two separate transactions/migrations,
+  not something EF Core can safely collapse into one automatically.
+
 ## Exercise
 
 Add a `Publisher` entity (`Id`, `Name`) with a one-to-many relationship to

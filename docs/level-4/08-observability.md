@@ -163,6 +163,62 @@ slow trace in Jaeger" to "here are the exact log lines from that specific
 request" — the three pillars (logs, metrics, traces) are far more useful
 correlated than viewed in isolation.
 
+## How It Actually Works
+
+- **`_logger.LogInformation("...{Customer}...", customer, total)`'s named
+  placeholders are parsed into a message template once and cached, exactly
+  like `System.Text.Json`'s per-type serialization plan and Roslyn's
+  compiled query patterns elsewhere in this course.** The first time a
+  given format string is logged, the framework parses it into a
+  `LogValuesFormatter` that knows the placeholder names and positions;
+  subsequent calls with the same template reuse that parsed structure
+  rather than re-parsing the string. Crucially, `LogInformation` is a
+  regular method call taking `object?[]` params — if the configured
+  minimum log level is above `Information`, the framework checks
+  `IsEnabled(LogLevel.Information)` *before* doing any formatting work, so
+  a disabled log statement costs only that cheap level check, not string
+  construction — the opposite of `$"..."` interpolation, which the compiler
+  forces to build the full string unconditionally before the method is even
+  called, wasting the allocation and formatting work even when nothing
+  ends up written.
+- **`BeginScope` implements its ambient-context propagation via
+  `AsyncLocal<T>`, the same mechanism .NET uses for flowing state across
+  `await` boundaries without an explicit parameter.** Because
+  `AsyncLocal<T>`'s value automatically flows to child async continuations
+  (captured and restored around each `await`'s state-machine resumption,
+  per Module 04 of Level 2) but not to unrelated concurrent operations, a
+  scope started before an `await Task.Delay(...)` stays attached to *that*
+  logical call chain specifically, even though the actual OS thread
+  executing the continuation afterward may be a completely different
+  thread-pool thread than the one that started the scope.
+- **`Activity.Current` is genuinely the same `AsyncLocal<T>`-based ambient
+  mechanism as logging scopes — traces and logging scopes solve the same
+  "how do I propagate context across async boundaries" problem with the
+  same underlying .NET primitive**, which is exactly why
+  `Activity.Current?.TraceId` reliably refers to the *currently executing
+  logical operation's* trace even from deep inside a chain of `await`ed
+  calls, without any of those methods needing to receive or pass a trace
+  context parameter explicitly.
+- **Distributed trace propagation across service boundaries works by
+  serializing `Activity`'s trace context into an outgoing HTTP header
+  (`traceparent`, the W3C Trace Context standard) on every `HttpClient`
+  call `AddHttpClientInstrumentation` wraps, and the receiving service's
+  `AddAspNetCoreInstrumentation` middleware reads that same header on the
+  way in to create a *child* span under the caller's trace rather than a
+  new, disconnected one** — this is why a whole distributed call chain
+  becomes one coherent waterfall: each service's span carries the same
+  trace ID, propagated purely through that one plain-text HTTP header, with
+  no shared database or central coordinator involved.
+- **`Counter<long>`/`Histogram<double>` from `System.Diagnostics.Metrics`
+  aggregate measurements in-process using lock-free or lightly-locked
+  accumulation structures, only exporting periodic summaries (not every
+  individual `.Add`/`.Record` call) to the configured exporter** — this is
+  why high-frequency metrics recording (once per request, even at very high
+  throughput) has negligible overhead compared to per-event logging or
+  tracing: the runtime batches and aggregates in memory, exporting
+  pre-aggregated snapshots (sums, counts, histogram buckets) on a timer
+  rather than shipping raw data points for every single measurement.
+
 ## Exercise
 
 Add `ILogger`-based structured logging to every endpoint in the Level 3 REST

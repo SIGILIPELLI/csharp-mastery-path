@@ -157,6 +157,60 @@ event until a consumer processes it. This trades immediate consistency for
 resilience and looser coupling — the right trade-off for actions that don't
 need an instant response back to the caller.
 
+## How It Actually Works
+
+- **`IHttpClientFactory` solves a real, concrete socket-exhaustion bug tied
+  to how `HttpClient`/`HttpClientHandler` manage TCP connections and DNS.**
+  A raw `new HttpClient()` per call disposes its underlying
+  `SocketsHttpHandler` (and the TCP connections it pooled) each time — but
+  TCP connections in `TIME_WAIT` after close aren't instantly reusable at
+  the OS level, so under load this exhausts available local ports. Reusing
+  one long-lived `HttpClient` forever avoids that but then never picks up
+  DNS changes, since a `SocketsHttpHandler`'s connection pool caches
+  resolved endpoints indefinitely. `IHttpClientFactory` splits the
+  difference deliberately: it hands out `HttpClient` instances backed by a
+  pooled `HttpMessageHandler` that's recycled (default every 2 minutes),
+  respecting DNS changes while keeping connections warm across most calls —
+  a genuine tension in TCP/HTTP semantics, not an arbitrary design choice.
+- **Polly's retry/circuit-breaker pipeline wraps the actual
+  `HttpMessageHandler` in the request pipeline, intercepting the same
+  `SendAsync` call the framework's DI-resolved `HttpClient` ultimately
+  makes.** `AddResilienceHandler` inserts a `DelegatingHandler` into the
+  handler chain configured for that typed client; every `GetAsync`/`PostAsync`
+  call flows through it before reaching the network. Retry re-invokes the
+  inner handler's `SendAsync` up to `MaxRetryAttempts` times with an
+  exponentially growing `Task.Delay` between attempts (the same
+  cancellation-aware delay mechanism from Module 04 of Level 3) — this is
+  why retries compose cleanly with `async`/`await`: each retry attempt is
+  just another `await`ed call through the same state-machine-based
+  suspension model.
+- **The circuit breaker maintains a rolling counter of successes/failures
+  over `SamplingDuration` and flips a shared state machine (Closed → Open →
+  HalfOpen → Closed) that every concurrent call through that client
+  observes.** Once `FailureRatio` is exceeded within the sampling window
+  with at least `MinimumThroughput` samples, the breaker moves to Open and
+  every subsequent call fails *immediately* — Polly short-circuits before
+  even attempting `SendAsync` — for `BreakDuration`, which is the actual
+  mechanism behind "protects the caller from wasting threads": no
+  connection is attempted, no timeout is waited out, calls fail fast in
+  microseconds instead of consuming a thread-pool continuation for seconds.
+- **Service discovery resolution happens per-request at the
+  `DelegatingHandler` level too, rewriting the request URI's host before it
+  reaches the actual socket layer** — `AddServiceDiscovery()` intercepts the
+  outgoing `HttpRequestMessage`, resolves the logical service name against
+  whatever backend is configured (DNS SRV records, Kubernetes service
+  endpoints, static configuration), and substitutes the resolved
+  host:port — the typed client's C# code never sees or needs to know which
+  concrete resolution mechanism is behind that logical name.
+- **Async messaging changes the failure-coupling model at a fundamentally
+  different layer than retries can fix — durability, not availability.** A
+  message broker persists the event to disk/replicated storage *before*
+  acknowledging the publish, so `PublishAsync` returning successfully means
+  the event will eventually be delivered even if every consumer is down —
+  no amount of `HttpClient` retry logic can offer that guarantee for a
+  synchronous call, because a synchronous failure with no consumer
+  listening has genuinely nowhere to store the intent to retry.
+
 ## Exercise
 
 Build two minimal API services locally: `PricingService` (returns a fixed

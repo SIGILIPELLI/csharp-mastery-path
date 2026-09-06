@@ -174,6 +174,50 @@ catch (JsonException ex)
 `JsonSerializer` throws `JsonException` (not a generic exception) on invalid
 input, so you can catch it specifically without swallowing unrelated bugs.
 
+## How It Actually Works
+
+- **`System.Text.Json` is built on `Utf8JsonReader`/`Utf8JsonWriter`, which
+  parse and emit UTF-8 bytes directly — never decoding to a UTF-16 `string`
+  intermediate.** Most JSON libraries historically read bytes, decoded them
+  to `string`/`char` (UTF-16 in .NET), then parsed that string. `Utf8JsonReader`
+  is a `ref struct` state machine that scans raw UTF-8 byte spans token by
+  token (`{`, `"key"`, `:`, numbers, ...) with zero allocation for the
+  reader itself — this is the specific design decision behind
+  `System.Text.Json`'s performance advantage over older reflection-and-
+  string-based JSON libraries, and why it's a `ref struct` at all: that
+  restricts it to stack-only use, which is precisely what lets it hold a
+  `Span<byte>` over the input safely without the GC needing to track it.
+- **`JsonSerializer.Serialize<T>` compiles a reflection-based (or, with
+  source generators, compile-time-generated) property accessor plan once per
+  type, then reuses it.** The first time you serialize a given `Person`
+  shape, the serializer inspects its properties via reflection, builds and
+  caches metadata describing how to read each one — subsequent calls reuse
+  that cached plan rather than re-reflecting every time. `record` types get
+  this metadata essentially for free because the compiler already generates
+  public positional properties with backing fields, which is exactly what
+  the serializer's reflection walk is looking for.
+- **`[JsonPropertyName]`/`[JsonIgnore]` are read once during that metadata-
+  building pass, not re-checked per property per call** — the compiled
+  serialization plan bakes in the renamed key or the "skip this member"
+  decision at plan-build time, so attribute lookup cost is paid once per
+  type, not once per object instance serialized.
+- **`JsonDocument.Parse` builds a lazy, immutable DOM over a *pooled* byte
+  buffer, which is why it implements `IDisposable`.** Unlike deserializing
+  into your own class (which copies data into new managed objects),
+  `JsonDocument` keeps the underlying UTF-8 bytes it parsed in a rented
+  buffer from `ArrayPool<byte>` and hands back `JsonElement` structs that
+  are thin views into that buffer — `GetString()`/`GetInt32()` decode lazily
+  on access rather than up front. `Dispose()` returns the rented buffer to
+  the pool; forgetting the `using` doesn't corrupt anything immediately
+  (the GC eventually reclaims it) but does prevent that buffer from being
+  reused, adding avoidable allocation pressure under load.
+- **Deserialization failures throw `JsonException` from deep inside the
+  `Utf8JsonReader` state machine** the moment a byte sequence doesn't match
+  any valid JSON token transition — the exception's `Path`/`LineNumber`/
+  `BytePositionInLine` properties come directly from the reader's own
+  position tracking as it scanned, which is why JSON parse errors in .NET
+  can point precisely at the offending character.
+
 ## Exercise
 
 Model a small `Recipe` record with `Name`, `int ServingSize`, and

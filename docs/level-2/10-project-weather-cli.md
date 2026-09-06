@@ -190,6 +190,42 @@ public class WeatherServiceTests
 | 08 Records & Pattern Matching | `record WeatherReading`, `record Result<T>` |
 | 09 NuGet & Project Structure | Splitting into `WeatherCli` + `WeatherCli.Tests` projects |
 
+## How It Actually Works
+
+- **`Result<T>.Fail` returning `default(T)` for `Value` is safe here
+  precisely because `T` is unconstrained and `Value` is typed `T?`** — for a
+  reference type like `WeatherReading`, `default(T)` is `null` (matching the
+  `T?` annotation); had `Result<int>` been used instead, `default(T)` would
+  be `0`, which is why the generic constraint story from Module 2 matters:
+  without a `where T : ...` constraint, the compiler can only ever offer you
+  `default(T)`, not a more specific "empty" value, because it has no
+  guarantee about what operations or defaults `T` actually supports.
+- **`GetCurrentAsync`'s `await Task.Delay(50)` genuinely suspends the async
+  state machine described in Module 4** — even though this is entirely
+  simulated (no real socket, no real HTTP request), the mechanism is
+  identical to a real network call: the method returns an incomplete `Task`
+  to `LookupAsync`, which itself is `async` and suspends at its own `await
+  _provider.GetCurrentAsync(city)`, propagating the suspension up through
+  `Main`'s compiler-generated state machine, all the way to whatever awaits
+  the top-level `foreach` loop's `await service.LookupAsync(city)` calls in
+  sequence — each iteration's suspension and resumption is a real, if tiny,
+  round trip through the thread pool's continuation-scheduling machinery.
+- **`JsonDocument.Parse` inside `FakeWeatherProvider` allocates a pooled
+  buffer per call, as covered in Module 7** — calling `GetCurrentAsync`
+  three times against known cities means three separate `Utf8JsonReader`
+  parses and three rented-then-returned buffers; because the `using var doc`
+  disposes it before the method returns, none of that buffer state survives
+  past the single lookup, keeping the fake provider's per-call cost
+  predictable and small.
+- **Testing against `IWeatherProvider` rather than `FakeWeatherProvider`
+  concretely works because `WeatherService`'s field is declared as the
+  interface type, so every call site compiles to the interface-dispatch
+  mechanism from Module 1** — swapping `FakeWeatherProvider` for
+  `NullProvider` in a test changes *which* interface-map entry the CLR
+  resolves `GetCurrentAsync` to at run time, with `WeatherService`'s own
+  compiled IL never needing to change or even know which implementation it
+  will eventually be handed.
+
 ## Exercise
 
 Add an `event Action<WeatherReading>? OnLookupSucceeded` to `WeatherService`,

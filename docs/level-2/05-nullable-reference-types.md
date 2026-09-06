@@ -179,6 +179,44 @@ foreach (var u in users)
 // b@example.com / (no phone)
 ```
 
+## How It Actually Works
+
+- **Nullability annotations are metadata Roslyn attaches to IL, invisible to
+  the CLR at run time.** `string` and `string?` truly compile to the exact
+  same IL type reference (`System.String`) — the compiler embeds nullability
+  facts as `[Nullable]`/`[NullableContext]` attributes on the assembly's
+  metadata purely for *other compilations* (and IDEs) to read back, so a
+  library you build with NRT enabled can inform a consumer's compiler about
+  its API's nullability even across assembly boundaries. This is exactly why
+  a `!`-suppressed warning that's actually wrong still throws
+  `NullReferenceException` at run time: there is zero runtime enforcement,
+  only a static analysis pass baked into the compiler's flow analysis.
+- **The flow analysis is a genuine dataflow algorithm, not a pattern-
+  matcher.** The compiler tracks a "null state" (not-null / maybe-null /
+  unknown) for each variable through every branch of your code, merging
+  states at control-flow joins — this is why `if (maybeName is not null) {
+  ... }` narrows `maybeName` to non-null *inside* that block specifically
+  (the compiler's flow state for that variable changes at that branch) but
+  the narrowing doesn't survive a subsequent reassignment or a call to
+  another method that could plausibly null it out again, unless that method
+  is itself annotated (`[NotNullWhen]`, `[MemberNotNull]`, etc.) to describe
+  its own null-narrowing contract to the analysis.
+- **`Nullable<T>` (`int?`) is unrelated machinery from a completely different
+  era of the language** — a real generic struct (Module 2's specialization
+  applies: `Nullable<int>` gets its own JIT-compiled layout) with a `bool
+  hasValue` field and a `T value` field, existing since C# 2.0, long before
+  nullable *reference* types (C# 8.0) were conceived. This is why `int?`
+  behaves identically whether `<Nullable>enable</Nullable>` is on or off in
+  the `.csproj` — that setting only toggles the reference-type static
+  analysis, never touching `Nullable<T>`'s actual runtime representation.
+- **`required` members are enforced by the compiler at every construction
+  site, via a hidden `RequiredMemberAttribute` and `SetsRequiredMembers`
+  checks** — `new Order()` without setting `CustomerName` fails to compile
+  because Roslyn inserts a compile-time-only obligation check, not because
+  the CLR's object-construction path itself understands "required"; a
+  reflection-based object creation path (e.g. deserializers, DI containers)
+  can still bypass it unless it explicitly honors the same attribute.
+
 ## Exercise
 
 Model a `Book` class with `required string Title`, `string? Subtitle`, and

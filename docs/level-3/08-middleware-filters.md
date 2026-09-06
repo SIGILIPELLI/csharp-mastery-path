@@ -226,6 +226,54 @@ endpoint, catching anything they throw — this is essentially what
 `UseExceptionHandler` provides out of the box, worth building once by hand
 to understand it.
 
+## How It Actually Works
+
+- **`UseMiddleware<T>()` constructs exactly one instance of your middleware
+  class per application startup — not per request — using a compiled
+  factory built via `ActivatorUtilities`, which is why per-request state
+  must never live in instance fields.** At startup, the framework reflects
+  over `RequestTimingMiddleware`'s constructor, resolves `RequestDelegate
+  next` (the already-built rest-of-pipeline delegate at that registration
+  point) and any DI services like `ILogger<T>` exactly once, and caches the
+  constructed instance for the app's entire lifetime. Only `InvokeAsync` —
+  never the constructor — runs per incoming request; this singleton-like
+  construction is why the class-based middleware pattern explicitly warns
+  against storing request-specific data in fields (it would leak across
+  concurrent requests) and instead threads everything through the
+  per-request `HttpContext` parameter.
+- **The nested-delegate chain built at startup is precisely the same
+  mechanism Module 01 described for `app.Use(...)` lambdas — class-based
+  middleware just wraps `InvokeAsync` in a delegate that closes over the
+  constructed instance.** `app.UseRequestTiming()` calls `UseMiddleware<T>`,
+  which builds a `RequestDelegate` (a `Func<HttpContext, Task>`) that calls
+  `instance.InvokeAsync(context)`, and stitches it into the nested-delegate
+  pipeline exactly like a raw lambda would — there's no architecturally
+  distinct "class middleware system," just a convenience wrapper generating
+  the same shape.
+- **Returning without calling `_next(context)` in `ApiKeyMiddleware` doesn't
+  throw or signal cancellation — it simply lets that middleware's
+  `InvokeAsync`/lambda complete, which unwinds back up through every
+  middleware registered before it (running their post-`next()` code) without
+  ever entering anything registered after it.** This is exactly the "nested
+  function call" model made concrete: skipping `next()` is equivalent to a
+  nested call simply never happening, so nothing inside that unexecuted call
+  (routing, endpoint execution, later middleware) ever runs, while
+  everything wrapping the current middleware still unwinds normally.
+- **Endpoint filters (`AddEndpointFilter`) attach to the specific
+  `RequestDelegate` the routing middleware ultimately invokes for that one
+  route, not the global pipeline** — they're resolved and composed once per
+  endpoint at startup (another nested-delegate chain, scoped narrowly), which
+  is why a filter added to one `MapGet` call never runs for a different
+  route, in contrast to `app.Use(...)` which always wraps every request
+  regardless of which endpoint eventually handles it.
+- **MVC action filters (`OnActionExecuting`) run inside the MVC action
+  invocation pipeline, which itself executes as one step deep inside the
+  outer middleware pipeline** — setting `context.Result` short-circuits only
+  that inner action-invocation pipeline (skipping the actual controller
+  method and remaining action filters) while the outer middleware chain
+  still unwinds normally afterward, the same nested-scope relationship
+  `AddEndpointFilter` has to the top-level pipeline in minimal APIs.
+
 ## Exercise
 
 Write a `RateLimitingMiddleware` that tracks request counts per client IP

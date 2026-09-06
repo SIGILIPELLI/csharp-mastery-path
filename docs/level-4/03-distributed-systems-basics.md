@@ -173,6 +173,54 @@ should fail readiness (stop receiving new traffic) without necessarily
 failing liveness (getting killed and restarted, which wouldn't fix a
 downstream outage anyway).
 
+## How It Actually Works
+
+- **`ConcurrentDictionary<string, PaymentResult>`'s thread safety comes from
+  fine-grained internal locking (striped locks over segments of its bucket
+  array), not a single global lock around every operation.** `TryGetValue`
+  is lock-free in the common case (a volatile read of the bucket, following
+  the same chained-bucket layout `Dictionary<K,V>` uses internally per
+  Module 06 of Level 1), while writes take a lock scoped to just the bucket
+  segment being modified — this is why `ConcurrentDictionary` scales far
+  better under concurrent access than wrapping a plain `Dictionary<K,V>` in
+  one `lock` around every call: multiple threads writing to *different*
+  buckets don't contend with each other at all. The in-memory idempotency
+  cache in this sketch would still lose all entries on a process
+  restart precisely because it's ordinary managed heap memory with no
+  durability — exactly why production systems back it with a database row
+  that survives the process.
+- **The outbox pattern's atomicity guarantee comes directly from EF Core's
+  single-transaction `SaveChangesAsync()` behavior described in Module 02 of
+  Level 3 — both `Orders` and `OutboxMessages` rows are staged in the same
+  `DbContext`'s change tracker and flushed as one SQL transaction.** If the
+  process crashes after that transaction commits but before the background
+  poller runs, the outbox row is durably on disk, unpublished, and gets
+  picked up on the next poll — this is a real database ACID guarantee doing
+  the heavy lifting, not application-level bookkeeping; if it crashes
+  *during* the transaction, the database rolls back both inserts together,
+  never leaving an order without its corresponding event.
+- **A `BackgroundService` (the exercise's polling worker) is a hosted
+  service the generic host runs on its own logical execution context,
+  started once at app startup via `IHostedService.StartAsync`, which
+  internally just kicks off `ExecuteAsync` as a fire-and-forget `Task`
+  tracked by the host.** Its polling loop is ordinary `async`/`await` code
+  suspending on `await Task.Delay(interval, stoppingToken)` between
+  iterations (Module 04's cooperative-cancellation mechanism, with
+  `stoppingToken` supplied by the host and signaled on graceful shutdown) —
+  there's no separate thread dedicated to it; it's scheduled onto the
+  thread pool like any other async continuation, waking up only when its
+  delay elapses or the token is cancelled.
+- **Health check endpoints execute each registered `IHealthCheck` and
+  aggregate results by scanning tags/predicates over the registration
+  list at request time, not by consulting cached state.** `AddDbContextCheck<T>`
+  actually attempts a lightweight database operation on each `/health/ready`
+  request (typically checking the connection can open), which is why
+  liveness and readiness must be separated by `Predicate` as shown — a slow
+  or unreachable database should fail the readiness check (skip that
+  predicate-filtered set including the DB check) without touching the
+  liveness check's own trivially-always-healthy delegate, keeping the
+  process alive for a database that may recover shortly.
+
 ## Exercise
 
 Implement the outbox pattern end-to-end against SQLite (module 07, Level 3):

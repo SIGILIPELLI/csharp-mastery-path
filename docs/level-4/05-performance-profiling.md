@@ -145,6 +145,62 @@ or even a simple parallel loop of `HttpClient` calls) hitting representative
 endpoints, so the CPU/memory data reflects production-shaped concurrency
 rather than a single request.
 
+## How It Actually Works
+
+- **`dotnet-trace` doesn't inject any instrumentation into your code — it
+  attaches to the CLR's built-in EventPipe, the same low-overhead tracing
+  infrastructure the runtime itself uses for diagnostics.** The
+  `Microsoft-DotNETCore-SampleProfiler` provider periodically (roughly
+  every millisecond) pauses each managed thread's execution just long
+  enough to walk its native call stack — using the same stack-frame
+  metadata the JIT already emits for exception handling and debugging — and
+  records which method was executing. A flame graph is simply an aggregate
+  of thousands of these stack-sample snapshots; the "hot" methods are the
+  ones that show up in the highest proportion of samples, which is why
+  profiling requires realistic load — sampling an idle process just
+  captures thousands of identical "waiting for work" stacks.
+- **`dotnet-counters`' GC and thread-pool metrics are read directly from the
+  runtime's own `EventCounter`/`Meter` APIs, updated by the GC and
+  thread-pool scheduler as they run** — `System.Runtime`'s `gen-0-gc-count`
+  counter increments exactly when the GC actually performs a Gen 0
+  collection (Module 5's generational collector, running whenever the Gen 0
+  budget fills), and `threadpool-queue-length` reflects the live count of
+  queued work items the thread-pool scheduler hasn't yet dispatched to a
+  worker thread. A sustained nonzero queue length under load means the pool
+  is creating new threads slower than work arrives (by design — the pool
+  grows conservatively to avoid oversubscribing cores) or existing threads
+  are blocked and unavailable — exactly what a rogue `.Result` call
+  produces, since it occupies a thread-pool thread for the call's entire
+  duration instead of yielding it back during the `await`.
+- **`GC.GetTotalAllocatedBytes()` reads the same per-thread allocation
+  counters BenchmarkDotNet's `[MemoryDiagnoser]` uses (Module 09 of Level
+  3)** — the CLR increments a running total every time it hands out memory
+  from the Gen 0 allocation budget (a simple bump-pointer allocator: Gen 0
+  is a contiguous region, and allocating there is usually just advancing a
+  pointer and checking against the budget limit, which is what makes .NET
+  allocation so cheap compared to, say, `malloc`) — this is why the number
+  reported is exact, not estimated.
+- **The `ReportWidget` leak is a direct, mechanical consequence of the GC's
+  reachability tracing described in Module 09 of Level 3** —
+  `_ticker.PriceChanged += OnPriceChanged` stores a delegate referencing
+  `this` inside `StockTicker`'s multicast invocation list (Module 03 of
+  Level 2's delegate-chain mechanism); as long as `StockTicker` itself is
+  reachable from a GC root, every `ReportWidget` in its subscriber list is
+  transitively reachable too, and the collector — correctly, by its own
+  rules — refuses to reclaim memory that's still referenced. This is
+  exactly why `dotnet-gcdump`'s object-count diff surfaces it: the leaked
+  type's instance count keeps climbing because each one really is still
+  alive, root-reachable, and doing its job as a mechanically-followed
+  reference chain, not a bug the GC could ever detect on its own.
+- **Server GC vs. Workstation GC is a choice between multiple independent
+  heaps-with-dedicated-threads (one per core, running collections in
+  parallel) versus a single heap collected by the thread that triggered the
+  collection** — this is a genuine structural difference in how the
+  collector partitions and traces the managed heap, not a tuning flag over
+  identical machinery, which is why mismatching it to the workload shows up
+  as measurably different GC pause characteristics rather than a subtle
+  statistical shift.
+
 ## Exercise
 
 Take the Level 3 REST API project (module 10), run it under load (a simple

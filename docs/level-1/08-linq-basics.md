@@ -136,6 +136,46 @@ chain.
 | `GroupBy(keySelector)` | Bucket elements by a computed key |
 | `ToList()` / `ToArray()` | Force evaluation into a concrete collection |
 
+## How It Actually Works
+
+- **`Where`/`Select` build a chain of iterator objects; nothing runs until
+  enumerated.** Calling `numbers.Where(n => n % 2 == 0)` doesn't loop over
+  `numbers` at all — it returns a small compiler/BCL-generated object (an
+  `IEnumerable<T>` implementing a state machine, similar in shape to
+  `yield return`-based iterators) that *captures* the source sequence and
+  the predicate lambda, but does no work yet. Only when something pulls
+  values out — `foreach`, `string.Join`, `ToList()` — does `MoveNext()` get
+  called repeatedly, and each `MoveNext()` call pulls exactly one element
+  through the *entire* chain (source → `Where` → `Select` → ...) before
+  producing the next. This is **deferred, pull-based, streaming execution**:
+  a `Where(...).Select(...).OrderBy(...)` chain (`OrderBy` being the
+  exception — it must buffer everything to sort) processes elements one at a
+  time end-to-end rather than materializing an intermediate list after each
+  stage.
+- **Re-enumerating a lazy query re-runs the whole chain from the source.**
+  If `numbers` changes between two `foreach` loops over the same
+  `evens` variable, the second loop sees the *new* filtered results — the
+  query is a recipe, not a snapshot. `ToList()`/`ToArray()` force one full
+  pass immediately and store the concrete results, which is why they're the
+  fix when you need a stable snapshot or plan to iterate more than once
+  (avoiding redundant recomputation of the whole pipeline).
+- **Lambdas that close over local variables allocate a closure object.**
+  `n => n % 2 == 0` doesn't reference outer state, so the compiler can cache
+  a single delegate instance and reuse it forever. But a lambda like `n =>
+  n > threshold` (where `threshold` is a local variable) forces the compiler
+  to generate a hidden class capturing `threshold` by reference, allocated
+  on the heap once per method invocation — a real, measurable allocation
+  cost in a hot loop, distinct from the delegate itself.
+- **Query syntax and method syntax compile to identical IL.** `from p in
+  people where p.Age > 25 select p.Name` is translated by Roslyn, before any
+  further compilation, directly into `people.Where(p => p.Age >
+  25).Select(p => p.Name)` — there is no separate "query engine"; it's pure
+  syntactic transformation to the method-syntax calls you already know.
+- **`GroupBy` must fully buffer the source** to build its groups (it can't
+  know a group is "done" until the whole sequence has been scanned), unlike
+  `Where`/`Select`, which stream — one of the reasons chaining a `GroupBy`
+  early in a pipeline changes the memory profile of the whole query.
+
 ## Exercise
 
 Given a `List<(string Name, string Department, double Salary)>` of employees,

@@ -192,6 +192,54 @@ Server streaming keeps one HTTP/2 connection open and pushes multiple
 responses over it — useful for live progress updates, tailing logs, or
 any producer/consumer relationship that isn't a single request/response.
 
+## How It Actually Works
+
+- **`UseAuthentication()` is middleware (Module 08 of Level 3's nested
+  pipeline) that runs the JWT handler against the incoming `Authorization`
+  header and populates `HttpContext.User` before anything downstream
+  executes.** The `JwtBearerHandler` splits the token into its three
+  base64url segments, verifies the signature over header+payload using
+  `IssuerSigningKey` (an HMAC computation for `HmacSha256`, run against the
+  raw bytes of the token — a real cryptographic operation, not a lookup),
+  and only if that passes does it deserialize the payload's claims into a
+  `ClaimsPrincipal` and attach it to the context. `ValidateLifetime`,
+  `ValidateIssuer`, `ValidateAudience` are each independent checks run
+  against plain fields in the decoded JSON payload — none of them require
+  a database round trip, which is exactly why JWTs are popular for
+  stateless, horizontally-scaled auth: any server holding the shared signing
+  key can validate a token without a central session store.
+- **`RequireAuthorization("AdminOnly")` is enforced by an authorization
+  *filter*, running inside the endpoint-invocation pipeline after routing
+  has matched — the same nested-filter-inside-middleware relationship
+  Module 08 of Level 3 described for MVC action filters.** It reads the
+  `ClaimsPrincipal` `UseAuthentication()` already populated, evaluates the
+  named policy's `RequireRole("Admin")` requirement against that user's
+  claims, and short-circuits with a 403 if it fails — never reaching your
+  endpoint's lambda body at all, exactly like `context.Result` short-
+  circuiting an MVC action filter.
+- **gRPC's typed contract is generated C# code produced by the Protobuf
+  compiler (`protoc`) as an MSBuild step, not reflection over the `.proto`
+  file at run time.** `dotnet build` invokes `protoc` (bundled via the
+  `Grpc.Tools` package) against every `.proto` file, emitting
+  `Greeter.GreeterBase`, `HelloRequest`, `HelloReply` as ordinary compiled
+  C# classes with `partial` message types backed by efficient binary
+  serialization code (Protobuf's own wire format, not `System.Text.Json`) —
+  this is why a typo in a field name is a compile error: the generated code
+  is real, statically-typed C# checked by Roslyn like anything else in your
+  project.
+- **gRPC calls run over a single persistent HTTP/2 connection using stream
+  multiplexing, which is the mechanism behind both efficient unary calls
+  and true server streaming.** Unlike HTTP/1.1 (one request per connection
+  round-trip, or limited pipelining), HTTP/2 lets many logical
+  request/response exchanges share one TCP connection as independent
+  "streams," identified by a stream ID in each frame — `StreamGreetings`'s
+  `IServerStreamWriter.WriteAsync` writes successive Protobuf-framed
+  messages onto the *same* HTTP/2 stream without closing the underlying
+  connection, and `ReadAllAsync()` on the client is an `IAsyncEnumerable<T>`
+  (Module 4-adjacent async iterator machinery) pulling frames off that
+  stream as they arrive, suspending between them exactly like `await
+  Task.Delay` suspends — no polling, no separate connection per message.
+
 ## Exercise
 
 Add JWT authentication to the REST API project from Level 3 module 10: a

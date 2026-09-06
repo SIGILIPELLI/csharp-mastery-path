@@ -192,6 +192,45 @@ public class OrderWithSetupTests : IDisposable
 }
 ```
 
+## How It Actually Works
+
+- **xUnit discovers `[Fact]`/`[Theory]` methods by scanning your test
+  assembly's metadata via reflection — no code of yours calls them
+  directly.** `dotnet test` builds your project into a `.dll`, then a
+  runner (`VSTest`/`xunit.runner`) loads that assembly with
+  `Assembly.Load`, reflects over every public type looking for methods
+  carrying the `[Fact]`/`[Theory]` custom attributes, and invokes each one
+  through `MethodInfo.Invoke` inside its own exception-catching harness —
+  this is exactly why a test method needs no special base class or
+  registration: attributes are just metadata tokens embedded in the
+  compiled IL, discoverable without running any of your code first.
+- **A fresh instance per test method is a deliberate isolation guarantee,
+  not an implementation detail you can rely on loosely.** xUnit constructs a
+  brand-new `OrderWithSetupTests` object — running its constructor — for
+  *every single* `[Fact]`/`[Theory]` case, then calls `Dispose()` (if
+  `IDisposable`) right after that one test finishes, before moving to the
+  next. This means fields like `_order` genuinely cannot leak state between
+  tests even if you tried, in contrast to some other test frameworks'
+  shared-fixture-by-default model — the tradeoff being that expensive setup
+  (a database connection, a large object graph) really does re-run per test
+  unless you opt into `IClassFixture<T>`/`ICollectionFixture<T>` to share it
+  deliberately.
+- **`[Theory]`/`[InlineData]` cases are separate test invocations at the
+  reflection level, not one loop.** The `InlineData` values are stored as
+  constructor arguments to the attribute, materialized as an `object[]` per
+  case; the runner calls the theory method once per data row via
+  `MethodInfo.Invoke(instance, dataRow)`, each treated as its own pass/fail
+  result with its own stack trace on failure — which is why one case failing
+  never suppresses the results of the others, unlike a hand-written
+  `foreach` loop of assertions in a single `[Fact]`, where the first failed
+  `Assert` throws and aborts the remaining iterations.
+- **`Assert.Throws<T>` executes the lambda and inspects the actual
+  exception's runtime type via the same type-check machinery from Module 1
+  and Module 7** — it wraps the call in `try`/`catch (Exception e)`
+  internally, then does an `is`-style check that `e`'s runtime type matches
+  (or derives from) `T`, failing the assertion with a clear message if no
+  exception was thrown at all or the wrong type was thrown.
+
 ## Exercise
 
 Write `Calculator.Tests` for a `StringUtils.Reverse(string)` and

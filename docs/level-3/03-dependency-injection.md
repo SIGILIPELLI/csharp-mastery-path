@@ -197,6 +197,51 @@ class ReportCache
 }
 ```
 
+## How It Actually Works
+
+- **The container resolves a dependency graph by walking constructor
+  parameters via reflection, once per resolution (with caching for the
+  metadata, not the instances).** `GetRequiredService<OrderService>()`
+  reflects over `OrderService`'s constructor, sees it needs `IOrderRepository`
+  and `IClock`, recursively resolves each of *those* by consulting the
+  registration table (a dictionary from service type to a descriptor holding
+  the implementation type/factory and lifetime), and only then calls `new
+  OrderService(repo, clock)` via a compiled expression tree the container
+  builds and caches after the first resolution — subsequent resolutions of
+  the same service type reuse that compiled factory rather than
+  re-reflecting every time, the same "build once, reuse" pattern as
+  `System.Text.Json`'s serialization plan.
+- **Lifetimes are implemented as three different storage/lookup strategies
+  inside the container, not a label.** Singleton instances are stored once
+  in the root `IServiceProvider`'s own instance cache and handed out for
+  every future request, from any scope. Scoped instances live in a
+  dictionary owned by the *current* `IServiceScope` — ASP.NET Core creates
+  exactly one such scope per incoming HTTP request (wired in during request
+  processing, as Module 01 covered) and disposes it — running `Dispose()` on
+  every `IDisposable` scoped instance it created — when the request
+  finishes. Transient services are never cached anywhere; every resolution
+  runs the constructor-injection factory fresh, which is exactly why `a` and
+  `b` above are different objects even resolved in the same request.
+- **The captive-dependency check is a real graph traversal run at
+  `app.Build()` (in Development) or the first resolution, not a documentation
+  warning.** ASP.NET Core's validation walks every registered singleton's
+  constructor dependencies transitively and flags any path that reaches a
+  scoped or transient-holding-scoped registration — this is a genuine static
+  analysis over the DI registration graph, catching the bug before a single
+  request runs, rather than relying on you noticing stale data in production.
+  `IServiceScopeFactory.CreateScope()` sidesteps the rule legitimately by
+  creating an independent, short-lived scope on demand — its own separate
+  dictionary of scoped instances, disposed when the `using` block ends,
+  exactly like the request-scoped one but created manually instead of by
+  the framework.
+- **`IOptions<T>` binding uses reflection once at startup to map
+  configuration keys to POCO properties** (case-insensitively, walking
+  nested sections for nested objects) and caches the bound instance as a
+  singleton — `IOptionsSnapshot<T>`/`IOptionsMonitor<T>` differ only in
+  *when* that binding re-runs (per-scope, or on a file-change/reload
+  notification), not in the underlying reflection-based binding mechanism
+  itself.
+
 ## Exercise
 
 Build a console-hosted DI container (`Host.CreateApplicationBuilder(args)`)

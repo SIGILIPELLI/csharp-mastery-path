@@ -134,6 +134,38 @@ more powerful than a simple value-equality dispatch.
 | `break` | Exit the nearest loop or switch immediately |
 | `continue` | Skip to the next iteration of the nearest loop |
 
+## How It Actually Works
+
+- **Switch expressions compile to a decision tree, not sequential tests.**
+  For a `switch` over an `int` with many arms, Roslyn emits a **jump table**
+  (IL `switch` opcode) when the case values are dense enough — the JIT turns
+  this into a single indexed branch, O(1) regardless of how many cases exist,
+  rather than a chain of `if`/`else` comparisons. For sparse or non-constant
+  patterns (type patterns, `when` guards) it falls back to a sequence of
+  conditional branches evaluated top to bottom, which is why arm *order*
+  matters once `when` clauses are involved — the compiler can't reorder
+  guarded arms for you.
+- **Pattern matching on `object shape` involves a type check, not free.**
+  `int i when i > 0` compiles to an `isinst`/`unbox.any` IL sequence: the CLR
+  checks the object's runtime type handle against `System.Int32`'s type
+  handle, and only unboxes (copies the boxed value back onto the stack) if it
+  matches. Each arm you add to a type-pattern switch is another type check in
+  sequence for the pattern-chain case, so this style of dispatch does cost
+  more than an integer jump table.
+- **`foreach` desugars to `GetEnumerator()`/`MoveNext()`/`Current`.** The
+  compiler rewrites `foreach (var fruit in fruits)` into a `try`/`finally`
+  block that calls `fruits.GetEnumerator()`, loops on `MoveNext()`, reads
+  `Current`, and disposes the enumerator in `finally` if it implements
+  `IDisposable`. For an array or `List<T>`, the compiler uses the concrete
+  struct enumerator type directly (not the `IEnumerable<T>` interface) so the
+  calls can be inlined and no heap allocation or virtual dispatch happens —
+  one reason iterating a `List<T>` with `foreach` is cheaper than iterating
+  it through an `IEnumerable<T>`-typed reference.
+- **`break`/`continue` are just labeled `br` (unconditional jump) IL
+  instructions** inserted at the right place in the compiled loop body — there
+  is no runtime cost beyond the jump itself, unlike exceptions, which unwind
+  the stack.
+
 ## Exercise
 
 Write a program that loops from 1 to 30 with `for`, and for each number uses

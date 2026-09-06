@@ -245,6 +245,42 @@ round-trips correctly, not just that the in-memory `List<TaskItem>` behaves.
 | 08 LINQ Basics | `Where`, `OrderBy`/`ThenByDescending`, `Max`, `Count`, `FirstOrDefault` |
 | 09 File I/O | `File.ReadAllLines`/`WriteAllLines`, `File.Exists` |
 
+## How It Actually Works
+
+- **`enum Priority` is a value type backed by an `int`, not a distinct
+  runtime concept.** `Priority.High` is just the integer `2` (declaration
+  order gives `Low = 0, Medium = 1, High = 2` by default) wearing a type
+  name — `Enum.Parse<Priority>` and `ToString()` work by consulting compiler-
+  generated metadata mapping names to those underlying integers. This is
+  exactly why `OrderBy(t => t.Done).ThenByDescending(t => t.Priority)`
+  sorts by priority correctly: it's comparing the underlying integers
+  (`High=2 > Medium=1 > Low=0`), not the display strings. It's also why an
+  invalid cast like `(Priority)99` compiles and runs without throwing —
+  enums aren't range-checked by the CLR unless you explicitly validate them
+  (as `ParsePriority`'s `switch` does for the string form).
+- **`tasks.Max(t => t.Id)` walks the whole list every call — an O(n) scan,
+  not a cached value.** LINQ's `Max` has no memory of previous calls; each
+  invocation of `RunCommand("add", ...)` re-scans every existing task to
+  find the highest id. For this console app's scale that's irrelevant, but
+  it's the same deferred-evaluation cost model from Module 8 — worth
+  recognizing before reaching for `tasks.Max(...)` inside a genuinely large
+  or frequently-called loop.
+- **`RemoveAll` compacts the list's backing array in place**, shifting
+  surviving elements down to fill gaps left by removed ones — a single O(n)
+  pass, not one array-shrink per removed element the way calling `Remove` in
+  a loop while iterating would be (which would also throw
+  `InvalidOperationException` for mutating a collection during
+  enumeration — a collection's enumerator checks a version counter on every
+  `MoveNext()` and throws the moment it detects the underlying list changed
+  mid-iteration).
+- **The object initializer `{ Done = done }` compiles to a plain property
+  assignment after the constructor returns** — `new TaskItem(id, title,
+  priority) { Done = done }` is exactly equivalent to constructing the
+  object, storing it in a compiler-generated temporary, calling
+  `set_Done(done)` on it, then yielding that temporary as the expression's
+  value. There's no special object-construction path involved beyond the
+  ordinary property setter call from Module 5.
+
 ## Exercise
 
 Extend the task manager with an `"edit|<id>|<newTitle>"` command that

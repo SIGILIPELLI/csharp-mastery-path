@@ -208,6 +208,56 @@ services:
 | Dependency injection | Level 3 · 03 |
 | Middleware/health checks | Level 3 · 08 |
 
+## How It Actually Works
+
+- **The `Orders API` and `Inventory Worker` are two entirely separate CLR
+  processes with independent GCs, JIT-compiled code, and memory heaps —
+  there is zero shared managed state between them, which is exactly why the
+  outbox pattern (persisting intent to a shared *database*, not shared
+  memory) is the only safe way to hand off work across that boundary.**
+  Everything Module 05 of Level 3 and Module 05 of Level 4 covered about one
+  process's generational GC, thread pool, and allocation behavior applies
+  independently to each container — a GC pause in `Inventory Worker` has no
+  effect whatsoever on `Orders API`'s request latency, and vice versa,
+  because they don't share an address space at all.
+- **`OutboxPublisherService.ExecuteAsync`'s `_scopeFactory.CreateScope()`
+  inside the polling loop creates a fresh `IServiceScope` — and therefore a
+  fresh `OrdersDbContext` — on every single poll iteration, deliberately.**
+  Per Module 03 of Level 3, `DbContext` is scoped and not thread-safe/
+  long-lived-safe; a `BackgroundService` has no per-request scope handed to
+  it automatically (there's no HTTP request driving it), so it must
+  construct and dispose its own scope explicitly each iteration — this is
+  the captive-dependency problem from Module 03, solved the same way: never
+  hold a scoped service across the `BackgroundService`'s entire (effectively
+  singleton) lifetime.
+- **`RequireAuthorization()` on `POST /orders` and its absence on `GET
+  /orders/{id}` means the JWT validation middleware (Module 02's signature/
+  claims verification) only actually executes its enforcement step for the
+  protected route — `UseAuthentication()` still runs for every request
+  (populating `HttpContext.User` if a valid token is present), but only the
+  authorization filter attached to the `POST` endpoint's pipeline
+  short-circuits an unauthenticated call**, which is precisely why the test
+  `PostOrder_WithoutAuth_ReturnsUnauthorized` targets `POST` specifically —
+  a matching test against the unprotected `GET` would (correctly) never see
+  a 401 no matter what credentials are supplied.
+- **The Docker Compose `depends_on: [orders-api]` only sequences container
+  *start*, not the SQLite file or migrations being ready — this is the same
+  ordering-versus-readiness gap Module 07 called out for Postgres**, and
+  it's why a genuinely reliable version of this capstone needs the
+  `Inventory Worker`'s first poll iteration to tolerate a not-yet-existing
+  `orders.db` (a caught exception and retry-after-delay, or an explicit
+  readiness dependency) rather than assuming the file exists the instant
+  its own container process starts.
+- **Swapping outbox-polling for a real message broker changes the delivery
+  *timing* guarantee from "eventually, bounded by poll interval" to
+  "near-immediately, push-based," but the atomicity guarantee underpinning
+  correctness — the order row and its associated event committing together
+  in one database transaction (Module 03) — stays identical either way**;
+  the broker only replaces the *transport* between "durably recorded intent
+  to publish" and "consumer receives it," which is exactly why outbox-based
+  designs migrate to a real broker without redesigning the write path, only
+  the publisher that drains the outbox table.
+
 ## Exercise
 
 Build the two services and the Docker Compose file described above end to

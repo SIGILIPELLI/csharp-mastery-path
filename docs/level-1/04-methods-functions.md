@@ -147,6 +147,35 @@ the call site — no need for a custom class just to return two values.
 | `=>` expression body | Shorthand for a single-expression method |
 | Tuple return `(T1, T2)` | Return multiple values without a dedicated class |
 
+## How It Actually Works
+
+- **`ref`/`out` pass a managed pointer, not a copy.** Under the hood both
+  compile to the same IL mechanism — a byref parameter — the difference
+  between them (`out` must be assigned, `ref` must be initialized first) is
+  purely a **compile-time definite-assignment rule** enforced by Roslyn; the
+  JIT-generated code for `ref int x` and `out int x` is identical. This is
+  why `ref`/`out` avoid copying a large `struct` on every call: the callee
+  operates on the caller's actual stack slot through a pointer, instead of
+  the value being pushed onto the callee's frame by value.
+- **`params` allocates an array at the call site.** `Average(1, 2, 3, 4, 5)`
+  is rewritten by the compiler into `Average(new int[] { 1, 2, 3, 4, 5 })` —
+  a real heap allocation happens on every call unless you pass an
+  already-existing array. In hot paths this is a known source of GC
+  pressure, which is why performance-sensitive framework APIs increasingly
+  offer `ReadOnlySpan<T>`-based overloads instead of `params T[]`.
+- **Tuples (`(int min, int max)`) are a `System.ValueTuple` struct, not a
+  class.** Because it's a value type, returning `(mn, mx)` copies the two
+  ints inline in the return value — no heap allocation, unlike the older
+  `Tuple<T1,T2>` reference type it replaced. The element names (`min`,
+  `max`) exist only in compiler metadata (`TupleElementNamesAttribute`) for
+  IntelliSense and readability; at the IL level the fields are just
+  `Item1`/`Item2`, which is why tuple field names don't survive across
+  assembly boundaries without that attribute being present.
+- **Expression-bodied members (`=>`) are purely syntactic sugar** — Roslyn
+  emits the exact same method body IL as the equivalent `{ return ...; }`
+  block. There is no runtime distinction between the two forms; choosing one
+  over the other is a readability decision only.
+
 ## Exercise
 
 Write a method `TryDivide(int a, int b, out int result)` that returns `false`

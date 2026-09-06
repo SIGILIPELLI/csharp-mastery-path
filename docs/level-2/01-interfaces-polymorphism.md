@@ -166,6 +166,42 @@ null check.
 | Explicit interface implementation | Member only reachable via the interface type |
 | `is` pattern | Type test + binding in one expression |
 
+## How It Actually Works
+
+- **Every interface call and `virtual`/`override` call is a `callvirt` — a
+  vtable lookup, not a direct jump.** For a `virtual` method, each type's
+  method table (created once per type when it's first loaded) has a slot for
+  that method, and `Dog`/`Cat` overriding `Speak()` just means their method
+  tables point that slot at their own implementation. Calling `pet.Speak()`
+  through an `Animal`-typed reference compiles to: read the object's method
+  table pointer (stored in its object header), index into the slot, jump to
+  whatever address is there — resolved at run time based on the object's
+  *actual* type, not the reference's declared type. This indirection is
+  what makes runtime polymorphism possible, and it's marginally slower than
+  a non-virtual call (an extra memory read) — usually irrelevant, but the
+  reason `sealed` classes/methods exist: they let the JIT skip the vtable
+  lookup and inline or devirtualize the call when it can prove the concrete
+  type statically.
+- **Interfaces use a separate interface-method-table mechanism, since a
+  class can implement many interfaces but has only one class hierarchy.**
+  The CLR maintains, per type, a mapping from each implemented interface's
+  methods to that type's concrete implementations — dispatching
+  `shape.Area()` through an `IShape`-typed reference looks up `Circle`'s (or
+  `Rectangle`'s) interface map to find the right vtable slot, then jumps
+  there, same as the class case but through one more level of indirection.
+- **Default interface methods are compiled directly into the interface's own
+  method table, called via a distinct `constrained.callvirt` sequence** —
+  `ConsoleLogger` genuinely has no `LogError` method of its own; the CLR
+  routes the call to `ILogger`'s default implementation only when no
+  overriding implementation exists on the concrete type, resolved once at
+  JIT time per call site (not re-checked on every call).
+- **`is Circle c` compiles to an `isinst` type check followed by a
+  conditional store**, exactly like the pattern-matching Module 3 covered —
+  the CLR walks the object's type-hierarchy metadata (and interface map, for
+  interface type tests) to answer "is this object's runtime type `Circle`
+  or a `Circle`-derived type," which is a genuine runtime cost proportional
+  to hierarchy depth, unlike a non-polymorphic direct field/method access.
+
 ## Exercise
 
 Define an `IPayable` interface with `decimal CalculatePay()`. Implement it

@@ -138,6 +138,40 @@ concatenation of path segments.
 | `File.Exists` / `Directory.Exists` | Check before acting, avoid exceptions for expected cases |
 | `Path.Combine` | Build cross-platform-correct file paths |
 
+## How It Actually Works
+
+- **`StreamWriter`/`StreamReader` wrap a `FileStream`, which wraps an OS file
+  descriptor — and buffer in user space to reduce syscalls.** Every read or
+  write ultimately becomes a system call into the OS kernel, which is orders
+  of magnitude slower than in-memory work. `StreamReader`/`StreamWriter`
+  keep an internal character buffer (default 1KB, tunable via a
+  constructor overload) so that calling `ReadLine()` repeatedly doesn't
+  issue a syscall per line — it issues one syscall to fill the buffer, then
+  serves many `ReadLine()` calls out of memory until the buffer is
+  exhausted. `File.ReadAllText`/`ReadAllLines` do the same buffering
+  internally but hide it, at the cost of holding the *entire* decoded file
+  in memory at once — fine for small files, a real problem for anything
+  approaching available RAM.
+- **`Dispose()` on a stream flushes buffered writes before releasing the OS
+  handle.** This is the mechanism-level reason `using` matters so much for
+  I/O specifically: if you write via `StreamWriter` and the process crashes
+  (or an exception propagates) before `Dispose()` runs, buffered-but-not-yet-
+  flushed bytes never reach disk — the file can look truncated or missing
+  your last few writes. `using` guarantees `Dispose()` — and therefore the
+  flush — runs via the compiler-generated `finally` block from Module 7,
+  even on the exception path.
+- **Text encoding happens at the stream boundary, not in your strings.** A
+  C# `string` is always UTF-16 in memory; `StreamWriter`/`StreamReader`
+  default to UTF-8 on disk (configurable via a constructor overload) and
+  transcode on every read/write. This conversion is why a file written by
+  one encoding and read assuming another silently corrupts non-ASCII
+  characters — the bytes on disk and the `char`s in memory are never the
+  same representation.
+- **`File.ReadAllText` internally opens, reads, and disposes a `FileStream`
+  in one call** — it's not a different I/O mechanism, just a convenience
+  wrapper that saves you writing the `using` block yourself for the common
+  "read it all now" case.
+
 ## Exercise
 
 Write a program that writes a list of at least five numbers to

@@ -182,6 +182,55 @@ dotnet nuget locals global-packages --list
 # global-packages: /Users/you/.nuget/packages
 ```
 
+## How It Actually Works
+
+- **`dotnet build`/`dotnet restore` are MSBuild invocations — the `.csproj`
+  is an MSBuild XML script, not a passive manifest.** `<PropertyGroup>` and
+  `<ItemGroup>` are literally MSBuild's variable and list syntax; the SDK-
+  style `<Project Sdk="Microsoft.NET.Sdk">` line imports a large set of
+  `.targets`/`.props` files installed with the SDK that define *how* to
+  compile C# into IL, run the compiler, and copy outputs — this is the
+  actual mechanism behind "no `<Compile Include>` needed": the imported SDK
+  targets glob `**/*.cs` automatically. Every `dotnet build` is really
+  MSBuild resolving that whole import graph and executing a dependency-
+  ordered series of build targets (`Restore` → `Compile` → `CoreCompile`
+  invoking Roslyn → `CopyFilesToOutputDirectory`, and more).
+  `Directory.Build.props`/`Directory.Build.targets` work by MSBuild
+  automatically probing parent directories for those exact filenames and
+  importing them early/late in the build, which is why they apply to every
+  `.csproj` beneath them with zero explicit reference.
+- **A `PackageReference` resolves to a set of assembly `.dll` files copied
+  into your output directory — this is real assembly loading at run time.**
+  At restore time, NuGet computes a dependency graph (including transitive
+  package dependencies) and writes it into `obj/project.assets.json`; at
+  build time, MSBuild reads that file to know exactly which assemblies to
+  reference for compilation and which ones to copy next to your `.dll` in
+  `bin/`. At run time, the CLR's assembly loader resolves each `using`d
+  type's containing assembly by consulting a generated `.deps.json`
+  manifest (listing every dependency and its expected version) plus a
+  `.runtimeconfig.json` describing which shared framework to bind against —
+  a version mismatch between what was compiled against and what's
+  physically present at run time is what produces
+  `FileNotFoundException`/`FileLoadException` at the moment a type from that
+  assembly is first touched (consistent with the JIT's lazy, per-method
+  compilation model from Module 1: assembly loading is similarly deferred
+  until something actually needs a type from it).
+- **The global NuGet cache (`~/.nuget/packages`) is what the *build* reads
+  from, not what ships.** MSBuild's restore step resolves package
+  references against that shared cache and then hard-links or copies the
+  specific assemblies your project needs into its own `bin/` output — this
+  is why ten projects referencing the same package version share one cached
+  copy on disk during development, but each project's *published* output
+  still carries its own independent copy of the assemblies it actually
+  needs at run time.
+- **`global.json`'s SDK pinning affects which MSBuild/Roslyn toolchain
+  runs, not which CLR your compiled app targets at run time** — those are
+  two independent version knobs: `global.json` picks the *build-time* SDK
+  (compiler, MSBuild version), while `<TargetFramework>net8.0</TargetFramework>`
+  picks the runtime/API surface the compiled assembly targets — a project
+  can be built with a newer SDK while still targeting an older
+  `TargetFramework`.
+
 ## Exercise
 
 Build a two-project solution: `MyLib.Core` (a class library with a

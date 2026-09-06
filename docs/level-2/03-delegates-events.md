@@ -136,6 +136,45 @@ thermostat.SetTemperature(21.5);
 | `event` | Restricted delegate field — subscribe/unsubscribe only from outside |
 | `?.Invoke(...)` | Null-safe way to raise an event |
 
+## How It Actually Works
+
+- **A delegate instance is a small object holding a method pointer *and* a
+  target reference.** `Operation op = Add` allocates a `Delegate`-derived
+  object on the heap with two key fields: the method's compiled-code entry
+  point, and (for instance methods) a reference to the target object the
+  method should run against — this is how `op(3, 4)` knows both *what* code
+  to jump to and *which* `this` to use, if any. A `static` method target
+  like `Add` leaves that second field null. Assigning `op = Multiply` isn't
+  mutating the delegate — it creates a brand-new delegate object and
+  rebinds the variable to it, since delegates are immutable once created.
+- **Multicasting is implemented as a linked list of single-cast delegates,
+  wrapped in a `MulticastDelegate`.** `notify += ...` doesn't append to some
+  internal array — it allocates a *new* `MulticastDelegate` whose invocation
+  list is the old list plus the new delegate, and reassigns `notify` to
+  point at it (delegates being immutable, exactly like `string`
+  concatenation building a new string rather than mutating in place).
+  Invoking a multicast delegate walks that list and calls each entry in
+  order, synchronously, on the calling thread — which is exactly why a
+  `Func<T,TResult>` multicast only surfaces the last method's return value:
+  the CLR's generated invoke loop simply discards every intermediate result
+  except the final one.
+- **`event` is a language-level access restriction over an ordinary delegate
+  field, enforced by the compiler, not the CLR.** Under `public event
+  Action<string>? Shipped;`, the compiler generates a private backing
+  delegate field plus `add_Shipped`/`remove_Shipped` accessor methods (again
+  the `specialname` pattern from properties). Code inside `Order` can use
+  `Shipped` as a plain field (including calling `Invoke` on it directly);
+  code outside the class can only call `+=`/`-=`, which the compiler routes
+  through those accessor methods — there is no way to reach the raw field or
+  call `=` to replace the whole list from outside, because the compiler
+  simply refuses to emit that access, not because the CLR blocks it.
+- **`?.Invoke(...)` reads the delegate field into a local exactly once**
+  before checking null and invoking — this null-safety pattern exists
+  specifically because a multi-threaded unsubscribe (`-=`) between the null
+  check and the call could otherwise race and null out the field mid-call;
+  capturing it into a temporary first (which is what `?.` compiles to)
+  avoids that particular `NullReferenceException` race.
+
 ## Exercise
 
 Build a `Stopwatch`-like `Timer` class with an `event Action<int> Tick` that

@@ -169,6 +169,46 @@ in more depth.
 | `IndexOutOfRangeException` | `SystemException` | Array/string index out of bounds |
 | Custom (`: Exception`) | Your choice | Domain-specific failure |
 
+## How It Actually Works
+
+- **Throwing an exception is expensive — much more than a `return` or a
+  bool-based `TryX` failure.** When `throw` executes, the CLR captures a
+  stack trace by walking the call stack frame by frame, allocates the
+  exception object on the heap, and then performs **two-pass exception
+  handling**: pass one walks up the stack looking for a matching `catch`
+  filter (evaluating `when` clauses as it goes, without unwinding anything
+  yet), and only once a handler is found does pass two actually unwind the
+  stack, running `finally` blocks along the way, down to that handler. This
+  two-pass design is *why* `catch (Exception e) when (...)` can inspect state
+  from deeper frames before the stack is torn down — those frames are still
+  alive during the search pass. It's also why hot-path "expected failure"
+  logic (parsing user input, probing a dictionary) should prefer `TryParse`/
+  `TryGetValue` over `try`/`catch` — the exception path costs orders of
+  magnitude more CPU than a bool check.
+- **`finally` blocks are protected regions in the CLR's exception table**,
+  not something the JIT re-derives from control flow — the compiled method
+  carries metadata describing which IL ranges are `try` regions and which
+  `finally`/`catch` handler each maps to. This is also why you can't safely
+  `return` out of a `finally` in most languages that support this pattern —
+  C# disallows a bare `goto`/`return` jumping *into* a try region, and any
+  jump *out* of one triggers the runtime to still run intervening `finally`
+  blocks before completing.
+- **`using` compiles to a `try`/`finally` calling `Dispose()`.** The compiler
+  desugars `using (var writer = ...)  { ... }` into `try { ... } finally {
+  if (writer != null) writer.Dispose(); }` — literally the same IL you'd get
+  writing that by hand. `Dispose()` is a deterministic, synchronous cleanup
+  hook the CLR itself does not call automatically; it exists specifically
+  for unmanaged resources (file handles, sockets, database connections) that
+  the garbage collector doesn't know how to reclaim promptly, since the GC
+  only tracks managed memory pressure, not OS handles.
+- **Custom exceptions add virtual dispatch overhead to `catch` matching.**
+  When the CLR searches for a matching handler, it checks the exception's
+  runtime type against each `catch` clause's declared type using the same
+  `isinst` type-check machinery as pattern matching (Module 3) — walking the
+  inheritance chain from your `InsufficientFundsException` up through
+  `Exception` until it finds (or fails to find) a match, in source order,
+  top to bottom.
+
 ## Exercise
 
 Write a method `SafeDivide(int a, int b)` that returns the division result,

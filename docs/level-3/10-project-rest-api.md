@@ -186,6 +186,55 @@ public class BooksApiTests : IClassFixture<WebApplicationFactory<Program>>
 }
 ```
 
+## How It Actually Works
+
+- **`Book` being a `record` with `init`-only properties makes `book with { Id
+  = 0 }` allocate a genuinely new object per request — the copy-constructor
+  mechanism from Module 8 of Level 2 running on every single `AddAsync`
+  call.** Because each incoming request gets its own deserialized `Book`
+  (`System.Text.Json`'s per-type cached plan from Module 07 materializing a
+  fresh instance from the request body), and `with` always clones rather
+  than mutates, there's no shared mutable state between concurrent requests
+  even under heavy load — a property this API gets essentially for free from
+  choosing `record` over a mutable `class`.
+- **`AddDbContext<LibraryDbContext>` registers the context as `Scoped` by
+  default — one instance per HTTP request, matching the "scope per request"
+  mechanism from Module 03.** This is exactly why `EfBookRepository`,
+  itself registered `AddScoped`, safely shares one `_db` across the whole
+  request without any locking: nothing else touches that specific
+  `DbContext` instance concurrently, since ASP.NET Core guarantees each
+  request gets its own isolated scope and therefore its own `DbContext`.
+  This also means `DbContext` is *not* thread-safe by design and must never
+  be captured into a singleton — the exact "captive dependency" trap Module
+  03 covered, just with `DbContext` as the scoped service being captured.
+- **`_db.Books.FindAsync(id)` checks the context's own change-tracker cache
+  before touching the database at all.** `FindAsync` (unlike `FirstOrDefaultAsync`)
+  first looks for an already-tracked entity with that primary key in the
+  current `DbContext`'s in-memory identity map (Module 02's change-tracker
+  snapshot mechanism); only on a cache miss does it issue a real `SELECT ...
+  WHERE Id = @id` against SQLite. Within a single request that calls
+  `FindAsync` once and later `SaveChangesAsync()`, this identity map is what
+  guarantees you're mutating the *same* tracked object the SQL update will
+  be diffed against.
+- **`CurrentValues.SetValues(book with { Id = id })` copies scalar property
+  values into the tracked entity's shadow state without replacing the
+  tracked object reference** — this is a targeted API operating directly on
+  EF Core's change-tracking snapshot (the same mechanism from Module 02),
+  which is why it correctly triggers `SaveChangesAsync()` to emit an
+  `UPDATE` only for columns whose values actually differ, rather than
+  detaching the old entity and attaching a wholesale replacement (which
+  would confuse the tracker about what changed).
+- **The middleware-wraps-routing-wraps-repository-call chain here is the
+  full pipeline from Module 01 and Module 08 composed end to end** — the
+  request-logging `app.Use(...)` lambda is the outermost nested delegate;
+  it calls `next()`, which runs routing, model binding, and finally your
+  `MapPost` lambda, which itself `await`s into `EfBookRepository.AddAsync`
+  — an async call suspending and resuming per Module 04's state-machine
+  mechanism — before control unwinds back out through routing and finally
+  back to the logging middleware's `Stopwatch.ElapsedMilliseconds`
+  read, which only sees an accurate elapsed time because it genuinely waited
+  for that entire nested chain to complete via `await next()`.
+
 ## Exercise
 
 Extend the API with a `GET /books/search?author=&fromYear=&toYear=` endpoint
