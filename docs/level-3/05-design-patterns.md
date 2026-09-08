@@ -197,6 +197,10 @@ one-instance guarantee while staying testable (you can substitute a fake
 instance in tests) — prefer DI-managed singletons over static
 `Instance` properties in new code.
 
+## How It Actually Works
+
+Every pattern here compiles down to the same handful of CLR mechanisms you already know: an interface reference is a fat pointer (object pointer + method table pointer), so swapping a `Strategy` implementation at runtime is just reassigning which method table that pointer points at — no branching logic needed at the call site, the CPU just jumps through a different vtable slot. `Decorator` works because C# lets you compose objects that all satisfy the same interface; each layer holds a reference to the next and the call chain is literally a linked list of virtual calls, unwound one frame at a time. `Singleton`'s thread-safety concern is real: the CLR does not guarantee static field initialization is atomic across threads unless you use a construct (like `Lazy<T>`) that inserts a double-checked lock under the hood — which is exactly why DI containers, which manage a single instance in a container-owned dictionary with their own synchronization, make hand-rolled singletons mostly unnecessary.
+
 ## Exercise
 
 Model a payment pipeline: an `IPaymentProcessor` interface with a

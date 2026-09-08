@@ -170,6 +170,10 @@ outright rejected by browsers for good reason — it would let any site on
 the internet make authenticated requests to your API using a logged-in
 user's cookies. Always name specific trusted origins.
 
+## How It Actually Works
+
+Password hashing algorithms like bcrypt/Argon2 are deliberately slow because they run a tunable number of internal rounds — each one mixing the password with a per-user salt through a memory-hard function, so brute-forcing means paying that same cost per guess with no shortcut (unlike a fast hash like SHA-256, which an attacker with a GPU farm can try billions of times a second). SQL injection defenses work because a parameterized query sends the SQL text and the user's data over the wire *separately* — the database compiles the query plan from the fixed SQL first, then binds the parameters as pure data, so there's no way for a malicious string to be reinterpreted as a command token. CORS is not a security boundary for your server (a server-to-server request never triggers it) — it's a lock the *browser* enforces on behalf of the user, checking your `Access-Control-Allow-Origin` response header before letting the calling page's JavaScript read the response; without that header allowing it, the request often still runs on the server, only the browser blocks the JS from seeing the result.
+
 ## Exercise
 
 Add proper authentication to the Level 3 REST API project: hash and store a
