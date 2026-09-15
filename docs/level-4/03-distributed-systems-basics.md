@@ -225,6 +225,10 @@ downstream outage anyway).
   liveness check's own trivially-always-healthy delegate, keeping the
   process alive for a database that may recover shortly.
 
+## 🔀 See this in another language
+
+- [Scala — 02 · Distributed Systems with Akka](https://sigilipelli.github.io/scala-mastery-path/level-4/02-distributed-systems-akka/)
+
 ## Exercise
 
 Implement the outbox pattern end-to-end against SQLite (module 07, Level 3):

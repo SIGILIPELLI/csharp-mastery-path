@@ -223,6 +223,11 @@ correlated than viewed in isolation.
   pre-aggregated snapshots (sums, counts, histogram buckets) on a timer
   rather than shipping raw data points for every single measurement.
 
+## 🔀 See this in another language
+
+- [Shell/Bash — 08 · Logging & Observability for Scripts](https://sigilipelli.github.io/shell-mastery-path/level-4/08-logging-observability/)
+- [PowerShell — 09 · Logging & Observability for Scripts](https://sigilipelli.github.io/powershell-mastery-path/level-4/09-logging-observability/)
+
 ## Exercise
 
 Add `ILogger`-based structured logging to every endpoint in the Level 3 REST

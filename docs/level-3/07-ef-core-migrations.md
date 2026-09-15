@@ -245,6 +245,10 @@ without it, accessing `book.Author` on a detached entity would just be
   two separate `Up()` steps executed in two separate transactions/migrations,
   not something EF Core can safely collapse into one automatically.
 
+## 🔀 See this in another language
+
+- [JavaScript — 04 · Working with Databases](https://sigilipelli.github.io/javascript-mastery-path/level-3/04-databases/)
+
 ## Exercise
 
 Add a `Publisher` entity (`Id`, `Name`) with a one-to-many relationship to

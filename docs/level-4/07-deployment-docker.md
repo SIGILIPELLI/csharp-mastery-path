@@ -235,6 +235,12 @@ or a manual rollback can target an exact previous build instead of hoping
   for a slow downstream dependency the process itself is fine, which
   belongs in readiness instead.
 
+## 🔀 See this in another language
+
+- [TypeScript — 06 · Deployment with Docker](https://sigilipelli.github.io/typescript-mastery-path/level-4/06-deployment-docker/)
+- [Go — 06 · Deployment with Docker](https://sigilipelli.github.io/go-mastery-path/level-4/06-deployment-docker/)
+- [Rust — 07 · Deployment with Docker](https://sigilipelli.github.io/rust-mastery-path/level-4/07-deployment-docker/)
+
 ## Exercise
 
 Write a multi-stage Dockerfile for the Level 3 REST API project, build it,

@@ -221,6 +221,11 @@ foreach (var u in users)
   reflection-based object creation path (e.g. deserializers, DI containers)
   can still bypass it unless it explicitly honors the same attribute.
 
+## 🔀 See this in another language
+
+- [Kotlin — 04 · Null Safety Advanced](https://sigilipelli.github.io/kotlin-mastery-path/level-2/04-null-safety-advanced/)
+- [Dart — 02 · Null Safety Advanced](https://sigilipelli.github.io/dart-mastery-path/level-2/02-null-safety-advanced/)
+
 ## Exercise
 
 Model a `Book` class with `required string Title`, `string? Subtitle`, and

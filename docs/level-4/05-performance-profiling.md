@@ -205,6 +205,12 @@ rather than a single request.
   as measurably different GC pause characteristics rather than a subtle
   statistical shift.
 
+## 🔀 See this in another language
+
+- [C — 03 · Performance Optimization & Profiling](https://sigilipelli.github.io/c-mastery-path/level-4/03-performance-profiling/)
+- [MATLAB — 04 · Performance Profiling & Optimization](https://sigilipelli.github.io/matlab-mastery-path/level-4/04-performance-profiling/)
+- [TypeScript — 07 · Performance Optimization](https://sigilipelli.github.io/typescript-mastery-path/level-4/07-performance-optimization/)
+
 ## Exercise
 
 Take the Level 3 REST API project (module 10), run it under load (a simple

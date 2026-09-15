@@ -193,6 +193,11 @@ deadlock. Prefer `await` all the way up the call stack.
   code — tells the state machine not to capture that context, avoiding the
   deadlock at the cost of resuming on an arbitrary thread-pool thread instead.
 
+## 🔀 See this in another language
+
+- [JavaScript — 04 · Promises & Async/Await](https://sigilipelli.github.io/javascript-mastery-path/level-2/04-promises-async-await/)
+- [TypeScript — 06 · Async/Await with Types](https://sigilipelli.github.io/typescript-mastery-path/level-2/06-async-await-types/)
+
 ## Exercise
 
 Write `DownloadAllAsync(string[] urls)` that simulates downloading each URL

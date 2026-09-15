@@ -246,6 +246,10 @@ class ReportCache
   notification), not in the underlying reflection-based binding mechanism
   itself.
 
+## 🔀 See this in another language
+
+- [PHP — 08 · Dependency Injection Basics](https://sigilipelli.github.io/php-mastery-path/level-3/08-dependency-injection/)
+
 ## Exercise
 
 Build a console-hosted DI container (`Host.CreateApplicationBuilder(args)`)

@@ -218,6 +218,10 @@ on your actual workload.
   span-based version's near-zero allocation: it's measuring the real
   garbage collector's bookkeeping, not estimating from source code.
 
+## 🔀 See this in another language
+
+- [JavaScript — 08 · Performance & Memory](https://sigilipelli.github.io/javascript-mastery-path/level-3/08-performance-memory/)
+
 ## Exercise
 
 Write a method `CountWords(ReadOnlySpan<char> text)` that counts

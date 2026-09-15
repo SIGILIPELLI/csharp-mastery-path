@@ -239,6 +239,12 @@ public class BooksApiTests : IClassFixture<WebApplicationFactory<Program>>
   read, which only sees an accurate elapsed time because it genuinely waited
   for that entire nested chain to complete via `await next()`.
 
+## 🔀 See this in another language
+
+- [Java — 11 · Project — REST API + Database CRUD Service](https://sigilipelli.github.io/java-mastery-path/level-3/11-project-rest-api-db/)
+- [Ruby — 10 · Project — REST API Service](https://sigilipelli.github.io/ruby-mastery-path/level-3/10-project-rest-api/)
+- [PHP — 10 · Project — REST API Service](https://sigilipelli.github.io/php-mastery-path/level-3/10-project-rest-api/)
+
 ## Exercise
 
 Extend the API with a `GET /books/search?author=&fromYear=&toYear=` endpoint
