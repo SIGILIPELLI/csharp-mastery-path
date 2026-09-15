@@ -1,3 +1,7 @@
+---
+description: "Microservices Patterns in .NET — A microservice architecture splits one application into independently deployable services that communicate over the…"
+---
+
 # 01 · Microservices Patterns in .NET
 
 A microservice architecture splits one application into independently

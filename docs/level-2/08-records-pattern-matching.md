@@ -1,3 +1,7 @@
+---
+description: "Records & Pattern Matching — Records are reference types built for representing immutable data, with value-based equality and a compact declaration…"
+---
+
 # 08 · Records & Pattern Matching
 
 Records are reference types built for representing immutable data, with

@@ -1,3 +1,7 @@
+---
+description: "Variables & Types — C# is statically typed — every variable's type is fixed at compile time, either written explicitly or inferred with var."
+---
+
 # 02 · Variables & Types
 
 C# is **statically typed** — every variable's type is fixed at compile time,
@@ -170,6 +174,12 @@ explains most of the "gotchas" in this module.
   indirection and heap allocation a reference type would need. The compiler
   rewrites `??` and `.Value`/`.HasValue` into direct field access on that
   struct — there's no boxing unless you assign an `int?` to an `object`.
+
+## 🔀 See this in another language
+
+- [Go — Variables, Types & Operators](https://sigilipelli.github.io/go-mastery-path/level-1/02-variables-types-operators/)
+- [Scala — Variables & Types](https://sigilipelli.github.io/scala-mastery-path/level-1/02-variables-types/)
+- [PowerShell — Variables & Types](https://sigilipelli.github.io/powershell-mastery-path/level-1/02-variables-types/)
 
 ## Exercise
 

@@ -1,3 +1,7 @@
+---
+description: "Distributed Systems Basics for .NET — Once an application spans multiple processes and machines, new failure modes appear that never come up in a single…"
+---
+
 # 03 · Distributed Systems Basics for .NET
 
 Once an application spans multiple processes and machines, new failure

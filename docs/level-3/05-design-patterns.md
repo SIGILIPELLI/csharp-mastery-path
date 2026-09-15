@@ -1,3 +1,7 @@
+---
+description: "Design Patterns in C# — Design patterns are named solutions to recurring problems. C#'s language features (interfaces, delegates, generics, records) make…"
+---
+
 # 05 · Design Patterns in C#
 
 Design patterns are named solutions to recurring problems. C#'s language

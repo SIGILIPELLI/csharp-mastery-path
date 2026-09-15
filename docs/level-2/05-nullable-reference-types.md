@@ -1,3 +1,7 @@
+---
+description: "Nullable Reference Types & Null Safety — Nullable reference types (NRT) turn NullReferenceException from a runtime surprise into a compile-time warning.…"
+---
+
 # 05 · Nullable Reference Types & Null Safety
 
 Nullable reference types (NRT) turn `NullReferenceException` from a runtime

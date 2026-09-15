@@ -1,3 +1,7 @@
+---
+description: "Advanced ASP.NET Core (auth, gRPC) — This module covers authentication/authorization with JWT bearer tokens, and gRPC as a typed, high-performance…"
+---
+
 # 02 · Advanced ASP.NET Core (auth, gRPC)
 
 This module covers authentication/authorization with JWT bearer tokens, and

@@ -1,3 +1,7 @@
+---
+description: "Entity Framework Core Basics — Entity Framework Core (EF Core) is Microsoft's ORM: it maps C# classes to database tables, and LINQ queries to SQL, so most…"
+---
+
 # 02 · Entity Framework Core Basics
 
 Entity Framework Core (EF Core) is Microsoft's ORM: it maps C# classes to

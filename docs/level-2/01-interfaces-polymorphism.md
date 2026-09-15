@@ -1,3 +1,7 @@
+---
+description: "Interfaces & Polymorphism — An interface defines a contract — a set of members a type promises to implement — without saying anything about how.…"
+---
+
 # 01 · Interfaces & Polymorphism
 
 An interface defines a contract — a set of members a type promises to

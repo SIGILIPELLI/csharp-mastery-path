@@ -1,3 +1,7 @@
+---
+description: "Middleware & Filters in ASP.NET Core — Module 01 introduced app.Use(...) in passing. This module covers writing proper reusable middleware classes, the…"
+---
+
 # 08 · Middleware & Filters in ASP.NET Core
 
 Module 01 introduced `app.Use(...)` in passing. This module covers writing

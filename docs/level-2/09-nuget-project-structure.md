@@ -1,3 +1,7 @@
+---
+description: "NuGet & Project Structure — Real .NET applications are rarely a single .csproj. This module covers how NuGet packages are referenced and restored, and how…"
+---
+
 # 09 · NuGet & Project Structure
 
 Real .NET applications are rarely a single `.csproj`. This module covers how

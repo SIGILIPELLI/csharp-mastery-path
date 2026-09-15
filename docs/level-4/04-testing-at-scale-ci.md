@@ -1,3 +1,7 @@
+---
+description: "Testing at Scale & CI — A handful of unit tests (Level 3, module 06) is easy to run by hand. A real codebase needs a test pyramid, fast feedback, and…"
+---
+
 # 04 · Testing at Scale & CI
 
 A handful of unit tests (Level 3, module 06) is easy to run by hand. A real

@@ -1,3 +1,7 @@
+---
+description: "Methods & Functions — static here means the method doesn't need an instance to call — appropriate for top-level-statement helper functions and pure…"
+---
+
 # 04 · Methods & Functions
 
 ## Basic methods
@@ -175,6 +179,12 @@ the call site — no need for a custom class just to return two values.
   emits the exact same method body IL as the equivalent `{ return ...; }`
   block. There is no runtime distinction between the two forms; choosing one
   over the other is a readability decision only.
+
+## 🔀 See this in another language
+
+- [Go — Functions & Multiple Returns](https://sigilipelli.github.io/go-mastery-path/level-1/04-functions-multiple-returns/)
+- [Scala — Functions](https://sigilipelli.github.io/scala-mastery-path/level-1/04-functions/)
+- [PowerShell — Functions](https://sigilipelli.github.io/powershell-mastery-path/level-1/04-functions/)
 
 ## Exercise
 

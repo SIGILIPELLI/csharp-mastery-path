@@ -1,3 +1,7 @@
+---
+description: "Exception Handling — Exceptions represent errors detected at runtime. C# lets you handle them explicitly instead of crashing the whole program."
+---
+
 # 07 · Exception Handling
 
 Exceptions represent errors detected at runtime. C# lets you handle them
@@ -208,6 +212,12 @@ in more depth.
   inheritance chain from your `InsufficientFundsException` up through
   `Exception` until it finds (or fails to find) a match, in source order,
   top to bottom.
+
+## 🔀 See this in another language
+
+- [Go — Pointers](https://sigilipelli.github.io/go-mastery-path/level-1/07-pointers/)
+- [Scala — Case Classes](https://sigilipelli.github.io/scala-mastery-path/level-1/07-case-classes/)
+- [PowerShell — Working with Files](https://sigilipelli.github.io/powershell-mastery-path/level-1/07-working-with-files/)
 
 ## Exercise
 

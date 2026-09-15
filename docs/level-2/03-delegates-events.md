@@ -1,3 +1,7 @@
+---
+description: "Delegates & Events — A delegate is a type-safe reference to a method — a 'function pointer' that can be stored in a variable, passed as an argument, and…"
+---
+
 # 03 · Delegates & Events
 
 A delegate is a type-safe reference to a method — a "function pointer" that

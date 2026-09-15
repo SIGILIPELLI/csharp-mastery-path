@@ -1,3 +1,7 @@
+---
+description: "Performance & Memory (Span, structs) — Most C# code never needs to think about allocations. This module covers the tools for when it does: Span, struct vs…"
+---
+
 # 09 · Performance & Memory (Span, structs)
 
 Most C# code never needs to think about allocations. This module covers the

@@ -1,3 +1,7 @@
+---
+description: "Project — Console Task Manager App — This project pulls together everything from Level 1: classes, an enum, collections, LINQ, exception-safe parsing, and…"
+---
+
 # 10 · Project — Console Task Manager App
 
 This project pulls together everything from Level 1: classes, an `enum`,
@@ -280,6 +284,12 @@ round-trips correctly, not just that the in-memory `List<TaskItem>` behaves.
   `set_Done(done)` on it, then yielding that temporary as the expression's
   value. There's no special object-construction path involved beyond the
   ordinary property setter call from Module 5.
+
+## 🔀 See this in another language
+
+- [Go — Project — CLI To-Do App](https://sigilipelli.github.io/go-mastery-path/level-1/10-project-todo-cli/)
+- [Scala — Project — CLI To-Do App](https://sigilipelli.github.io/scala-mastery-path/level-1/10-project-todo-app/)
+- [PowerShell — Project — System Info Reporter](https://sigilipelli.github.io/powershell-mastery-path/level-1/10-project-system-info-reporter/)
 
 ## Exercise
 

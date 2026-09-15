@@ -1,3 +1,7 @@
+---
+description: "Security Best Practices — Module 02 covered authentication mechanics. This module covers the broader set of defenses every production .NET web app needs…"
+---
+
 # 06 · Security Best Practices
 
 Module 02 covered authentication mechanics. This module covers the broader

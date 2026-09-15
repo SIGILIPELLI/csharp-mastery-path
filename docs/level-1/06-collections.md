@@ -1,3 +1,7 @@
+---
+description: "Collections — Arrays have a fixed size once created — nums.Length is baked in, and there's no Add/Remove. For a growable collection, use List."
+---
+
 # 06 · Collections
 
 ## Arrays — fixed size
@@ -163,6 +167,12 @@ even though it often appears insertion-ordered in practice.
 - **`foreach` over `Dictionary<K,V>` allocates no extra objects** for the
   `KeyValuePair<TKey,TValue>` — it's a `struct`, so `kvp` in the loop body
   lives on the stack, not the heap, each iteration.
+
+## 🔀 See this in another language
+
+- [Go — Structs](https://sigilipelli.github.io/go-mastery-path/level-1/06-structs/)
+- [Scala — Classes & Objects Basics](https://sigilipelli.github.io/scala-mastery-path/level-1/06-classes-objects/)
+- [PowerShell — Arrays & Hashtables](https://sigilipelli.github.io/powershell-mastery-path/level-1/06-arrays-hashtables/)
 
 ## Exercise
 

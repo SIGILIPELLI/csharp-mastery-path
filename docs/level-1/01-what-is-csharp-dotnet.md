@@ -1,3 +1,7 @@
+---
+description: "What Is C# & .NET? — C# is a modern, statically-typed, object-oriented language created by Microsoft. It compiles to an intermediate language (IL) that…"
+---
+
 # 01 · What Is C# & .NET?
 
 C# is a modern, statically-typed, object-oriented language created by
@@ -196,6 +200,12 @@ element is what tells the compiler which reference assemblies (the framework's
 API surface) to compile against, and what tells the host which CLR version to
 load at run time — a mismatch between the two is where "it builds but won't
 run" errors come from.
+
+## 🔀 See this in another language
+
+- [Go — Setup & First Program](https://sigilipelli.github.io/go-mastery-path/level-1/01-setup/)
+- [Scala — Setup & First Program](https://sigilipelli.github.io/scala-mastery-path/level-1/01-setup/)
+- [PowerShell — Setup & First Script](https://sigilipelli.github.io/powershell-mastery-path/level-1/01-setup/)
 
 ## Exercise
 

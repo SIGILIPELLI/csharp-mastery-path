@@ -1,3 +1,7 @@
+---
+description: "Testing with xUnit — Automated tests catch regressions before your users do. xUnit is the most common test framework in the modern .NET ecosystem, and…"
+---
+
 # 06 · Testing with xUnit
 
 Automated tests catch regressions before your users do. xUnit is the most

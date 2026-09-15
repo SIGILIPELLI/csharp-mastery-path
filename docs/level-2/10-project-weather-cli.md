@@ -1,3 +1,7 @@
+---
+description: "Project — Weather CLI — This project combines everything from Level 2: interfaces, generics, async, nullable reference types, JSON parsing, and a simple…"
+---
+
 # 10 · Project — Weather CLI
 
 This project combines everything from Level 2: interfaces, generics, async,

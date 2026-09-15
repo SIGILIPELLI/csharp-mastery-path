@@ -1,3 +1,7 @@
+---
+description: "Testing Advanced (Moq, integration tests) — Level 1/2 covered basic unit tests with xUnit. This module adds mocking with Moq, Theory/InlineData for…"
+---
+
 # 06 · Testing Advanced (Moq, integration tests)
 
 Level 1/2 covered basic unit tests with xUnit. This module adds mocking with

@@ -1,3 +1,7 @@
+---
+description: "Dependency Injection Deep Dive — ASP.NET Core has a dependency injection (DI) container built in — IServiceProvider backed by IServiceCollection. Module…"
+---
+
 # 03 · Dependency Injection Deep Dive
 
 ASP.NET Core has a dependency injection (DI) container built in — `IServiceProvider`

@@ -1,3 +1,7 @@
+---
+description: "LINQ Basics — Where keeps elements matching a predicate (a lambda returning bool); Select transforms each element (a 'projection'). Both are lazy — they…"
+---
+
 # 08 · LINQ Basics
 
 **LINQ** (Language Integrated Query) lets you filter, transform, and
@@ -175,6 +179,12 @@ chain.
   know a group is "done" until the whole sequence has been scanned), unlike
   `Where`/`Select`, which stream — one of the reasons chaining a `GroupBy`
   early in a pipeline changes the memory profile of the whole query.
+
+## 🔀 See this in another language
+
+- [Go — Error Handling](https://sigilipelli.github.io/go-mastery-path/level-1/08-error-handling/)
+- [Scala — Pattern Matching Intro](https://sigilipelli.github.io/scala-mastery-path/level-1/08-pattern-matching-intro/)
+- [PowerShell — Error Handling Basics](https://sigilipelli.github.io/powershell-mastery-path/level-1/08-error-handling-basics/)
 
 ## Exercise
 

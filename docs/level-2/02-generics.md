@@ -1,3 +1,7 @@
+---
+description: "Generics — Generics let you write a class, method, or interface once and reuse it for any type, with full compile-time type safety — no casting, no boxing…"
+---
+
 # 02 · Generics
 
 Generics let you write a class, method, or interface once and reuse it for

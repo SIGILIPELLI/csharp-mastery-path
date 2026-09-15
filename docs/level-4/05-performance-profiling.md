@@ -1,3 +1,7 @@
+---
+description: "Performance Profiling & Optimization — Level 3 module 09 introduced Span and BenchmarkDotNet for micro-benchmarks. This module covers profiling a running…"
+---
+
 # 05 · Performance Profiling & Optimization
 
 Level 3 module 09 introduced `Span<T>` and `BenchmarkDotNet` for

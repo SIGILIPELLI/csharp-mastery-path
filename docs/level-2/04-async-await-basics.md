@@ -1,3 +1,7 @@
+---
+description: "Async/Await Basics — async/await lets you write code that performs long-running, I/O-bound work (network calls, file access, database queries) without…"
+---
+
 # 04 · Async/Await Basics
 
 `async`/`await` lets you write code that performs long-running,

@@ -1,3 +1,7 @@
+---
+description: "Observability (logging, tracing) — Once an app runs as multiple replicas across multiple services (modules 01, 07), 'SSH in and read the log file' stops…"
+---
+
 # 08 · Observability (logging, tracing)
 
 Once an app runs as multiple replicas across multiple services (modules 01,

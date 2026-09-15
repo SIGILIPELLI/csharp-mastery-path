@@ -1,3 +1,7 @@
+---
+description: "Project — REST API Service — This capstone for Level 3 combines minimal APIs (01), EF Core with SQLite migrations (02, 07), dependency injection (03)…"
+---
+
 # 10 · Project — REST API Service
 
 This capstone for Level 3 combines minimal APIs (01), EF Core with SQLite

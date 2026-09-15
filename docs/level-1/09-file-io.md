@@ -1,3 +1,7 @@
+---
+description: "File I/O & Working with Text — System.IO provides both simple one-shot helpers (File.ReadAllText, File.WriteAllText) and stream-based classes…"
+---
+
 # 09 · File I/O & Working with Text
 
 `System.IO` provides both simple one-shot helpers (`File.ReadAllText`,
@@ -171,6 +175,12 @@ concatenation of path segments.
   in one call** — it's not a different I/O mechanism, just a convenience
   wrapper that saves you writing the `using` block yourself for the common
   "read it all now" case.
+
+## 🔀 See this in another language
+
+- [Go — Packages & Modules](https://sigilipelli.github.io/go-mastery-path/level-1/09-packages-modules/)
+- [Scala — Traits Basics](https://sigilipelli.github.io/scala-mastery-path/level-1/09-traits-basics/)
+- [PowerShell — Modules Basics](https://sigilipelli.github.io/powershell-mastery-path/level-1/09-modules-basics/)
 
 ## Exercise
 

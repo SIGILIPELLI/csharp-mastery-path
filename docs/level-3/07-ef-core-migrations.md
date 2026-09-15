@@ -1,3 +1,7 @@
+---
+description: "Working with Databases (EF Core migrations) — Module 02 introduced EF Core's DbContext and LINQ queries against an in-memory provider. This module covers…"
+---
+
 # 07 · Working with Databases (EF Core migrations)
 
 Module 02 introduced EF Core's `DbContext` and LINQ queries against an

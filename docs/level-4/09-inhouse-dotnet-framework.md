@@ -1,3 +1,7 @@
+---
+description: "Building an In-House .NET Framework — Larger organizations often build a thin internal framework on top of ASP.NET Core — shared conventions for error…"
+---
+
 # 09 · Building an In-House .NET Framework
 
 Larger organizations often build a thin internal framework on top of

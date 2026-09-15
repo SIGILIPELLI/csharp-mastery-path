@@ -1,3 +1,7 @@
+---
+description: "Deployment (Docker for .NET) — Packaging a .NET app as a Docker image makes it run identically on a laptop, a CI runner, and production. This module…"
+---
+
 # 07 · Deployment (Docker for .NET)
 
 Packaging a .NET app as a Docker image makes it run identically on a

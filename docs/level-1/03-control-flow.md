@@ -1,3 +1,7 @@
+---
+description: "Control Flow — _ is the discard pattern — matches anything not already matched, like default. 6 or 7 combines two patterns in one arm. There's no…"
+---
+
 # 03 · Control Flow
 
 ## if / else if / else
@@ -165,6 +169,12 @@ more powerful than a simple value-equality dispatch.
   instructions** inserted at the right place in the compiled loop body — there
   is no runtime cost beyond the jump itself, unlike exceptions, which unwind
   the stack.
+
+## 🔀 See this in another language
+
+- [Go — Control Flow](https://sigilipelli.github.io/go-mastery-path/level-1/03-control-flow/)
+- [Scala — Control Flow](https://sigilipelli.github.io/scala-mastery-path/level-1/03-control-flow/)
+- [PowerShell — Control Flow](https://sigilipelli.github.io/powershell-mastery-path/level-1/03-control-flow/)
 
 ## Exercise
 

@@ -1,3 +1,7 @@
+---
+description: "Capstone Project — This capstone ties together every Level 3 and Level 4 module into one system: a small order-processing platform split into two…"
+---
+
 # 10 · Capstone Project
 
 This capstone ties together every Level 3 and Level 4 module into one

@@ -1,3 +1,7 @@
+---
+description: "Advanced Async & Task Parallel Library — Level 1 covered async/await basics. This module goes deeper: composing tasks, cancellation, throttling parallel…"
+---
+
 # 04 · Advanced Async & Task Parallel Library
 
 Level 1 covered `async`/`await` basics. This module goes deeper: composing

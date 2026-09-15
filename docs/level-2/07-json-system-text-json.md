@@ -1,3 +1,7 @@
+---
+description: "Working with JSON (System.Text.Json) — System.Text.Json is the built-in JSON library that ships with .NET — no NuGet package required for the basics. It…"
+---
+
 # 07 · Working with JSON (System.Text.Json)
 
 `System.Text.Json` is the built-in JSON library that ships with .NET — no

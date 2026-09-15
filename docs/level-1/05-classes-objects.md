@@ -1,3 +1,7 @@
+---
+description: "Classes & Objects — A class is a blueprint; an object is an instance created from that blueprint with new."
+---
+
 # 05 · Classes & Objects
 
 A class is a blueprint; an object is an instance created from that blueprint
@@ -207,6 +211,12 @@ Note `Counter.InstanceCount` is accessed on the type, not on an instance.
   work the JIT has to do on every assignment and every method call — the
   reason the framework's own guidance caps "should be a struct" at roughly
   16 bytes.
+
+## 🔀 See this in another language
+
+- [Go — Arrays, Slices & Maps](https://sigilipelli.github.io/go-mastery-path/level-1/05-arrays-slices-maps/)
+- [Scala — Collections Basics](https://sigilipelli.github.io/scala-mastery-path/level-1/05-collections-basics/)
+- [PowerShell — Working with Objects & the Pipeline](https://sigilipelli.github.io/powershell-mastery-path/level-1/05-objects-pipeline/)
 
 ## Exercise
 
