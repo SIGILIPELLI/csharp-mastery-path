@@ -232,9 +232,9 @@ public class WeatherServiceTests
 
 ## 🔀 See this in another language
 
-- [Python — 10 · Project — Weather/Data CLI](https://sigilipelli.github.io/python-mastery-path/level-2/10-project-weather-cli/)
-- [Go — 10 · Project — Weather CLI](https://sigilipelli.github.io/go-mastery-path/level-2/10-project-weather-cli/)
-- [Rust — 10 · Project — Weather CLI](https://sigilipelli.github.io/rust-mastery-path/level-2/10-project-weather-cli/)
+- [Python — 10 · Project — Weather/Data CLI](https://learnmasterypath.com/python-mastery-path/level-2/10-project-weather-cli/)
+- [Go — 10 · Project — Weather CLI](https://learnmasterypath.com/go-mastery-path/level-2/10-project-weather-cli/)
+- [Rust — 10 · Project — Weather CLI](https://learnmasterypath.com/rust-mastery-path/level-2/10-project-weather-cli/)
 
 ## Exercise
 

@@ -177,9 +177,9 @@ explains most of the "gotchas" in this module.
 
 ## 🔀 See this in another language
 
-- [Go — Variables, Types & Operators](https://sigilipelli.github.io/go-mastery-path/level-1/02-variables-types-operators/)
-- [Scala — Variables & Types](https://sigilipelli.github.io/scala-mastery-path/level-1/02-variables-types/)
-- [PowerShell — Variables & Types](https://sigilipelli.github.io/powershell-mastery-path/level-1/02-variables-types/)
+- [Go — Variables, Types & Operators](https://learnmasterypath.com/go-mastery-path/level-1/02-variables-types-operators/)
+- [Scala — Variables & Types](https://learnmasterypath.com/scala-mastery-path/level-1/02-variables-types/)
+- [PowerShell — Variables & Types](https://learnmasterypath.com/powershell-mastery-path/level-1/02-variables-types/)
 
 ## Exercise
 

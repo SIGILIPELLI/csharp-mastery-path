@@ -172,9 +172,9 @@ more powerful than a simple value-equality dispatch.
 
 ## 🔀 See this in another language
 
-- [Go — Control Flow](https://sigilipelli.github.io/go-mastery-path/level-1/03-control-flow/)
-- [Scala — Control Flow](https://sigilipelli.github.io/scala-mastery-path/level-1/03-control-flow/)
-- [PowerShell — Control Flow](https://sigilipelli.github.io/powershell-mastery-path/level-1/03-control-flow/)
+- [Go — Control Flow](https://learnmasterypath.com/go-mastery-path/level-1/03-control-flow/)
+- [Scala — Control Flow](https://learnmasterypath.com/scala-mastery-path/level-1/03-control-flow/)
+- [PowerShell — Control Flow](https://learnmasterypath.com/powershell-mastery-path/level-1/03-control-flow/)
 
 ## Exercise
 

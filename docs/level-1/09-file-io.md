@@ -178,9 +178,9 @@ concatenation of path segments.
 
 ## 🔀 See this in another language
 
-- [Go — Packages & Modules](https://sigilipelli.github.io/go-mastery-path/level-1/09-packages-modules/)
-- [Scala — Traits Basics](https://sigilipelli.github.io/scala-mastery-path/level-1/09-traits-basics/)
-- [PowerShell — Modules Basics](https://sigilipelli.github.io/powershell-mastery-path/level-1/09-modules-basics/)
+- [Go — Packages & Modules](https://learnmasterypath.com/go-mastery-path/level-1/09-packages-modules/)
+- [Scala — Traits Basics](https://learnmasterypath.com/scala-mastery-path/level-1/09-traits-basics/)
+- [PowerShell — Modules Basics](https://learnmasterypath.com/powershell-mastery-path/level-1/09-modules-basics/)
 
 ## Exercise
 

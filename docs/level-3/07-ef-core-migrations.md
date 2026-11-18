@@ -247,7 +247,7 @@ without it, accessing `book.Author` on a detached entity would just be
 
 ## 🔀 See this in another language
 
-- [JavaScript — 04 · Working with Databases](https://sigilipelli.github.io/javascript-mastery-path/level-3/04-databases/)
+- [JavaScript — 04 · Working with Databases](https://learnmasterypath.com/javascript-mastery-path/level-3/04-databases/)
 
 ## Exercise
 

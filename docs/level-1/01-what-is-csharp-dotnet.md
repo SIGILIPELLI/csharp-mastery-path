@@ -203,9 +203,9 @@ run" errors come from.
 
 ## 🔀 See this in another language
 
-- [Go — Setup & First Program](https://sigilipelli.github.io/go-mastery-path/level-1/01-setup/)
-- [Scala — Setup & First Program](https://sigilipelli.github.io/scala-mastery-path/level-1/01-setup/)
-- [PowerShell — Setup & First Script](https://sigilipelli.github.io/powershell-mastery-path/level-1/01-setup/)
+- [Go — Setup & First Program](https://learnmasterypath.com/go-mastery-path/level-1/01-setup/)
+- [Scala — Setup & First Program](https://learnmasterypath.com/scala-mastery-path/level-1/01-setup/)
+- [PowerShell — Setup & First Script](https://learnmasterypath.com/powershell-mastery-path/level-1/01-setup/)
 
 ## Exercise
 

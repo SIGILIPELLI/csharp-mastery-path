@@ -214,9 +214,9 @@ Note `Counter.InstanceCount` is accessed on the type, not on an instance.
 
 ## 🔀 See this in another language
 
-- [Go — Arrays, Slices & Maps](https://sigilipelli.github.io/go-mastery-path/level-1/05-arrays-slices-maps/)
-- [Scala — Collections Basics](https://sigilipelli.github.io/scala-mastery-path/level-1/05-collections-basics/)
-- [PowerShell — Working with Objects & the Pipeline](https://sigilipelli.github.io/powershell-mastery-path/level-1/05-objects-pipeline/)
+- [Go — Arrays, Slices & Maps](https://learnmasterypath.com/go-mastery-path/level-1/05-arrays-slices-maps/)
+- [Scala — Collections Basics](https://learnmasterypath.com/scala-mastery-path/level-1/05-collections-basics/)
+- [PowerShell — Working with Objects & the Pipeline](https://learnmasterypath.com/powershell-mastery-path/level-1/05-objects-pipeline/)
 
 ## Exercise
 

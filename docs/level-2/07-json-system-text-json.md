@@ -224,9 +224,9 @@ input, so you can catch it specifically without swallowing unrelated bugs.
 
 ## 🔀 See this in another language
 
-- [JavaScript — 05 · Working with JSON & Fetch API](https://sigilipelli.github.io/javascript-mastery-path/level-2/05-json-fetch/)
-- [TypeScript — 08 · Working with JSON/APIs](https://sigilipelli.github.io/typescript-mastery-path/level-2/08-working-with-json-apis/)
-- [Ruby — 06 · Working with JSON/APIs](https://sigilipelli.github.io/ruby-mastery-path/level-2/06-json-apis/)
+- [JavaScript — 05 · Working with JSON & Fetch API](https://learnmasterypath.com/javascript-mastery-path/level-2/05-json-fetch/)
+- [TypeScript — 08 · Working with JSON/APIs](https://learnmasterypath.com/typescript-mastery-path/level-2/08-working-with-json-apis/)
+- [Ruby — 06 · Working with JSON/APIs](https://learnmasterypath.com/ruby-mastery-path/level-2/06-json-apis/)
 
 ## Exercise
 

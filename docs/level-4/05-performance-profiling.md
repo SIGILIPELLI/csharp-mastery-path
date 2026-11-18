@@ -207,9 +207,9 @@ rather than a single request.
 
 ## 🔀 See this in another language
 
-- [C — 03 · Performance Optimization & Profiling](https://sigilipelli.github.io/c-mastery-path/level-4/03-performance-profiling/)
-- [MATLAB — 04 · Performance Profiling & Optimization](https://sigilipelli.github.io/matlab-mastery-path/level-4/04-performance-profiling/)
-- [TypeScript — 07 · Performance Optimization](https://sigilipelli.github.io/typescript-mastery-path/level-4/07-performance-optimization/)
+- [C — 03 · Performance Optimization & Profiling](https://learnmasterypath.com/c-mastery-path/level-4/03-performance-profiling/)
+- [MATLAB — 04 · Performance Profiling & Optimization](https://learnmasterypath.com/matlab-mastery-path/level-4/04-performance-profiling/)
+- [TypeScript — 07 · Performance Optimization](https://learnmasterypath.com/typescript-mastery-path/level-4/07-performance-optimization/)
 
 ## Exercise
 

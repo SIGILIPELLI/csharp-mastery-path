@@ -182,9 +182,9 @@ the call site — no need for a custom class just to return two values.
 
 ## 🔀 See this in another language
 
-- [Go — Functions & Multiple Returns](https://sigilipelli.github.io/go-mastery-path/level-1/04-functions-multiple-returns/)
-- [Scala — Functions](https://sigilipelli.github.io/scala-mastery-path/level-1/04-functions/)
-- [PowerShell — Functions](https://sigilipelli.github.io/powershell-mastery-path/level-1/04-functions/)
+- [Go — Functions & Multiple Returns](https://learnmasterypath.com/go-mastery-path/level-1/04-functions-multiple-returns/)
+- [Scala — Functions](https://learnmasterypath.com/scala-mastery-path/level-1/04-functions/)
+- [PowerShell — Functions](https://learnmasterypath.com/powershell-mastery-path/level-1/04-functions/)
 
 ## Exercise
 

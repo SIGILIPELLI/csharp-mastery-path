@@ -182,9 +182,9 @@ chain.
 
 ## 🔀 See this in another language
 
-- [Go — Error Handling](https://sigilipelli.github.io/go-mastery-path/level-1/08-error-handling/)
-- [Scala — Pattern Matching Intro](https://sigilipelli.github.io/scala-mastery-path/level-1/08-pattern-matching-intro/)
-- [PowerShell — Error Handling Basics](https://sigilipelli.github.io/powershell-mastery-path/level-1/08-error-handling-basics/)
+- [Go — Error Handling](https://learnmasterypath.com/go-mastery-path/level-1/08-error-handling/)
+- [Scala — Pattern Matching Intro](https://learnmasterypath.com/scala-mastery-path/level-1/08-pattern-matching-intro/)
+- [PowerShell — Error Handling Basics](https://learnmasterypath.com/powershell-mastery-path/level-1/08-error-handling-basics/)
 
 ## Exercise
 

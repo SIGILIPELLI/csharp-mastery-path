@@ -225,8 +225,8 @@ correlated than viewed in isolation.
 
 ## 🔀 See this in another language
 
-- [Shell/Bash — 08 · Logging & Observability for Scripts](https://sigilipelli.github.io/shell-mastery-path/level-4/08-logging-observability/)
-- [PowerShell — 09 · Logging & Observability for Scripts](https://sigilipelli.github.io/powershell-mastery-path/level-4/09-logging-observability/)
+- [Shell/Bash — 08 · Logging & Observability for Scripts](https://learnmasterypath.com/shell-mastery-path/level-4/08-logging-observability/)
+- [PowerShell — 09 · Logging & Observability for Scripts](https://learnmasterypath.com/powershell-mastery-path/level-4/09-logging-observability/)
 
 ## Exercise
 

@@ -248,7 +248,7 @@ class ReportCache
 
 ## 🔀 See this in another language
 
-- [PHP — 08 · Dependency Injection Basics](https://sigilipelli.github.io/php-mastery-path/level-3/08-dependency-injection/)
+- [PHP — 08 · Dependency Injection Basics](https://learnmasterypath.com/php-mastery-path/level-3/08-dependency-injection/)
 
 ## Exercise
 

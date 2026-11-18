@@ -223,8 +223,8 @@ foreach (var u in users)
 
 ## 🔀 See this in another language
 
-- [Kotlin — 04 · Null Safety Advanced](https://sigilipelli.github.io/kotlin-mastery-path/level-2/04-null-safety-advanced/)
-- [Dart — 02 · Null Safety Advanced](https://sigilipelli.github.io/dart-mastery-path/level-2/02-null-safety-advanced/)
+- [Kotlin — 04 · Null Safety Advanced](https://learnmasterypath.com/kotlin-mastery-path/level-2/04-null-safety-advanced/)
+- [Dart — 02 · Null Safety Advanced](https://learnmasterypath.com/dart-mastery-path/level-2/02-null-safety-advanced/)
 
 ## Exercise
 

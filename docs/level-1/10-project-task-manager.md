@@ -287,9 +287,9 @@ round-trips correctly, not just that the in-memory `List<TaskItem>` behaves.
 
 ## 🔀 See this in another language
 
-- [Go — Project — CLI To-Do App](https://sigilipelli.github.io/go-mastery-path/level-1/10-project-todo-cli/)
-- [Scala — Project — CLI To-Do App](https://sigilipelli.github.io/scala-mastery-path/level-1/10-project-todo-app/)
-- [PowerShell — Project — System Info Reporter](https://sigilipelli.github.io/powershell-mastery-path/level-1/10-project-system-info-reporter/)
+- [Go — Project — CLI To-Do App](https://learnmasterypath.com/go-mastery-path/level-1/10-project-todo-cli/)
+- [Scala — Project — CLI To-Do App](https://learnmasterypath.com/scala-mastery-path/level-1/10-project-todo-app/)
+- [PowerShell — Project — System Info Reporter](https://learnmasterypath.com/powershell-mastery-path/level-1/10-project-system-info-reporter/)
 
 ## Exercise
 

@@ -215,9 +215,9 @@ in more depth.
 
 ## 🔀 See this in another language
 
-- [Go — Pointers](https://sigilipelli.github.io/go-mastery-path/level-1/07-pointers/)
-- [Scala — Case Classes](https://sigilipelli.github.io/scala-mastery-path/level-1/07-case-classes/)
-- [PowerShell — Working with Files](https://sigilipelli.github.io/powershell-mastery-path/level-1/07-working-with-files/)
+- [Go — Pointers](https://learnmasterypath.com/go-mastery-path/level-1/07-pointers/)
+- [Scala — Case Classes](https://learnmasterypath.com/scala-mastery-path/level-1/07-case-classes/)
+- [PowerShell — Working with Files](https://learnmasterypath.com/powershell-mastery-path/level-1/07-working-with-files/)
 
 ## Exercise
 

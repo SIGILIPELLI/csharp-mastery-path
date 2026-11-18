@@ -237,9 +237,9 @@ or a manual rollback can target an exact previous build instead of hoping
 
 ## 🔀 See this in another language
 
-- [TypeScript — 06 · Deployment with Docker](https://sigilipelli.github.io/typescript-mastery-path/level-4/06-deployment-docker/)
-- [Go — 06 · Deployment with Docker](https://sigilipelli.github.io/go-mastery-path/level-4/06-deployment-docker/)
-- [Rust — 07 · Deployment with Docker](https://sigilipelli.github.io/rust-mastery-path/level-4/07-deployment-docker/)
+- [TypeScript — 06 · Deployment with Docker](https://learnmasterypath.com/typescript-mastery-path/level-4/06-deployment-docker/)
+- [Go — 06 · Deployment with Docker](https://learnmasterypath.com/go-mastery-path/level-4/06-deployment-docker/)
+- [Rust — 07 · Deployment with Docker](https://learnmasterypath.com/rust-mastery-path/level-4/07-deployment-docker/)
 
 ## Exercise
 

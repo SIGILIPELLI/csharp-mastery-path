@@ -227,7 +227,7 @@ downstream outage anyway).
 
 ## 🔀 See this in another language
 
-- [Scala — 02 · Distributed Systems with Akka](https://sigilipelli.github.io/scala-mastery-path/level-4/02-distributed-systems-akka/)
+- [Scala — 02 · Distributed Systems with Akka](https://learnmasterypath.com/scala-mastery-path/level-4/02-distributed-systems-akka/)
 
 ## Exercise
 

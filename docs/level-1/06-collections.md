@@ -170,9 +170,9 @@ even though it often appears insertion-ordered in practice.
 
 ## 🔀 See this in another language
 
-- [Go — Structs](https://sigilipelli.github.io/go-mastery-path/level-1/06-structs/)
-- [Scala — Classes & Objects Basics](https://sigilipelli.github.io/scala-mastery-path/level-1/06-classes-objects/)
-- [PowerShell — Arrays & Hashtables](https://sigilipelli.github.io/powershell-mastery-path/level-1/06-arrays-hashtables/)
+- [Go — Structs](https://learnmasterypath.com/go-mastery-path/level-1/06-structs/)
+- [Scala — Classes & Objects Basics](https://learnmasterypath.com/scala-mastery-path/level-1/06-classes-objects/)
+- [PowerShell — Arrays & Hashtables](https://learnmasterypath.com/powershell-mastery-path/level-1/06-arrays-hashtables/)
 
 ## Exercise
 
