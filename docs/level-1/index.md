@@ -1,3 +1,7 @@
+---
+description: "Level 1 (Entry) of the free C# Mastery Path. Get comfortable reading and writing C#, understand .NET's core building blocks, and ship a small working…"
+---
+
 # Level 1 · Entry <span class="level-badge">Foundations</span>
 
 Goal: get comfortable reading and writing C#, understand .NET's core building

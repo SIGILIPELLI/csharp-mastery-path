@@ -1,6 +1,6 @@
 ---
 title: "Learn C# Free: Beginner to Master Course"
-description: "Free C#/.NET course from beginner to advanced -- hands-on lessons with runnable code and real capstone projects. Part of a 40-course free learning library."
+description: "Free C#/.NET course from beginner to advanced -- hands-on lessons with runnable code and real capstone projects. Part of a 100+ course free learning library."
 ---
 
 # C# Mastery Path

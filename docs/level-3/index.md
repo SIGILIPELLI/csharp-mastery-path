@@ -1,3 +1,7 @@
+---
+description: "Level 3 (Advanced) of the free C# Mastery Path. Build real services — ASP.NET Core, Entity Framework Core, dependency injection, and the design patterns and…"
+---
+
 # Level 3 · Advanced <span class="level-badge">Advanced</span>
 
 Goal: build real services — ASP.NET Core, Entity Framework Core, dependency

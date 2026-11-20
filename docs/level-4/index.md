@@ -1,3 +1,7 @@
+---
+description: "Level 4 (Master) of the free C# Mastery Path. Production systems and architecture — microservices, distributed systems, security, deployment, and…"
+---
+
 # Level 4 · Master <span class="level-badge">Master</span>
 
 Goal: production systems and architecture — microservices, distributed

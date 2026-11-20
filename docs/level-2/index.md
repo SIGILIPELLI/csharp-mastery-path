@@ -1,3 +1,7 @@
+---
+description: "Level 2 (Intermediate) of the free C# Mastery Path. Write idiomatic, testable C# — interfaces, generics, async/await, and modern language features like…"
+---
+
 # Level 2 · Intermediate <span class="level-badge">Intermediate</span>
 
 Goal: write idiomatic, testable C# — interfaces, generics, async/await, and
