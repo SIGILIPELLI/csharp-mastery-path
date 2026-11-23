@@ -220,7 +220,7 @@ on your actual workload.
 
 ## 🔀 See this in another language
 
-- [JavaScript — 08 · Performance & Memory](https://learnmasterypath.com/javascript-mastery-path/level-3/08-performance-memory/)
+- [JavaScript — 08 · Performance & Memory](https://learnmasterypath.com/javascript-mastery-path/level-3/07-performance-memory/)
 
 ## Exercise
 

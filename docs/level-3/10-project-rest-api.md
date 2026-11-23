@@ -241,7 +241,7 @@ public class BooksApiTests : IClassFixture<WebApplicationFactory<Program>>
 
 ## 🔀 See this in another language
 
-- [Java — 11 · Project — REST API + Database CRUD Service](https://learnmasterypath.com/java-mastery-path/level-3/11-project-rest-api-db/)
+- [Java — 11 · Project — REST API + Database CRUD Service](https://learnmasterypath.com/java-mastery-path/level-3/10-project-rest-api-db/)
 - [Ruby — 10 · Project — REST API Service](https://learnmasterypath.com/ruby-mastery-path/level-3/10-project-rest-api/)
 - [PHP — 10 · Project — REST API Service](https://learnmasterypath.com/php-mastery-path/level-3/10-project-rest-api/)
 
