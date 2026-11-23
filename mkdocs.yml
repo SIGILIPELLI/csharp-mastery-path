@@ -83,8 +83,8 @@ not_in_nav: |
 
 nav:
   - Home: index.md
-  - "💼 Interview Questions": interview-questions.md
-  - "📋 Cheat Sheet": cheat-sheet.md
+  - Interview Questions: interview-questions.md
+  - Cheat Sheet: cheat-sheet.md
   - "Level 1 · Entry":
       - Overview: level-1/index.md
       - "01 · What Is C# & .NET?": level-1/01-what-is-csharp-dotnet.md
@@ -133,5 +133,5 @@ nav:
       - "08 · Observability (logging, tracing)": level-4/08-observability.md
       - "09 · Building an In-House .NET Framework": level-4/09-inhouse-dotnet-framework.md
       - "10 · Capstone Project": level-4/10-capstone-project.md
-  - "🎯 Final Quiz": quiz.md
+  - Final Quiz: quiz.md
 
