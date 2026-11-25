@@ -1,0 +1,4297 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="179 C# interview questions with answers and explanations, from beginner to advanced, organised by level. Free, from the C# Mastery Path.">
+      
+      
+      
+        <link rel="canonical" href="https://learnmasterypath.com/csharp-mastery-path/interview-questions/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../cheat-sheet/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
+    
+    
+  
+  <title>C# Interview Questions and Answers (179 Questions) – C# Course</title>
+
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="../stylesheets/progress-tracker.css">
+    
+      <link rel="stylesheet" href="../stylesheets/final-quiz.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-05VBGCXN12"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-05VBGCXN12');
+  </script>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Mastery Path">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="C# Interview Questions and Answers (179 Questions) – C# Course">
+  <meta property="og:description" content="179 C# interview questions with answers and explanations, from beginner to advanced, organised by level. Free, from the C# Mastery Path.">
+  <meta property="og:url" content="https://learnmasterypath.com/csharp-mastery-path/interview-questions/">
+  <meta property="og:image" content="https://learnmasterypath.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Mastery Path: free structured courses, beginner to master">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="C# Interview Questions and Answers (179 Questions) – C# Course">
+  <meta name="twitter:description" content="179 C# interview questions with answers and explanations, from beginner to advanced, organised by level. Free, from the C# Mastery Path.">
+  <meta name="twitter:image" content="https://learnmasterypath.com/og-image.png">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9440969811959397"
+     crossorigin="anonymous"></script><script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Mastery Path", "item": "https://learnmasterypath.com/"},
+      {"@type": "ListItem", "position": 2, "name": "C# Mastery Path", "item": "https://learnmasterypath.com/csharp-mastery-path/"},
+      {"@type": "ListItem", "position": 3, "name": "Interview Questions", "item": "https://learnmasterypath.com/csharp-mastery-path/interview-questions/"}
+    ]
+  }
+  </script>
+  <style>
+    .md-banner a:hover { text-decoration: underline !important; }
+    .mp-related { margin-top: 2.4rem; padding-top: 1rem; border-top: 1px solid var(--md-default-fg-color--lightest); font-size: .78rem; }
+    .mp-related h2 { font-size: .9rem; margin: 0 0 .5rem; }
+    .mp-related ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .4rem .9rem; }
+    .mp-related li { margin: 0 !important; }
+  </style>
+  <script type="application/json" id="mp-course-meta">{"home": false, "id": "csharp-mastery-path", "name": "C# Mastery Path", "repo": "https://github.com/SIGILIPELLI/csharp-mastery-path", "src": "interview-questions.md", "url": "https://learnmasterypath.com/csharp-mastery-path/"}</script>
+  <link rel="stylesheet" href="https://learnmasterypath.com/assets/learn.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://learnmasterypath.com/assets/course.css?v=1">
+  <script src="https://learnmasterypath.com/assets/learn.js" defer></script>
+  <script src="https://learnmasterypath.com/assets/signup.js" defer></script>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#c-interview-questions-and-answers" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+  <a href="https://learnmasterypath.com/" style="color: inherit; text-decoration: none;">
+    &larr; Mastery Path &middot; all 100+ free courses
+  </a>
+  <span style="opacity: .6; margin: 0 .6em;">|</span>
+  <a href="https://learnmasterypath.com/search/" style="color: inherit; text-decoration: none;">Search all courses</a>
+  <span style="opacity: .6; margin: 0 .6em;">|</span>
+  <a href="https://learnmasterypath.com/resume/" style="color: inherit; font-weight: 700; text-decoration: none;">
+    Got the skills? Free resume ATS check &rarr;
+  </a>
+
+          </div>
+          
+        </aside>
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="C# Mastery Path" class="md-header__button md-logo" aria-label="C# Mastery Path" data-md-component="logo">
+      <svg class="mp-mark" viewBox="0 0 160 160" role="img" aria-label="Mastery Path logo">
+  <circle cx="80" cy="80" r="74" fill="#FAF7EF" stroke="#2FA98D" stroke-width="5"/>
+  <rect class="mp-bar mp-bar-1" x="36" y="90" width="17" height="24" rx="5" fill="#2FA98D"/>
+  <rect class="mp-bar mp-bar-2" x="59" y="74" width="17" height="40" rx="5" fill="#7FC9B7"/>
+  <rect class="mp-bar mp-bar-3" x="82" y="56" width="17" height="58" rx="5" fill="#E0B457"/>
+  <rect class="mp-bar mp-bar-4" x="105" y="38" width="17" height="76" rx="5" fill="#C97B4A"/>
+  <circle class="mp-dot" cx="44.5" cy="82" r="7" fill="#22261f"/>
+</svg>
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            C# Mastery Path
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              C# Interview Questions and Answers (179 Questions)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/SIGILIPELLI/csharp-mastery-path" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    csharp-mastery-path
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Interview Questions
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../cheat-sheet/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Cheat Sheet
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../level-1/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Level 1 · Entry
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../level-2/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Level 2 · Intermediate
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../level-3/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Level 3 · Advanced
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../level-4/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Level 4 · Master
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../quiz/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Final Quiz
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="C# Mastery Path" class="md-nav__button md-logo" aria-label="C# Mastery Path" data-md-component="logo">
+      <svg class="mp-mark" viewBox="0 0 160 160" role="img" aria-label="Mastery Path logo">
+  <circle cx="80" cy="80" r="74" fill="#FAF7EF" stroke="#2FA98D" stroke-width="5"/>
+  <rect class="mp-bar mp-bar-1" x="36" y="90" width="17" height="24" rx="5" fill="#2FA98D"/>
+  <rect class="mp-bar mp-bar-2" x="59" y="74" width="17" height="40" rx="5" fill="#7FC9B7"/>
+  <rect class="mp-bar mp-bar-3" x="82" y="56" width="17" height="58" rx="5" fill="#E0B457"/>
+  <rect class="mp-bar mp-bar-4" x="105" y="38" width="17" height="76" rx="5" fill="#C97B4A"/>
+  <circle class="mp-dot" cx="44.5" cy="82" r="7" fill="#22261f"/>
+</svg>
+    </a>
+    C# Mastery Path
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/SIGILIPELLI/csharp-mastery-path" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    csharp-mastery-path
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interview Questions
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Interview Questions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#level-1-entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 1 · Entry
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Level 1 · Entry">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01-what-is-c-net" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        01 · What Is C# &amp; .NET?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#02-variables-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        02 · Variables &amp; Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#03-control-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        03 · Control Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#04-methods-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        04 · Methods &amp; Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#05-classes-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        05 · Classes &amp; Objects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#06-collections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        06 · Collections
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#07-exception-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        07 · Exception Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#08-linq-basics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        08 · LINQ Basics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#09-file-io-working-with-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        09 · File I/O &amp; Working with Text
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-project-console-task-manager-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10 · Project — Console Task Manager App
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#level-2-intermediate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 2 · Intermediate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Level 2 · Intermediate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01-interfaces-polymorphism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        01 · Interfaces &amp; Polymorphism
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#02-generics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        02 · Generics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#03-delegates-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        03 · Delegates &amp; Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#04-asyncawait-basics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        04 · Async/Await Basics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#05-nullable-reference-types-null-safety" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        05 · Nullable Reference Types &amp; Null Safety
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#06-testing-with-xunit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        06 · Testing with xUnit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#07-working-with-json-systemtextjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        07 · Working with JSON (System.Text.Json)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#08-records-pattern-matching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        08 · Records &amp; Pattern Matching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#09-nuget-project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        09 · NuGet &amp; Project Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-project-weather-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10 · Project — Weather CLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#level-3-advanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 3 · Advanced
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Level 3 · Advanced">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01-aspnet-core-basics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        01 · ASP.NET Core Basics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#02-entity-framework-core-basics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        02 · Entity Framework Core Basics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#03-dependency-injection-deep-dive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        03 · Dependency Injection Deep Dive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#04-advanced-async-task-parallel-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        04 · Advanced Async &amp; Task Parallel Library
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#05-design-patterns-in-c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        05 · Design Patterns in C#
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#06-testing-advanced-moq-integration-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        06 · Testing Advanced (Moq, integration tests)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#07-working-with-databases-ef-core-migrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        07 · Working with Databases (EF Core migrations)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#08-middleware-filters-in-aspnet-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        08 · Middleware &amp; Filters in ASP.NET Core
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#09-performance-memory-span-structs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        09 · Performance &amp; Memory (Span, structs)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-project-rest-api-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10 · Project — REST API Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#level-4-master" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 4 · Master
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Level 4 · Master">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01-microservices-patterns-in-net" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        01 · Microservices Patterns in .NET
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#02-advanced-aspnet-core-auth-grpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        02 · Advanced ASP.NET Core (auth, gRPC)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#03-distributed-systems-basics-for-net" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        03 · Distributed Systems Basics for .NET
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#04-testing-at-scale-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        04 · Testing at Scale &amp; CI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#05-performance-profiling-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        05 · Performance Profiling &amp; Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#06-security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        06 · Security Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#07-deployment-docker-for-net" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        07 · Deployment (Docker for .NET)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#08-observability-logging-tracing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        08 · Observability (logging, tracing)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#09-building-an-in-house-net-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        09 · Building an In-House .NET Framework
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-capstone-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10 · Capstone Project
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mixed-questions-across-all-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mixed questions across all levels
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-coding-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Practical coding questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Practical coding questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#top-words-with-linq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top words with LINQ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shapes-with-records-and-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shapes with records and patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cheat-sheet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cheat Sheet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../level-1/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Level 1 · Entry
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Level 1 · Entry
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-1/01-what-is-csharp-dotnet/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 · What Is C# & .NET?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-1/02-variables-types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 · Variables & Types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-1/03-control-flow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 · Control Flow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-1/04-methods-functions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 · Methods & Functions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-1/05-classes-objects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 · Classes & Objects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-1/06-collections/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 · Collections
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-1/07-exception-handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 · Exception Handling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-1/08-linq-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 · LINQ Basics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-1/09-file-io/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 · File I/O & Working with Text
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-1/10-project-task-manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 · Project — Console Task Manager App
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../level-2/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Level 2 · Intermediate
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Level 2 · Intermediate
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-2/01-interfaces-polymorphism/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 · Interfaces & Polymorphism
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-2/02-generics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 · Generics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-2/03-delegates-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 · Delegates & Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-2/04-async-await-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 · Async/Await Basics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-2/05-nullable-reference-types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 · Nullable Reference Types & Null Safety
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-2/06-testing-xunit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 · Testing with xUnit
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-2/07-json-system-text-json/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 · Working with JSON (System.Text.Json)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-2/08-records-pattern-matching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 · Records & Pattern Matching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-2/09-nuget-project-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 · NuGet & Project Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-2/10-project-weather-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 · Project — Weather CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../level-3/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Level 3 · Advanced
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Level 3 · Advanced
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-3/01-aspnet-core-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 · ASP.NET Core Basics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-3/02-ef-core-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 · Entity Framework Core Basics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-3/03-dependency-injection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 · Dependency Injection Deep Dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-3/04-advanced-async-tpl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 · Advanced Async & Task Parallel Library
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-3/05-design-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 · Design Patterns in C#
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-3/06-testing-advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 · Testing Advanced (Moq, integration tests)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-3/07-ef-core-migrations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 · Working with Databases (EF Core migrations)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-3/08-middleware-filters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 · Middleware & Filters in ASP.NET Core
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-3/09-performance-memory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 · Performance & Memory (Span, structs)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-3/10-project-rest-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 · Project — REST API Service
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../level-4/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Level 4 · Master
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Level 4 · Master
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-4/01-microservices-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 · Microservices Patterns in .NET
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-4/02-advanced-aspnet-core/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 · Advanced ASP.NET Core (auth, gRPC)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-4/03-distributed-systems-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 · Distributed Systems Basics for .NET
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-4/04-testing-at-scale-ci/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 · Testing at Scale & CI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-4/05-performance-profiling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 · Performance Profiling & Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-4/06-security-best-practices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 · Security Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-4/07-deployment-docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 · Deployment (Docker for .NET)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-4/08-observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 · Observability (logging, tracing)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-4/09-inhouse-dotnet-framework/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 · Building an In-House .NET Framework
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../level-4/10-capstone-project/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 · Capstone Project
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quiz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Final Quiz
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#level-1-entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 1 · Entry
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Level 1 · Entry">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01-what-is-c-net" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        01 · What Is C# &amp; .NET?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#02-variables-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        02 · Variables &amp; Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#03-control-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        03 · Control Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#04-methods-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        04 · Methods &amp; Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#05-classes-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        05 · Classes &amp; Objects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#06-collections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        06 · Collections
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#07-exception-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        07 · Exception Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#08-linq-basics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        08 · LINQ Basics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#09-file-io-working-with-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        09 · File I/O &amp; Working with Text
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-project-console-task-manager-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10 · Project — Console Task Manager App
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#level-2-intermediate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 2 · Intermediate
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Level 2 · Intermediate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01-interfaces-polymorphism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        01 · Interfaces &amp; Polymorphism
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#02-generics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        02 · Generics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#03-delegates-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        03 · Delegates &amp; Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#04-asyncawait-basics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        04 · Async/Await Basics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#05-nullable-reference-types-null-safety" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        05 · Nullable Reference Types &amp; Null Safety
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#06-testing-with-xunit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        06 · Testing with xUnit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#07-working-with-json-systemtextjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        07 · Working with JSON (System.Text.Json)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#08-records-pattern-matching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        08 · Records &amp; Pattern Matching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#09-nuget-project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        09 · NuGet &amp; Project Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-project-weather-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10 · Project — Weather CLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#level-3-advanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 3 · Advanced
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Level 3 · Advanced">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01-aspnet-core-basics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        01 · ASP.NET Core Basics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#02-entity-framework-core-basics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        02 · Entity Framework Core Basics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#03-dependency-injection-deep-dive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        03 · Dependency Injection Deep Dive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#04-advanced-async-task-parallel-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        04 · Advanced Async &amp; Task Parallel Library
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#05-design-patterns-in-c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        05 · Design Patterns in C#
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#06-testing-advanced-moq-integration-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        06 · Testing Advanced (Moq, integration tests)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#07-working-with-databases-ef-core-migrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        07 · Working with Databases (EF Core migrations)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#08-middleware-filters-in-aspnet-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        08 · Middleware &amp; Filters in ASP.NET Core
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#09-performance-memory-span-structs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        09 · Performance &amp; Memory (Span, structs)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-project-rest-api-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10 · Project — REST API Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#level-4-master" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 4 · Master
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Level 4 · Master">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#01-microservices-patterns-in-net" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        01 · Microservices Patterns in .NET
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#02-advanced-aspnet-core-auth-grpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        02 · Advanced ASP.NET Core (auth, gRPC)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#03-distributed-systems-basics-for-net" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        03 · Distributed Systems Basics for .NET
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#04-testing-at-scale-ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        04 · Testing at Scale &amp; CI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#05-performance-profiling-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        05 · Performance Profiling &amp; Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#06-security-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        06 · Security Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#07-deployment-docker-for-net" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        07 · Deployment (Docker for .NET)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#08-observability-logging-tracing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        08 · Observability (logging, tracing)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#09-building-an-in-house-net-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        09 · Building an In-House .NET Framework
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-capstone-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10 · Capstone Project
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mixed-questions-across-all-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mixed questions across all levels
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#practical-coding-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Practical coding questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Practical coding questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#top-words-with-linq" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top words with LINQ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shapes-with-records-and-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shapes with records and patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+                  
+
+
+  
+  
+
+
+<h1 id="c-interview-questions-and-answers">C# Interview Questions and Answers<a class="headerlink" href="#c-interview-questions-and-answers" title="Permanent link">&para;</a></h1>
+<p><strong>179 questions</strong> with the correct answer and a short explanation, organised from beginner (Level 1) to advanced (Level 4). Every question comes from a lesson in the free C# Mastery Path, so you can open the lesson to go deeper.</p>
+<div class="admonition tip">
+<p class="admonition-title">Practise, don't just read</p>
+<p>Each lesson also ends with an interactive quiz, and the <a href="../quiz/">final quiz</a> tests all four levels. Try to answer each question below before reading the answer.</p>
+</div>
+<h2 id="level-1-entry">Level 1 · Entry<a class="headerlink" href="#level-1-entry" title="Permanent link">&para;</a></h2>
+<h3 id="01-what-is-c-net"><a href="../level-1/01-what-is-csharp-dotnet/">01 · What Is C# &amp; .NET?</a><a class="headerlink" href="#01-what-is-c-net" title="Permanent link">&para;</a></h3>
+<p><strong>Q1.</strong> What is the relationship between C# and .NET?</p>
+<p><strong>Answer:</strong> C# is the language; .NET is the runtime and class libraries that run it</p>
+<p>The SDK provides the compiler and tools.</p>
+<p><strong>Q2.</strong> What does <code>dotnet run</code> do?</p>
+<p><strong>Answer:</strong> Builds and runs the project</p>
+<p>dotnet build compiles; dotnet run builds then runs.</p>
+<p><strong>Q3.</strong> What does C# compile to before running?</p>
+<p><strong>Answer:</strong> Intermediate Language (IL), JIT-compiled to machine code by the runtime</p>
+<p>The CLR executes IL.</p>
+<p><strong>Q4.</strong> What is a top-level statements program?</p>
+<p><strong>Answer:</strong> A Program.cs where code can start without an explicit Main method</p>
+<p>Modern templates use it.</p>
+<h3 id="02-variables-types"><a href="../level-1/02-variables-types/">02 · Variables &amp; Types</a><a class="headerlink" href="#02-variables-types" title="Permanent link">&para;</a></h3>
+<p><strong>Q5.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"{a / b} {a % b} {(double)a / b}"</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Answer:</strong> 3 1 3.5</p>
+<p>Integer division truncates. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q6.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kt">var</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kt">var</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.5</span><span class="p">;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kt">var</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">y</span><span class="p">;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">z</span><span class="p">.</span><span class="n">GetType</span><span class="p">().</span><span class="n">Name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">" "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">z</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Answer:</strong> Double 12.5</p>
+<p>var infers the type at compile time. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q7.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kt">string?</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">s</span><span class="o">?.</span><span class="n">Length</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Answer:</strong> -1</p>
+<p>?. short-circuits and ?? supplies a default. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q8.</strong> What's the difference between a value type and a reference type?</p>
+<p><strong>Answer:</strong> Value types hold their data directly; reference types hold a reference to data on the heap</p>
+<p>int and struct are values; class is a reference type.</p>
+<h3 id="03-control-flow"><a href="../level-1/03-control-flow/">03 · Control Flow</a><a class="headerlink" href="#03-control-flow" title="Permanent link">&para;</a></h3>
+<p><strong>Q9.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kt">int</span><span class="w"> </span><span class="n">s</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;=</span><span class="mi">10</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">%</span><span class="mi">2</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">&gt;</span><span class="mi">7</span><span class="p">)</span><span class="w"> </span><span class="k">break</span><span class="p">;</span><span class="w"> </span><span class="n">s</span><span class="o">+=</span><span class="n">i</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Answer:</strong> 16</p>
+<p>1+3+5+7 = 16. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q10.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kt">string</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="k">switch</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">"one"</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">"few"</span><span class="p">,</span><span class="w"> </span><span class="n">_</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">"many"</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Answer:</strong> few</p>
+<p>Switch expressions support patterns like or. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q11.</strong> Does a C# switch case fall through to the next case?</p>
+<p><strong>Answer:</strong> No: each case section must end with break/return/etc.</p>
+<p>Unlike C.</p>
+<p><strong>Q12.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s">"abc"</span><span class="p">)</span><span class="w"> </span><span class="n">Console</span><span class="p">.</span><span class="n">Write</span><span class="p">((</span><span class="kt">char</span><span class="p">)(</span><span class="n">c</span><span class="o">+</span><span class="mi">1</span><span class="p">));</span>
+</code></pre></div>
+<p><strong>Answer:</strong> bcd</p>
+<p>char arithmetic yields int; cast back to char. Verified by compiling and running with the .NET SDK.</p>
+<h3 id="04-methods-functions"><a href="../level-1/04-methods-functions/">04 · Methods &amp; Functions</a><a class="headerlink" href="#04-methods-functions" title="Permanent link">&para;</a></h3>
+<p><strong>Q13.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kt">int</span><span class="w"> </span><span class="nf">Inc</span><span class="p">(</span><span class="k">ref</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">){</span><span class="w"> </span><span class="n">x</span><span class="o">++</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">x</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">Inc</span><span class="p">(</span><span class="k">ref</span><span class="w"> </span><span class="n">a</span><span class="p">);</span><span class="w"> </span><span class="n">Inc</span><span class="p">(</span><span class="k">ref</span><span class="w"> </span><span class="n">a</span><span class="p">);</span><span class="w"> </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Answer:</strong> 3</p>
+<p>ref passes the variable itself. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q14.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kt">bool</span><span class="w"> </span><span class="nf">TryDiv</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="kt">int</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="k">out</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">r</span><span class="p">){</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">b</span><span class="o">==</span><span class="mi">0</span><span class="p">){</span><span class="n">r</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="k">return</span><span class="w"> </span><span class="k">false</span><span class="p">;}</span><span class="w"> </span><span class="n">r</span><span class="o">=</span><span class="n">a</span><span class="o">/</span><span class="n">b</span><span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">true</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">if</span><span class="p">(</span><span class="n">TryDiv</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="k">out</span><span class="w"> </span><span class="kt">var</span><span class="w"> </span><span class="n">q</span><span class="p">))</span><span class="w"> </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">q</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Answer:</strong> 3</p>
+<p>The Try pattern returns success and an out value. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q15.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kt">string</span><span class="w"> </span><span class="nf">Greet</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">greeting</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Hello"</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s">$"{greeting}, {name}!"</span><span class="p">;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">Greet</span><span class="p">(</span><span class="s">"Ada"</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">" "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Greet</span><span class="p">(</span><span class="n">greeting</span><span class="p">:</span><span class="w"> </span><span class="s">"Hi"</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">:</span><span class="w"> </span><span class="s">"Bo"</span><span class="p">));</span>
+</code></pre></div>
+<p><strong>Answer:</strong> Hello, Ada! Hi, Bo!</p>
+<p>Optional and named arguments. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q16.</strong> What does the expression-bodied syntax <code>int Sq(int x) =&gt; x * x;</code> mean?</p>
+<p><strong>Answer:</strong> A method whose body is a single expression</p>
+<p>Shorter syntax.</p>
+<h3 id="05-classes-objects"><a href="../level-1/05-classes-objects/">05 · Classes &amp; Objects</a><a class="headerlink" href="#05-classes-objects" title="Permanent link">&para;</a></h3>
+<p><strong>Q17.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kt">var</span><span class="w"> </span><span class="n">p</span><span class="o">=</span><span class="k">new</span><span class="w"> </span><span class="n">P</span><span class="p">(</span><span class="s">"Ada"</span><span class="p">);</span><span class="w"> </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">p</span><span class="p">);</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">P</span><span class="p">{</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Name</span><span class="p">{</span><span class="k">get</span><span class="p">;}</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">P</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">Name</span><span class="o">=</span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">ToString</span><span class="p">()</span><span class="o">=&gt;</span><span class="s">$"P({Name})"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p><strong>Answer:</strong> P(Ada)</p>
+<p>ToString controls string conversion. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q18.</strong> What does a get-only auto property <code>public string Name { get; }</code> allow?</p>
+<p><strong>Answer:</strong> Setting only in the constructor (or initializer)</p>
+<p>Immutability.</p>
+<p><strong>Q19.</strong> What does <code>private</code> do?</p>
+<p><strong>Answer:</strong> Restricts access to the declaring class</p>
+<p>Encapsulation.</p>
+<p><strong>Q20.</strong> What does <code>static</code> on a member mean?</p>
+<p><strong>Answer:</strong> It belongs to the type, not an instance</p>
+<p>Call it via the type name.</p>
+<h3 id="06-collections"><a href="../level-1/06-collections/">06 · Collections</a><a class="headerlink" href="#06-collections" title="Permanent link">&para;</a></h3>
+<p><strong>Q21.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kt">var</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Dictionary</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">{[</span><span class="s">"a"</span><span class="p">]</span><span class="o">=</span><span class="mi">1</span><span class="p">};</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">m</span><span class="p">[</span><span class="s">"b"</span><span class="p">]</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span><span class="w"> </span><span class="n">m</span><span class="p">[</span><span class="s">"a"</span><span class="p">]</span><span class="o">+=</span><span class="mi">5</span><span class="p">;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="n">Join</span><span class="p">(</span><span class="s">","</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">Select</span><span class="p">(</span><span class="n">kv</span><span class="o">=&gt;</span><span class="s">$"{kv.Key}{kv.Value}"</span><span class="p">)));</span>
+</code></pre></div>
+<p><strong>Answer:</strong> a6,b2</p>
+<p>Dictionary stores key/value pairs. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q22.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kt">var</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">};</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">l</span><span class="p">.</span><span class="n">Sort</span><span class="p">();</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="mi">9</span><span class="p">);</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">RemoveAt</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="n">Join</span><span class="p">(</span><span class="s">" "</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">)</span><span class="o">+</span><span class="s">" "</span><span class="o">+</span><span class="n">l</span><span class="p">.</span><span class="n">Count</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Answer:</strong> 2 3 9 3</p>
+<p>Sort then add then remove the first. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q23.</strong> When is HashSet&lt;T&gt; the right choice?</p>
+<p><strong>Answer:</strong> When you need fast membership tests and uniqueness</p>
+<p>Average O(1) Contains.</p>
+<p><strong>Q24.</strong> What happens reading a missing Dictionary key with the indexer?</p>
+<p><strong>Answer:</strong> KeyNotFoundException; use TryGetValue to avoid it</p>
+<p>Check first.</p>
+<h3 id="07-exception-handling"><a href="../level-1/07-exception-handling/">07 · Exception Handling</a><a class="headerlink" href="#07-exception-handling" title="Permanent link">&para;</a></h3>
+<p><strong>Q25.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kt">int</span><span class="p">[]</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">int</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">IndexOutOfRangeException</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Console</span><span class="p">.</span><span class="n">Write</span><span class="p">(</span><span class="s">"idx "</span><span class="p">);</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Console</span><span class="p">.</span><span class="n">Write</span><span class="p">(</span><span class="s">"fin"</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p><strong>Answer:</strong> idx fin</p>
+<p>finally always runs. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q26.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">InvalidOperationException</span><span class="p">(</span><span class="s">"bad"</span><span class="p">);</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">Message</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">"bad"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">"filtered"</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p><strong>Answer:</strong> filtered</p>
+<p>Exception filters use when. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q27.</strong> What does <code>using var f = File.OpenRead(p);</code> guarantee?</p>
+<p><strong>Answer:</strong> The stream is disposed when it goes out of scope, even on exceptions</p>
+<p>IDisposable pattern.</p>
+<p><strong>Q28.</strong> What's the right way to rethrow preserving the stack trace?</p>
+<p><strong>Answer:</strong> <code>throw;</code> inside the catch block</p>
+<p>throw ex resets the trace.</p>
+<h3 id="08-linq-basics"><a href="../level-1/08-linq-basics/">08 · LINQ Basics</a><a class="headerlink" href="#08-linq-basics" title="Permanent link">&para;</a></h3>
+<p><strong>Q29.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kt">var</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">[]{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">};</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="n">Join</span><span class="p">(</span><span class="s">","</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">Where</span><span class="p">(</span><span class="n">x</span><span class="o">=&gt;</span><span class="n">x</span><span class="o">%</span><span class="mi">2</span><span class="o">==</span><span class="mi">0</span><span class="p">).</span><span class="n">Select</span><span class="p">(</span><span class="n">x</span><span class="o">=&gt;</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">)));</span>
+</code></pre></div>
+<p><strong>Answer:</strong> 4,16,36</p>
+<p>Where filters then Select projects. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q30.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kt">var</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">[]{</span><span class="s">"apple"</span><span class="p">,</span><span class="s">"bob"</span><span class="p">,</span><span class="s">"cat"</span><span class="p">,</span><span class="s">"avocado"</span><span class="p">};</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="k">foreach</span><span class="w"> </span><span class="p">(</span><span class="kt">var</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">GroupBy</span><span class="p">(</span><span class="n">s</span><span class="o">=&gt;</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]).</span><span class="n">OrderBy</span><span class="p">(</span><span class="n">g</span><span class="o">=&gt;</span><span class="n">g</span><span class="p">.</span><span class="n">Key</span><span class="p">))</span><span class="w"> </span><span class="n">Console</span><span class="p">.</span><span class="n">Write</span><span class="p">(</span><span class="s">$"{g.Key}{g.Count()} "</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Answer:</strong> a2 b1 c1</p>
+<p>GroupBy by first character. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q31.</strong> When does a LINQ query like <code>Where</code> actually run?</p>
+<p><strong>Answer:</strong> Lazily: when enumerated (e.g. ToList, foreach)</p>
+<p>Deferred execution.</p>
+<p><strong>Q32.</strong> What's the difference between First() and FirstOrDefault()?</p>
+<p><strong>Answer:</strong> First throws if empty; FirstOrDefault returns the default</p>
+<p>Choose by expectation.</p>
+<h3 id="09-file-io-working-with-text"><a href="../level-1/09-file-io/">09 · File I/O &amp; Working with Text</a><a class="headerlink" href="#09-file-io-working-with-text" title="Permanent link">&para;</a></h3>
+<p><strong>Q33.</strong> Which reads all text from a file in one call?</p>
+<p><strong>Answer:</strong> File.ReadAllText(path)</p>
+<p>For large files, stream lines.</p>
+<p><strong>Q34.</strong> Why use <code>using</code> with StreamReader?</p>
+<p><strong>Answer:</strong> To dispose the file handle deterministically</p>
+<p>Prevents handle leaks.</p>
+<p><strong>Q35.</strong> How do you build a portable path?</p>
+<p><strong>Answer:</strong> Path.Combine(dir, name)</p>
+<p>It uses the correct separator.</p>
+<p><strong>Q36.</strong> What should you do before reading a file that may not exist?</p>
+<p><strong>Answer:</strong> Check File.Exists or handle FileNotFoundException</p>
+<p>Be defensive.</p>
+<h3 id="10-project-console-task-manager-app"><a href="../level-1/10-project-task-manager/">10 · Project — Console Task Manager App</a><a class="headerlink" href="#10-project-console-task-manager-app" title="Permanent link">&para;</a></h3>
+<p><strong>Q37.</strong> Why separate the TaskItem model from the console UI?</p>
+<p><strong>Answer:</strong> So logic can be reused and tested without I/O</p>
+<p>Separation of concerns.</p>
+<p><strong>Q38.</strong> How can tasks persist between runs?</p>
+<p><strong>Answer:</strong> Serialize them to a file (e.g. JSON) and load on startup</p>
+<p>JSON is simple.</p>
+<p><strong>Q39.</strong> What does validating user input prevent?</p>
+<p><strong>Answer:</strong> Crashes and bad data from malformed entries</p>
+<p>Use TryParse.</p>
+<p><strong>Q40.</strong> Which collection suits an ordered list of tasks?</p>
+<p><strong>Answer:</strong> List&lt;TaskItem&gt;</p>
+<p>Indexing and ordering.</p>
+<h2 id="level-2-intermediate">Level 2 · Intermediate<a class="headerlink" href="#level-2-intermediate" title="Permanent link">&para;</a></h2>
+<h3 id="01-interfaces-polymorphism"><a href="../level-2/01-interfaces-polymorphism/">01 · Interfaces &amp; Polymorphism</a><a class="headerlink" href="#01-interfaces-polymorphism" title="Permanent link">&para;</a></h3>
+<p><strong>Q41.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">IShape</span><span class="p">[]</span><span class="w"> </span><span class="n">a</span><span class="o">=</span><span class="p">{</span><span class="k">new</span><span class="w"> </span><span class="n">Sq</span><span class="p">(),</span><span class="k">new</span><span class="w"> </span><span class="n">Ci</span><span class="p">()};</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">Sum</span><span class="p">(</span><span class="n">s</span><span class="o">=&gt;</span><span class="n">s</span><span class="p">.</span><span class="n">Area</span><span class="p">()));</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="k">interface</span><span class="w"> </span><span class="n">IShape</span><span class="p">{</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">Area</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">Sq</span><span class="p">:</span><span class="n">IShape</span><span class="p">{</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">Area</span><span class="p">()</span><span class="o">=&gt;</span><span class="mi">4</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="k">class</span><span class="w"> </span><span class="nc">Ci</span><span class="p">:</span><span class="n">IShape</span><span class="p">{</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">Area</span><span class="p">()</span><span class="o">=&gt;</span><span class="mi">3</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p><strong>Answer:</strong> 7</p>
+<p>Polymorphism: each object's own Area runs. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q42.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">B</span><span class="w"> </span><span class="n">x</span><span class="o">=</span><span class="k">new</span><span class="w"> </span><span class="n">D</span><span class="p">();</span><span class="w"> </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">F</span><span class="p">());</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">B</span><span class="p">{</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="k">virtual</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">F</span><span class="p">()</span><span class="o">=&gt;</span><span class="s">"B"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">D</span><span class="p">:</span><span class="n">B</span><span class="p">{</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">F</span><span class="p">()</span><span class="o">=&gt;</span><span class="s">"D"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p><strong>Answer:</strong> D</p>
+<p>virtual/override dispatches on the runtime type. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q43.</strong> Why program to an interface?</p>
+<p><strong>Answer:</strong> Callers depend on behavior, so implementations can be swapped and tested</p>
+<p>Loose coupling.</p>
+<p><strong>Q44.</strong> Can a C# class implement several interfaces?</p>
+<p><strong>Answer:</strong> Yes</p>
+<p>But inherits from one base class.</p>
+<h3 id="02-generics"><a href="../level-2/02-generics/">02 · Generics</a><a class="headerlink" href="#02-generics" title="Permanent link">&para;</a></h3>
+<p><strong>Q45.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">T</span><span class="w"> </span><span class="n">Max</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">T</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="n">T</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="n">T</span><span class="p">:</span><span class="n">IComparable</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">CompareTo</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">&gt;=</span><span class="mi">0</span><span class="o">?</span><span class="n">a</span><span class="p">:</span><span class="n">b</span><span class="p">;</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">Max</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span><span class="o">+</span><span class="s">" "</span><span class="o">+</span><span class="n">Max</span><span class="p">(</span><span class="s">"b"</span><span class="p">,</span><span class="s">"a"</span><span class="p">));</span>
+</code></pre></div>
+<p><strong>Answer:</strong> 7 b</p>
+<p>The constraint enables comparison. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q46.</strong> What does <code>where T : class</code> constrain?</p>
+<p><strong>Answer:</strong> T must be a reference type</p>
+<p>Constraints enable operations.</p>
+<p><strong>Q47.</strong> Why use List&lt;int&gt; rather than ArrayList?</p>
+<p><strong>Answer:</strong> Type safety and no boxing</p>
+<p>Generics avoid casts.</p>
+<p><strong>Q48.</strong> What is boxing?</p>
+<p><strong>Answer:</strong> Wrapping a value type in an object on the heap</p>
+<p>A performance cost.</p>
+<h3 id="03-delegates-events"><a href="../level-2/03-delegates-events/">03 · Delegates &amp; Events</a><a class="headerlink" href="#03-delegates-events" title="Permanent link">&para;</a></h3>
+<p><strong>Q49.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="n">Func</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">sq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="o">=&gt;</span><span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="p">;</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="n">Action</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">say</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="o">=&gt;</span><span class="n">Console</span><span class="p">.</span><span class="n">Write</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="n">say</span><span class="p">(</span><span class="s">"v="</span><span class="o">+</span><span class="n">sq</span><span class="p">(</span><span class="mi">6</span><span class="p">));</span>
+</code></pre></div>
+<p><strong>Answer:</strong> v=36</p>
+<p>Func returns a value; Action doesn't. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q50.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="kt">var</span><span class="w"> </span><span class="n">b</span><span class="o">=</span><span class="k">new</span><span class="w"> </span><span class="n">B</span><span class="p">();</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">Said</span><span class="o">+=</span><span class="n">m</span><span class="o">=&gt;</span><span class="n">Console</span><span class="p">.</span><span class="n">Write</span><span class="p">(</span><span class="n">m</span><span class="o">+</span><span class="s">"1 "</span><span class="p">);</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">Said</span><span class="o">+=</span><span class="n">m</span><span class="o">=&gt;</span><span class="n">Console</span><span class="p">.</span><span class="n">Write</span><span class="p">(</span><span class="n">m</span><span class="o">+</span><span class="s">"2"</span><span class="p">);</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">Say</span><span class="p">(</span><span class="s">"x"</span><span class="p">);</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">B</span><span class="p">{</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="k">event</span><span class="w"> </span><span class="n">Action</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;?</span><span class="w"> </span><span class="n">Said</span><span class="p">;</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="n">Say</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">Said</span><span class="o">?.</span><span class="n">Invoke</span><span class="p">(</span><span class="n">s</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p><strong>Answer:</strong> x1 x2</p>
+<p>Subscribers are invoked in order. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q51.</strong> Why use <code>?.Invoke</code> for events?</p>
+<p><strong>Answer:</strong> To avoid NullReferenceException when there are no subscribers</p>
+<p>Events are null with no handlers.</p>
+<p><strong>Q52.</strong> What's the difference between a delegate and an event?</p>
+<p><strong>Answer:</strong> An event restricts outsiders to subscribe/unsubscribe; only the owner raises it</p>
+<p>Encapsulation.</p>
+<h3 id="04-asyncawait-basics"><a href="../level-2/04-async-await-basics/">04 · Async/Await Basics</a><a class="headerlink" href="#04-asyncawait-basics" title="Permanent link">&para;</a></h3>
+<p><strong>Q53.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">F</span><span class="p">(){</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">Task</span><span class="p">.</span><span class="n">Delay</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="k">await</span><span class="w"> </span><span class="n">F</span><span class="p">());</span>
+</code></pre></div>
+<p><strong>Answer:</strong> 42</p>
+<p>await unwraps the Task result. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q54.</strong> What does <code>await</code> do while waiting?</p>
+<p><strong>Answer:</strong> Frees the thread to do other work and resumes afterward</p>
+<p>Async is about not blocking.</p>
+<p><strong>Q55.</strong> Why avoid <code>.Result</code> or <code>.Wait()</code> on tasks?</p>
+<p><strong>Answer:</strong> They block and can deadlock in some contexts</p>
+<p>Use await.</p>
+<p><strong>Q56.</strong> What should async methods return?</p>
+<p><strong>Answer:</strong> Task or Task&lt;T&gt; (not async void except event handlers)</p>
+<p>async void can't be awaited.</p>
+<h3 id="05-nullable-reference-types-null-safety"><a href="../level-2/05-nullable-reference-types/">05 · Nullable Reference Types &amp; Null Safety</a><a class="headerlink" href="#05-nullable-reference-types-null-safety" title="Permanent link">&para;</a></h3>
+<p><strong>Q57.</strong> What does <code>&lt;Nullable&gt;enable&lt;/Nullable&gt;</code> do?</p>
+<p><strong>Answer:</strong> The compiler warns about possible null dereferences</p>
+<p>It's a compile-time analysis.</p>
+<p><strong>Q58.</strong> What does <code>string?</code> mean?</p>
+<p><strong>Answer:</strong> The reference may be null</p>
+<p><code>string</code> means non-null intent.</p>
+<p><strong>Q59.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="kt">string?</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">;</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s">"default"</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Answer:</strong> default</p>
+<p>?? supplies a fallback. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q60.</strong> What does the <code>!</code> (null-forgiving) operator do?</p>
+<p><strong>Answer:</strong> Tells the compiler not to warn; it doesn't check at runtime</p>
+<p>Use sparingly.</p>
+<h3 id="06-testing-with-xunit"><a href="../level-2/06-testing-xunit/">06 · Testing with xUnit</a><a class="headerlink" href="#06-testing-with-xunit" title="Permanent link">&para;</a></h3>
+<p><strong>Q61.</strong> Which attribute marks a simple xUnit test?</p>
+<p><strong>Answer:</strong> [Fact]</p>
+<p>[Theory] with [InlineData] is data-driven.</p>
+<p><strong>Q62.</strong> What is [Theory] with [InlineData] for?</p>
+<p><strong>Answer:</strong> Running one test with several input sets</p>
+<p>Parameterized tests.</p>
+<p><strong>Q63.</strong> How do xUnit tests share setup?</p>
+<p><strong>Answer:</strong> Constructor and IDisposable per test, or fixtures for sharing</p>
+<p>A new instance per test.</p>
+<p><strong>Q64.</strong> What's a good test name?</p>
+<p><strong>Answer:</strong> Describes behavior and expectation</p>
+<p>Method_Scenario_Expected.</p>
+<h3 id="07-working-with-json-systemtextjson"><a href="../level-2/07-json-system-text-json/">07 · Working with JSON (System.Text.Json)</a><a class="headerlink" href="#07-working-with-json-systemtextjson" title="Permanent link">&para;</a></h3>
+<p><strong>Q65.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="kt">var</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Json</span><span class="p">.</span><span class="n">JsonSerializer</span><span class="p">.</span><span class="n">Serialize</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">P</span><span class="p">(</span><span class="s">"Ada"</span><span class="p">,</span><span class="mi">36</span><span class="p">));</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">j</span><span class="p">);</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="k">record</span><span class="w"> </span><span class="nf">P</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">Name</span><span class="p">,</span><span class="kt">int</span><span class="w"> </span><span class="n">Age</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Answer:</strong> {"Name":"Ada","Age":36}</p>
+<p>Serialize uses property names. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q66.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="kt">var</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Json</span><span class="p">.</span><span class="n">JsonSerializer</span><span class="p">.</span><span class="n">Deserialize</span><span class="o">&lt;</span><span class="n">P</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"{\"Name\":\"Bo\",\"Age\":5}"</span><span class="p">);</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">p</span><span class="o">!</span><span class="p">.</span><span class="n">Name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">Age</span><span class="p">);</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="k">record</span><span class="w"> </span><span class="nf">P</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">Name</span><span class="p">,</span><span class="kt">int</span><span class="w"> </span><span class="n">Age</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Answer:</strong> Bo5</p>
+<p>Deserialize&lt;T&gt; builds the object. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q67.</strong> What's JsonSerializerOptions PropertyNameCaseInsensitive for?</p>
+<p><strong>Answer:</strong> Matching JSON names regardless of case</p>
+<p>Common for web JSON.</p>
+<p><strong>Q68.</strong> What does System.Text.Json do with unknown properties by default?</p>
+<p><strong>Answer:</strong> Ignores them</p>
+<p>Strict handling is opt-in.</p>
+<h3 id="08-records-pattern-matching"><a href="../level-2/08-records-pattern-matching/">08 · Records &amp; Pattern Matching</a><a class="headerlink" href="#08-records-pattern-matching" title="Permanent link">&para;</a></h3>
+<p><strong>Q69.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="kt">var</span><span class="w"> </span><span class="n">a</span><span class="o">=</span><span class="k">new</span><span class="w"> </span><span class="n">P</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span><span class="w"> </span><span class="kt">var</span><span class="w"> </span><span class="n">b</span><span class="o">=</span><span class="n">a</span><span class="w"> </span><span class="k">with</span><span class="p">{</span><span class="n">Y</span><span class="o">=</span><span class="mi">5</span><span class="p">};</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"{a==new P(1,2)} {b}"</span><span class="p">);</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="k">record</span><span class="w"> </span><span class="nf">P</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">X</span><span class="p">,</span><span class="kt">int</span><span class="w"> </span><span class="n">Y</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Answer:</strong> True P { X = 1, Y = 5 }</p>
+<p>Records have value equality and <code>with</code>. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q70.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="kt">object</span><span class="w"> </span><span class="n">o</span><span class="o">=</span><span class="mi">42</span><span class="p">;</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="kt">string</span><span class="w"> </span><span class="n">r</span><span class="o">=</span><span class="n">o</span><span class="w"> </span><span class="k">switch</span><span class="p">{</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="k">when</span><span class="w"> </span><span class="n">n</span><span class="o">&gt;</span><span class="mi">40</span><span class="o">=&gt;</span><span class="s">"big"</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">=&gt;</span><span class="s">"int"</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="o">=&gt;</span><span class="s">"str"</span><span class="p">,</span><span class="w"> </span><span class="n">_</span><span class="o">=&gt;</span><span class="s">"?"</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Answer:</strong> big</p>
+<p>Patterns with guards. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q71.</strong> How does a record differ from a class?</p>
+<p><strong>Answer:</strong> It gives value-based equality, ToString and with-expressions</p>
+<p>Great for DTOs.</p>
+<p><strong>Q72.</strong> What does <code>is not null</code> check?</p>
+<p><strong>Answer:</strong> The reference isn't null, via pattern matching</p>
+<p>Readable null check.</p>
+<h3 id="09-nuget-project-structure"><a href="../level-2/09-nuget-project-structure/">09 · NuGet &amp; Project Structure</a><a class="headerlink" href="#09-nuget-project-structure" title="Permanent link">&para;</a></h3>
+<p><strong>Q73.</strong> What does <code>dotnet add package X</code> do?</p>
+<p><strong>Answer:</strong> Adds a NuGet package reference to the project</p>
+<p>Restored on build.</p>
+<p><strong>Q74.</strong> What file defines a project's dependencies and target framework?</p>
+<p><strong>Answer:</strong> The .csproj file</p>
+<p>MSBuild project.</p>
+<p><strong>Q75.</strong> What's a solution (.sln)?</p>
+<p><strong>Answer:</strong> A container grouping several projects</p>
+<p>Open it in the IDE.</p>
+<p><strong>Q76.</strong> Why separate library and app projects?</p>
+<p><strong>Answer:</strong> Reuse and testability</p>
+<p>Reference with ProjectReference.</p>
+<h3 id="10-project-weather-cli"><a href="../level-2/10-project-weather-cli/">10 · Project — Weather CLI</a><a class="headerlink" href="#10-project-weather-cli" title="Permanent link">&para;</a></h3>
+<p><strong>Q77.</strong> Which class is used to call an HTTP API?</p>
+<p><strong>Answer:</strong> HttpClient (reuse a single instance)</p>
+<p>Avoid creating one per request.</p>
+<p><strong>Q78.</strong> How should API failures be handled?</p>
+<p><strong>Answer:</strong> Check status codes, catch HttpRequestException and show a friendly message</p>
+<p>Network calls fail.</p>
+<p><strong>Q79.</strong> Where should an API key live?</p>
+<p><strong>Answer:</strong> Outside source control, in configuration or environment variables</p>
+<p>Never commit secrets.</p>
+<p><strong>Q80.</strong> Why model the response with a record/class?</p>
+<p><strong>Answer:</strong> To deserialize JSON into typed objects</p>
+<p>System.Text.Json.</p>
+<h2 id="level-3-advanced">Level 3 · Advanced<a class="headerlink" href="#level-3-advanced" title="Permanent link">&para;</a></h2>
+<h3 id="01-aspnet-core-basics"><a href="../level-3/01-aspnet-core-basics/">01 · ASP.NET Core Basics</a><a class="headerlink" href="#01-aspnet-core-basics" title="Permanent link">&para;</a></h3>
+<p><strong>Q81.</strong> What does <code>app.MapGet("/hello", () =&gt; "hi")</code> define?</p>
+<p><strong>Answer:</strong> A minimal API endpoint answering GET /hello</p>
+<p>Minimal APIs map routes to handlers.</p>
+<p><strong>Q82.</strong> What does <code>builder.Build()</code> return?</p>
+<p><strong>Answer:</strong> The WebApplication used to configure the pipeline and run</p>
+<p>Services are registered before Build.</p>
+<p><strong>Q83.</strong> Which status code means 'created'?</p>
+<p><strong>Answer:</strong> 201</p>
+<p>Return Results.Created for POST.</p>
+<p><strong>Q84.</strong> What does model binding do?</p>
+<p><strong>Answer:</strong> Maps request data (route, query, body) to handler parameters</p>
+<p>Validation follows.</p>
+<h3 id="02-entity-framework-core-basics"><a href="../level-3/02-ef-core-basics/">02 · Entity Framework Core Basics</a><a class="headerlink" href="#02-entity-framework-core-basics" title="Permanent link">&para;</a></h3>
+<p><strong>Q85.</strong> What is a DbContext?</p>
+<p><strong>Answer:</strong> A session with the database that tracks entities and queries (unit of work)</p>
+<p>DbSet&lt;T&gt; exposes tables.</p>
+<p><strong>Q86.</strong> When are changes saved?</p>
+<p><strong>Answer:</strong> On SaveChanges()</p>
+<p>Tracking records changes.</p>
+<p><strong>Q87.</strong> What causes the N+1 query problem?</p>
+<p><strong>Answer:</strong> Loading related data in a loop instead of Include or a joined query</p>
+<p>Use Include or projection.</p>
+<p><strong>Q88.</strong> What does AsNoTracking do?</p>
+<p><strong>Answer:</strong> Skips change tracking for faster read-only queries</p>
+<p>Use for reads.</p>
+<h3 id="03-dependency-injection-deep-dive"><a href="../level-3/03-dependency-injection/">03 · Dependency Injection Deep Dive</a><a class="headerlink" href="#03-dependency-injection-deep-dive" title="Permanent link">&para;</a></h3>
+<p><strong>Q89.</strong> Which lifetime creates one instance per HTTP request?</p>
+<p><strong>Answer:</strong> Scoped</p>
+<p>DbContext is scoped.</p>
+<p><strong>Q90.</strong> Which lifetime creates a new instance every time it's resolved?</p>
+<p><strong>Answer:</strong> Transient</p>
+<p>Use for lightweight stateless services.</p>
+<p><strong>Q91.</strong> What's the 'captive dependency' bug?</p>
+<p><strong>Answer:</strong> A singleton holding a scoped service, keeping it alive too long</p>
+<p>Lifetimes must nest correctly.</p>
+<p><strong>Q92.</strong> Why inject interfaces rather than new up classes?</p>
+<p><strong>Answer:</strong> Testability and loose coupling</p>
+<p>Swap implementations.</p>
+<h3 id="04-advanced-async-task-parallel-library"><a href="../level-3/04-advanced-async-tpl/">04 · Advanced Async &amp; Task Parallel Library</a><a class="headerlink" href="#04-advanced-async-task-parallel-library" title="Permanent link">&para;</a></h3>
+<p><strong>Q93.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="kt">var</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">Task</span><span class="p">.</span><span class="n">WhenAll</span><span class="p">(</span><span class="n">Task</span><span class="p">.</span><span class="n">Run</span><span class="p">(()</span><span class="o">=&gt;</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">Task</span><span class="p">.</span><span class="n">Run</span><span class="p">(()</span><span class="o">=&gt;</span><span class="mi">2</span><span class="p">),</span><span class="w"> </span><span class="n">Task</span><span class="p">.</span><span class="n">Run</span><span class="p">(()</span><span class="o">=&gt;</span><span class="mi">3</span><span class="p">));</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">Sum</span><span class="p">());</span>
+</code></pre></div>
+<p><strong>Answer:</strong> 6</p>
+<p>WhenAll awaits all tasks and returns their results. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q94.</strong> What does CancellationToken enable?</p>
+<p><strong>Answer:</strong> Cooperative cancellation of long-running work</p>
+<p>Check it and pass it along.</p>
+<p><strong>Q95.</strong> When is Parallel.ForEach appropriate?</p>
+<p><strong>Answer:</strong> CPU-bound loops over independent items</p>
+<p>Use async for I/O.</p>
+<p><strong>Q96.</strong> What does ConfigureAwait(false) do in library code?</p>
+<p><strong>Answer:</strong> Avoids capturing the synchronization context</p>
+<p>Reduces deadlock risk.</p>
+<h3 id="05-design-patterns-in-c"><a href="../level-3/05-design-patterns/">05 · Design Patterns in C#</a><a class="headerlink" href="#05-design-patterns-in-c" title="Permanent link">&para;</a></h3>
+<p><strong>Q97.</strong> What does the Repository pattern abstract?</p>
+<p><strong>Answer:</strong> Data access behind an interface</p>
+<p>Lets code depend on an abstraction.</p>
+<p><strong>Q98.</strong> What's the Strategy pattern?</p>
+<p><strong>Answer:</strong> Interchangeable algorithms behind an interface</p>
+<p>Inject the strategy.</p>
+<p><strong>Q99.</strong> What does the Decorator pattern do?</p>
+<p><strong>Answer:</strong> Wraps an object to add behavior while keeping the interface</p>
+<p>Logging and caching wrappers.</p>
+<p><strong>Q100.</strong> Why is a Singleton often discouraged?</p>
+<p><strong>Answer:</strong> Global state hampers testing; use DI singleton lifetime instead</p>
+<p>Let the container manage it.</p>
+<h3 id="06-testing-advanced-moq-integration-tests"><a href="../level-3/06-testing-advanced/">06 · Testing Advanced (Moq, integration tests)</a><a class="headerlink" href="#06-testing-advanced-moq-integration-tests" title="Permanent link">&para;</a></h3>
+<p><strong>Q101.</strong> What does Moq let you do?</p>
+<p><strong>Answer:</strong> Create fake dependencies and set up/verify interactions</p>
+<p>Mock interfaces.</p>
+<p><strong>Q102.</strong> What does WebApplicationFactory provide?</p>
+<p><strong>Answer:</strong> An in-memory host for integration tests of the real pipeline</p>
+<p>Test endpoints end to end.</p>
+<p><strong>Q103.</strong> What should integration tests use for the database?</p>
+<p><strong>Answer:</strong> A test database or in-memory provider isolated per test</p>
+<p>Keep them repeatable.</p>
+<p><strong>Q104.</strong> What's wrong with over-mocking?</p>
+<p><strong>Answer:</strong> Tests verify implementation details and become brittle</p>
+<p>Prefer testing behavior.</p>
+<h3 id="07-working-with-databases-ef-core-migrations"><a href="../level-3/07-ef-core-migrations/">07 · Working with Databases (EF Core migrations)</a><a class="headerlink" href="#07-working-with-databases-ef-core-migrations" title="Permanent link">&para;</a></h3>
+<p><strong>Q105.</strong> What does <code>dotnet ef migrations add Name</code> do?</p>
+<p><strong>Answer:</strong> Generates code describing the schema change since the last model snapshot</p>
+<p>Apply with <code>database update</code>.</p>
+<p><strong>Q106.</strong> Why review generated migrations?</p>
+<p><strong>Answer:</strong> They can drop columns or data; check before applying</p>
+<p>Destructive changes need care.</p>
+<p><strong>Q107.</strong> Where should production migrations run from?</p>
+<p><strong>Answer:</strong> A controlled deployment step, often a generated SQL script or migration bundle</p>
+<p>Avoid surprise schema changes.</p>
+<p><strong>Q108.</strong> What is a migration snapshot?</p>
+<p><strong>Answer:</strong> The record of the current model state used to diff the next migration</p>
+<p>ModelSnapshot.cs.</p>
+<h3 id="08-middleware-filters-in-aspnet-core"><a href="../level-3/08-middleware-filters/">08 · Middleware &amp; Filters in ASP.NET Core</a><a class="headerlink" href="#08-middleware-filters-in-aspnet-core" title="Permanent link">&para;</a></h3>
+<p><strong>Q109.</strong> In what order does request middleware run?</p>
+<p><strong>Answer:</strong> In registration order; responses unwind in reverse</p>
+<p>UseX order matters.</p>
+<p><strong>Q110.</strong> What does <code>app.UseAuthentication()</code> need relative to authorization?</p>
+<p><strong>Answer:</strong> It must come before UseAuthorization</p>
+<p>Identify, then authorize.</p>
+<p><strong>Q111.</strong> What is an action filter?</p>
+<p><strong>Answer:</strong> Code that runs before/after an MVC action</p>
+<p>Cross-cutting concerns.</p>
+<p><strong>Q112.</strong> What does short-circuiting middleware do?</p>
+<p><strong>Answer:</strong> Writes a response without calling the next delegate</p>
+<p>E.g. returning 401.</p>
+<h3 id="09-performance-memory-span-structs"><a href="../level-3/09-performance-memory/">09 · Performance &amp; Memory (Span, structs)</a><a class="headerlink" href="#09-performance-memory-span-structs" title="Permanent link">&para;</a></h3>
+<p><strong>Q113.</strong> What is Span&lt;T&gt; good for?</p>
+<p><strong>Answer:</strong> Slicing contiguous memory without allocating or copying</p>
+<p>A ref struct living on the stack.</p>
+<p><strong>Q114.</strong> What's the downside of boxing in hot loops?</p>
+<p><strong>Answer:</strong> Heap allocations and GC pressure</p>
+<p>Use generics.</p>
+<p><strong>Q115.</strong> When are structs a good choice?</p>
+<p><strong>Answer:</strong> Small immutable value-like types</p>
+<p>Large structs copy expensively.</p>
+<p><strong>Q116.</strong> What should you do before optimizing?</p>
+<p><strong>Answer:</strong> Measure with a profiler or BenchmarkDotNet</p>
+<p>Evidence first.</p>
+<h3 id="10-project-rest-api-service"><a href="../level-3/10-project-rest-api/">10 · Project — REST API Service</a><a class="headerlink" href="#10-project-rest-api-service" title="Permanent link">&para;</a></h3>
+<p><strong>Q117.</strong> Which HTTP verb creates a resource?</p>
+<p><strong>Answer:</strong> POST</p>
+<p>PUT replaces, PATCH modifies.</p>
+<p><strong>Q118.</strong> What should a validation failure return?</p>
+<p><strong>Answer:</strong> 400 Bad Request with details</p>
+<p>Client errors are 4xx.</p>
+<p><strong>Q119.</strong> What does a DTO do?</p>
+<p><strong>Answer:</strong> Shapes data crossing the API boundary, separate from the entity</p>
+<p>Don't expose entities directly.</p>
+<p><strong>Q120.</strong> How should the API version be handled?</p>
+<p><strong>Answer:</strong> Explicitly (URL or header) so changes don't break clients</p>
+<p>Compatibility.</p>
+<h2 id="level-4-master">Level 4 · Master<a class="headerlink" href="#level-4-master" title="Permanent link">&para;</a></h2>
+<h3 id="01-microservices-patterns-in-net"><a href="../level-4/01-microservices-patterns/">01 · Microservices Patterns in .NET</a><a class="headerlink" href="#01-microservices-patterns-in-net" title="Permanent link">&para;</a></h3>
+<p><strong>Q121.</strong> What does the API gateway pattern provide?</p>
+<p><strong>Answer:</strong> A single entry point that routes, authenticates and aggregates</p>
+<p>Clients talk to one endpoint.</p>
+<p><strong>Q122.</strong> Why give each microservice its own database?</p>
+<p><strong>Answer:</strong> Independent deployment and schema evolution without coupling</p>
+<p>Avoid shared-DB coupling.</p>
+<p><strong>Q123.</strong> What does the circuit breaker pattern do?</p>
+<p><strong>Answer:</strong> Stops calling a failing dependency for a while to let it recover</p>
+<p>Polly implements it.</p>
+<p><strong>Q124.</strong> What is eventual consistency?</p>
+<p><strong>Answer:</strong> Data across services becomes consistent after propagation, not instantly</p>
+<p>Plan for it.</p>
+<h3 id="02-advanced-aspnet-core-auth-grpc"><a href="../level-4/02-advanced-aspnet-core/">02 · Advanced ASP.NET Core (auth, gRPC)</a><a class="headerlink" href="#02-advanced-aspnet-core-auth-grpc" title="Permanent link">&para;</a></h3>
+<p><strong>Q125.</strong> What is a JWT bearer token?</p>
+<p><strong>Answer:</strong> A signed token the client sends to prove identity and claims</p>
+<p>Validate signature, issuer and expiry.</p>
+<p><strong>Q126.</strong> What is gRPC best suited for?</p>
+<p><strong>Answer:</strong> Efficient service-to-service calls with Protobuf contracts</p>
+<p>HTTP/2 streaming.</p>
+<p><strong>Q127.</strong> What does policy-based authorization do?</p>
+<p><strong>Answer:</strong> Evaluates named requirements over claims for access decisions</p>
+<p>[Authorize(Policy=...)].</p>
+<p><strong>Q128.</strong> Why should tokens have short lifetimes?</p>
+<p><strong>Answer:</strong> Limits damage if stolen; use refresh tokens</p>
+<p>Rotate.</p>
+<h3 id="03-distributed-systems-basics-for-net"><a href="../level-4/03-distributed-systems-basics/">03 · Distributed Systems Basics for .NET</a><a class="headerlink" href="#03-distributed-systems-basics-for-net" title="Permanent link">&para;</a></h3>
+<p><strong>Q129.</strong> What does idempotency mean for an API?</p>
+<p><strong>Answer:</strong> Repeating the same request has the same effect as doing it once</p>
+<p>Safe retries.</p>
+<p><strong>Q130.</strong> Why do message consumers need to be idempotent?</p>
+<p><strong>Answer:</strong> Delivery is typically at-least-once, so duplicates occur</p>
+<p>Deduplicate.</p>
+<p><strong>Q131.</strong> What does the CAP theorem say?</p>
+<p><strong>Answer:</strong> During a partition you must choose between consistency and availability</p>
+<p>Partitions happen.</p>
+<p><strong>Q132.</strong> What do retries with exponential backoff and jitter avoid?</p>
+<p><strong>Answer:</strong> Thundering herds hammering a recovering service</p>
+<p>Spread out retries.</p>
+<h3 id="04-testing-at-scale-ci"><a href="../level-4/04-testing-at-scale-ci/">04 · Testing at Scale &amp; CI</a><a class="headerlink" href="#04-testing-at-scale-ci" title="Permanent link">&para;</a></h3>
+<p><strong>Q133.</strong> What belongs in a CI pipeline for .NET?</p>
+<p><strong>Answer:</strong> Restore, build, test, analysis and publish</p>
+<p>dotnet test in CI.</p>
+<p><strong>Q134.</strong> Why cache NuGet packages in CI?</p>
+<p><strong>Answer:</strong> To cut restore time</p>
+<p>Faster feedback.</p>
+<p><strong>Q135.</strong> What does a test pyramid recommend?</p>
+<p><strong>Answer:</strong> Many fast unit tests, fewer integration tests, very few end-to-end tests</p>
+<p>Balance speed and confidence.</p>
+<p><strong>Q136.</strong> What do you do with a flaky test?</p>
+<p><strong>Answer:</strong> Fix or quarantine it; don't ignore red builds</p>
+<p>Trust matters.</p>
+<h3 id="05-performance-profiling-optimization"><a href="../level-4/05-performance-profiling/">05 · Performance Profiling &amp; Optimization</a><a class="headerlink" href="#05-performance-profiling-optimization" title="Permanent link">&para;</a></h3>
+<p><strong>Q137.</strong> What does BenchmarkDotNet provide?</p>
+<p><strong>Answer:</strong> Reliable micro-benchmarks with warmup and statistics</p>
+<p>Run in Release.</p>
+<p><strong>Q138.</strong> Why measure in Release mode?</p>
+<p><strong>Answer:</strong> Debug builds disable optimizations</p>
+<p>Different performance.</p>
+<p><strong>Q139.</strong> What does dotnet-counters/trace help with?</p>
+<p><strong>Answer:</strong> Observing runtime metrics and traces of a running app</p>
+<p>Find hot paths and GC issues.</p>
+<p><strong>Q140.</strong> What's a common cause of high GC pauses?</p>
+<p><strong>Answer:</strong> Too many allocations and large object heap churn</p>
+<p>Reduce allocations.</p>
+<h3 id="06-security-best-practices"><a href="../level-4/06-security-best-practices/">06 · Security Best Practices</a><a class="headerlink" href="#06-security-best-practices" title="Permanent link">&para;</a></h3>
+<p><strong>Q141.</strong> How do you prevent SQL injection?</p>
+<p><strong>Answer:</strong> Parameterized queries or EF Core LINQ, never string concatenation</p>
+<p>Parameters separate code from data.</p>
+<p><strong>Q142.</strong> Where should secrets live?</p>
+<p><strong>Answer:</strong> Secret stores or environment variables, not source control</p>
+<p>User secrets for development.</p>
+<p><strong>Q143.</strong> How are passwords stored?</p>
+<p><strong>Answer:</strong> Hashed with a slow salted algorithm (e.g. PBKDF2/bcrypt/argon2)</p>
+<p>Never reversible.</p>
+<p><strong>Q144.</strong> What does HTTPS plus HSTS provide?</p>
+<p><strong>Answer:</strong> Encrypted transport and enforced secure connections</p>
+<p>Always on.</p>
+<h3 id="07-deployment-docker-for-net"><a href="../level-4/07-deployment-docker/">07 · Deployment (Docker for .NET)</a><a class="headerlink" href="#07-deployment-docker-for-net" title="Permanent link">&para;</a></h3>
+<p><strong>Q145.</strong> Why use multi-stage Docker builds for .NET?</p>
+<p><strong>Answer:</strong> Build with the SDK image, ship only the runtime and published output (smaller)</p>
+<p>Smaller attack surface.</p>
+<p><strong>Q146.</strong> What does <code>dotnet publish -c Release</code> produce?</p>
+<p><strong>Answer:</strong> Deployable output for the app</p>
+<p>Copy it into the runtime image.</p>
+<p><strong>Q147.</strong> Why run as a non-root user in a container?</p>
+<p><strong>Answer:</strong> Limits damage if the app is compromised</p>
+<p>Least privilege.</p>
+<p><strong>Q148.</strong> How should configuration be supplied to containers?</p>
+<p><strong>Answer:</strong> Environment variables or mounted config, not baked-in secrets</p>
+<p>Twelve-factor.</p>
+<h3 id="08-observability-logging-tracing"><a href="../level-4/08-observability/">08 · Observability (logging, tracing)</a><a class="headerlink" href="#08-observability-logging-tracing" title="Permanent link">&para;</a></h3>
+<p><strong>Q149.</strong> What are the three pillars of observability?</p>
+<p><strong>Answer:</strong> Logs, metrics and traces</p>
+<p>Together they explain behavior.</p>
+<p><strong>Q150.</strong> What does structured logging provide?</p>
+<p><strong>Answer:</strong> Searchable key/value fields instead of free text</p>
+<p>Serilog and ILogger templates.</p>
+<p><strong>Q151.</strong> What does a trace id enable?</p>
+<p><strong>Answer:</strong> Following one request across services</p>
+<p>OpenTelemetry.</p>
+<p><strong>Q152.</strong> What's a good alert?</p>
+<p><strong>Answer:</strong> Actionable and tied to user impact (SLO)</p>
+<p>Avoid alert fatigue.</p>
+<h3 id="09-building-an-in-house-net-framework"><a href="../level-4/09-inhouse-dotnet-framework/">09 · Building an In-House .NET Framework</a><a class="headerlink" href="#09-building-an-in-house-net-framework" title="Permanent link">&para;</a></h3>
+<p><strong>Q153.</strong> When does an in-house framework make sense?</p>
+<p><strong>Answer:</strong> When many teams repeat the same cross-cutting setup and standards</p>
+<p>Weigh maintenance.</p>
+<p><strong>Q154.</strong> What should the framework hide?</p>
+<p><strong>Answer:</strong> Boilerplate like logging, auth, health checks and config defaults</p>
+<p>Opinionated defaults.</p>
+<p><strong>Q155.</strong> How should it be versioned?</p>
+<p><strong>Answer:</strong> With semantic versioning and a changelog via NuGet</p>
+<p>Consumers need stability.</p>
+<p><strong>Q156.</strong> What's a risk?</p>
+<p><strong>Answer:</strong> Becoming a bottleneck or leaky abstraction</p>
+<p>Keep it thin and documented.</p>
+<h3 id="10-capstone-project"><a href="../level-4/10-capstone-project/">10 · Capstone Project</a><a class="headerlink" href="#10-capstone-project" title="Permanent link">&para;</a></h3>
+<p><strong>Q157.</strong> What does the capstone integrate?</p>
+<p><strong>Answer:</strong> API, data, DI, tests, security, containers and observability</p>
+<p>End to end.</p>
+<p><strong>Q158.</strong> How do you verify the service before release?</p>
+<p><strong>Answer:</strong> Automated tests, CI build and a staged deployment with health checks</p>
+<p>Layered checks.</p>
+<p><strong>Q159.</strong> What belongs in a readiness check?</p>
+<p><strong>Answer:</strong> Dependencies the app needs to serve traffic (DB, cache)</p>
+<p>Distinguish from liveness.</p>
+<p><strong>Q160.</strong> What makes the design maintainable?</p>
+<p><strong>Answer:</strong> Clear layering, interfaces, tests and documentation</p>
+<p>Sustainable.</p>
+<h2 id="mixed-questions-across-all-levels">Mixed questions across all levels<a class="headerlink" href="#mixed-questions-across-all-levels" title="Permanent link">&para;</a></h2>
+<p><strong>Q161.</strong> What is the relationship between the C# compiler and the runtime?</p>
+<p><strong>Answer:</strong> The compiler produces IL; the runtime JIT-compiles it to machine code</p>
+<p>That's how .NET achieves portability.</p>
+<p><strong>Q162.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span><span class="w"> </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"{a/b} {(double)a/b}"</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Answer:</strong> 3 3.5</p>
+<p>Integer division truncates. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q163.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="kt">string?</span><span class="w"> </span><span class="n">s</span><span class="o">=</span><span class="k">null</span><span class="p">;</span><span class="w"> </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">s</span><span class="o">?.</span><span class="n">Length</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Answer:</strong> -1</p>
+<p>Null-conditional plus coalescing. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q164.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kt">int</span><span class="p">[]</span><span class="w"> </span><span class="n">a</span><span class="o">=</span><span class="k">new</span><span class="w"> </span><span class="kt">int</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">IndexOutOfRangeException</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Console</span><span class="p">.</span><span class="n">Write</span><span class="p">(</span><span class="s">"c"</span><span class="p">);</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Console</span><span class="p">.</span><span class="n">Write</span><span class="p">(</span><span class="s">"f"</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p><strong>Answer:</strong> cf</p>
+<p>finally always runs. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q165.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="kt">var</span><span class="w"> </span><span class="n">n</span><span class="o">=</span><span class="k">new</span><span class="p">[]{</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">1</span><span class="p">};</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="n">Join</span><span class="p">(</span><span class="s">","</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">Where</span><span class="p">(</span><span class="n">x</span><span class="o">=&gt;</span><span class="n">x</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">).</span><span class="n">OrderBy</span><span class="p">(</span><span class="n">x</span><span class="o">=&gt;</span><span class="n">x</span><span class="p">).</span><span class="n">Select</span><span class="p">(</span><span class="n">x</span><span class="o">=&gt;</span><span class="n">x</span><span class="o">*</span><span class="mi">10</span><span class="p">)));</span>
+</code></pre></div>
+<p><strong>Answer:</strong> 20,50,80</p>
+<p>Where, then OrderBy, then Select. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q166.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="kt">var</span><span class="w"> </span><span class="n">l</span><span class="o">=</span><span class="k">new</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">};</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="kt">var</span><span class="w"> </span><span class="n">q</span><span class="o">=</span><span class="n">l</span><span class="p">.</span><span class="n">Where</span><span class="p">(</span><span class="n">x</span><span class="o">=&gt;</span><span class="n">x</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">);</span>
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="n">l</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">q</span><span class="p">.</span><span class="n">Count</span><span class="p">());</span>
+</code></pre></div>
+<p><strong>Answer:</strong> 3</p>
+<p>LINQ is deferred: the query ran after the add. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q167.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="kt">var</span><span class="w"> </span><span class="n">a</span><span class="o">=</span><span class="k">new</span><span class="w"> </span><span class="n">P</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span><span class="w"> </span><span class="kt">var</span><span class="w"> </span><span class="n">b</span><span class="o">=</span><span class="k">new</span><span class="w"> </span><span class="n">P</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">$"{a==b} {ReferenceEquals(a,b)}"</span><span class="p">);</span>
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="k">record</span><span class="w"> </span><span class="nf">P</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">X</span><span class="p">,</span><span class="kt">int</span><span class="w"> </span><span class="n">Y</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Answer:</strong> True False</p>
+<p>Records compare by value. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q168.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="n">B</span><span class="w"> </span><span class="n">x</span><span class="o">=</span><span class="k">new</span><span class="w"> </span><span class="n">D</span><span class="p">();</span><span class="w"> </span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">F</span><span class="p">());</span>
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">B</span><span class="p">{</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="k">virtual</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">F</span><span class="p">()</span><span class="o">=&gt;</span><span class="s">"B"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">D</span><span class="p">:</span><span class="n">B</span><span class="p">{</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">F</span><span class="p">()</span><span class="o">=&gt;</span><span class="s">"D"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p><strong>Answer:</strong> D</p>
+<p>Virtual dispatch uses the runtime type. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q169.</strong> What does this print?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">F</span><span class="p">(){</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">Task</span><span class="p">.</span><span class="n">Delay</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">21</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="kt">var</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">Task</span><span class="p">.</span><span class="n">WhenAll</span><span class="p">(</span><span class="n">F</span><span class="p">(),</span><span class="w"> </span><span class="n">F</span><span class="p">());</span>
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">Sum</span><span class="p">());</span>
+</code></pre></div>
+<p><strong>Answer:</strong> 42</p>
+<p>WhenAll awaits both tasks. Verified by compiling and running with the .NET SDK.</p>
+<p><strong>Q170.</strong> Why is <code>.Result</code> on a Task risky in an ASP.NET app?</p>
+<p><strong>Answer:</strong> It blocks the thread and can deadlock or exhaust the thread pool; use await</p>
+<p>Async all the way.</p>
+<p><strong>Q171.</strong> A scoped DbContext is injected into a singleton service. What's the problem?</p>
+<p><strong>Answer:</strong> A captive dependency: the scoped instance lives forever and isn't thread-safe</p>
+<p>Match lifetimes or use IServiceScopeFactory.</p>
+<p><strong>Q172.</strong> An EF query loads orders then touches order.Customer in a loop. What's the issue?</p>
+<p><strong>Answer:</strong> N+1 queries; use Include or project to a DTO</p>
+<p>Reduce round trips.</p>
+<p><strong>Q173.</strong> <code>dotnet ef migrations add</code> generated a migration that drops a column. What now?</p>
+<p><strong>Answer:</strong> Review it: dropping loses data, so adjust or plan a backup and staged change</p>
+<p>Generated code needs review.</p>
+<p><strong>Q174.</strong> A POST that creates an order is retried by the client after a timeout. How do you avoid duplicates?</p>
+<p><strong>Answer:</strong> Make it idempotent with an idempotency key</p>
+<p>Safe retries.</p>
+<p><strong>Q175.</strong> A dependency fails repeatedly and your service slows down waiting on it. Which pattern helps?</p>
+<p><strong>Answer:</strong> Circuit breaker with timeouts and fallback</p>
+<p>Fail fast and recover.</p>
+<p><strong>Q176.</strong> How should passwords be stored?</p>
+<p><strong>Answer:</strong> Salted slow hash such as PBKDF2, bcrypt or Argon2</p>
+<p>Never reversible.</p>
+<p><strong>Q177.</strong> Where should an API key for a third-party service live in production?</p>
+<p><strong>Answer:</strong> In a secret store or environment variable, not in source control</p>
+<p>Rotate if leaked.</p>
+<p><strong>Q178.</strong> Why use multi-stage Docker builds for a .NET API?</p>
+<p><strong>Answer:</strong> Build with the SDK image and ship only the runtime plus published output</p>
+<p>Smaller, safer images.</p>
+<p><strong>Q179.</strong> What does a trace id help you do across microservices?</p>
+<p><strong>Answer:</strong> Follow one request through every service</p>
+<p>Distributed tracing.</p>
+<h2 id="practical-coding-questions">Practical coding questions<a class="headerlink" href="#practical-coding-questions" title="Permanent link">&para;</a></h2>
+<h3 id="top-words-with-linq">Top words with LINQ<a class="headerlink" href="#top-words-with-linq" title="Permanent link">&para;</a></h3>
+<p>Implement WordStats.TopWords(text, n): split on spaces, group identical words, count them, order by count descending then word ascending, and take the first n. Print <code>word: count</code> for the top three.</p>
+<p>Starter code:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>var text = "the quick brown fox jumps over the lazy dog the fox";
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>var top = WordStats.TopWords(text, 3);
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a>foreach (var (word, count) in top)
+<a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>    Console.WriteLine($"{word}: {count}");
+<a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a>
+<a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a>static class WordStats
+<a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a>{
+<a id="__codelineno-36-9" name="__codelineno-36-9" href="#__codelineno-36-9"></a>    public static IEnumerable&lt;(string Word, int Count)&gt; TopWords(string text, int n) =&gt;
+<a id="__codelineno-36-10" name="__codelineno-36-10" href="#__codelineno-36-10"></a>        // split into words, group, count, order by count desc then word asc, take n
+<a id="__codelineno-36-11" name="__codelineno-36-11" href="#__codelineno-36-11"></a>        throw new NotImplementedException();
+<a id="__codelineno-36-12" name="__codelineno-36-12" href="#__codelineno-36-12"></a>}
+</code></pre></div>
+<p>Expected output:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>the: 3
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>fox: 2
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>brown: 1
+</code></pre></div>
+<p>??? success "Show a solution"</p>
+<div class="highlight"><pre><span></span><code>```
+var text = "the quick brown fox jumps over the lazy dog the fox";
+
+var top = WordStats.TopWords(text, 3);
+foreach (var (word, count) in top)
+    Console.WriteLine($"{word}: {count}");
+
+static class WordStats
+{
+    public static IEnumerable&lt;(string Word, int Count)&gt; TopWords(string text, int n) =&gt;
+        text.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+            .GroupBy(w =&gt; w)
+            .Select(g =&gt; (Word: g.Key, Count: g.Count()))
+            .OrderByDescending(t =&gt; t.Count)
+            .ThenBy(t =&gt; t.Word)
+            .Take(n);
+}
+```
+
+GroupBy builds the buckets, Select counts, and the two-key ordering makes ties deterministic. Verified by running the solution with the .NET SDK.
+</code></pre></div>
+<h3 id="shapes-with-records-and-patterns">Shapes with records and patterns<a class="headerlink" href="#shapes-with-records-and-patterns" title="Permanent link">&para;</a></h3>
+<p>Complete Describe(): use a switch expression with property patterns so a circle needs Radius &gt; 0, a square is a square, a rectangle needs Width and Height &gt; 0, and anything else is <code>invalid</code>. Area is already implemented.</p>
+<p>Starter code:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>Shape[] shapes = { new Circle(1), new Rect(2, 3), new Square(2), new Rect(0, 5) };
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>foreach (var s in shapes)
+<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>    Console.WriteLine($"{Describe(s)} area={Area(s):F2}");
+<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a>
+<a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a>static string Describe(Shape s) =&gt;
+<a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a>    // use a switch expression with property patterns:
+<a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a>    // circle (Radius &gt; 0), square, rectangle (Width and Height &gt; 0), otherwise "invalid"
+<a id="__codelineno-39-8" name="__codelineno-39-8" href="#__codelineno-39-8"></a>    throw new NotImplementedException();
+<a id="__codelineno-39-9" name="__codelineno-39-9" href="#__codelineno-39-9"></a>
+<a id="__codelineno-39-10" name="__codelineno-39-10" href="#__codelineno-39-10"></a>static double Area(Shape s) =&gt; s switch
+<a id="__codelineno-39-11" name="__codelineno-39-11" href="#__codelineno-39-11"></a>{
+<a id="__codelineno-39-12" name="__codelineno-39-12" href="#__codelineno-39-12"></a>    Circle c =&gt; Math.PI * c.Radius * c.Radius,
+<a id="__codelineno-39-13" name="__codelineno-39-13" href="#__codelineno-39-13"></a>    Square q =&gt; q.Side * q.Side,
+<a id="__codelineno-39-14" name="__codelineno-39-14" href="#__codelineno-39-14"></a>    Rect r =&gt; r.Width * r.Height,
+<a id="__codelineno-39-15" name="__codelineno-39-15" href="#__codelineno-39-15"></a>    _ =&gt; 0
+<a id="__codelineno-39-16" name="__codelineno-39-16" href="#__codelineno-39-16"></a>};
+<a id="__codelineno-39-17" name="__codelineno-39-17" href="#__codelineno-39-17"></a>
+<a id="__codelineno-39-18" name="__codelineno-39-18" href="#__codelineno-39-18"></a>abstract record Shape;
+<a id="__codelineno-39-19" name="__codelineno-39-19" href="#__codelineno-39-19"></a>record Circle(double Radius) : Shape;
+<a id="__codelineno-39-20" name="__codelineno-39-20" href="#__codelineno-39-20"></a>record Rect(double Width, double Height) : Shape;
+<a id="__codelineno-39-21" name="__codelineno-39-21" href="#__codelineno-39-21"></a>record Square(double Side) : Shape;
+</code></pre></div>
+<p>Expected output:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>circle area=3.14
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>rectangle area=6.00
+<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>square area=4.00
+<a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a>invalid area=0.00
+</code></pre></div>
+<p>??? success "Show a solution"</p>
+<div class="highlight"><pre><span></span><code>```
+Shape[] shapes = { new Circle(1), new Rect(2, 3), new Square(2), new Rect(0, 5) };
+foreach (var s in shapes)
+    Console.WriteLine($"{Describe(s)} area={Area(s):F2}");
+
+static string Describe(Shape s) =&gt; s switch
+{
+    Circle { Radius: &gt; 0 } =&gt; "circle",
+    Square =&gt; "square",
+    Rect { Width: &gt; 0, Height: &gt; 0 } =&gt; "rectangle",
+    _ =&gt; "invalid"
+};
+
+static double Area(Shape s) =&gt; s switch
+{
+    Circle c =&gt; Math.PI * c.Radius * c.Radius,
+    Square q =&gt; q.Side * q.Side,
+    Rect r =&gt; r.Width * r.Height,
+    _ =&gt; 0
+};
+
+abstract record Shape;
+record Circle(double Radius) : Shape;
+record Rect(double Width, double Height) : Shape;
+record Square(double Side) : Shape;
+```
+
+Records give concise immutable shapes and patterns let you encode validity in the match. The Rect with Width 0 falls through to invalid. Verified by running the solution with the .NET SDK.
+</code></pre></div>
+<hr />
+<p>More free practice: the <a href="../">C# Mastery Path</a> curriculum, the <a href="https://learnmasterypath.com/interview-pack/">Interview Prep Pack</a> and the <a href="https://learnmasterypath.com/resume/">free resume ATS check</a>.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+  
+  <nav class="mp-related" aria-label="Related free courses">
+    <h2>Related free courses</h2>
+    <ul>
+      <li><a href="https://learnmasterypath.com/python-mastery-path/">Python</a></li><li><a href="https://learnmasterypath.com/java-mastery-path/">Java</a></li><li><a href="https://learnmasterypath.com/javascript-mastery-path/">JavaScript</a></li><li><a href="https://learnmasterypath.com/typescript-mastery-path/">TypeScript</a></li><li><a href="https://learnmasterypath.com/shell-mastery-path/">Shell/Bash</a></li>
+      <li><a href="https://learnmasterypath.com/">All 100+ courses &rarr;</a></li>
+    </ul>
+  </nav>
+  
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: Home">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Home
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../cheat-sheet/" class="md-footer__link md-footer__link--next" aria-label="Next: Cheat Sheet">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Cheat Sheet
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+  <div class="mp-foot">
+    <div class="mp-foot-inner">
+      <a class="mp-foot-brand" href="https://learnmasterypath.com/"><svg class="mp-mark" viewBox="0 0 160 160" role="img" aria-label="Mastery Path logo">
+  <circle cx="80" cy="80" r="74" fill="#FAF7EF" stroke="#2FA98D" stroke-width="5"/>
+  <rect class="mp-bar mp-bar-1" x="36" y="90" width="17" height="24" rx="5" fill="#2FA98D"/>
+  <rect class="mp-bar mp-bar-2" x="59" y="74" width="17" height="40" rx="5" fill="#7FC9B7"/>
+  <rect class="mp-bar mp-bar-3" x="82" y="56" width="17" height="58" rx="5" fill="#E0B457"/>
+  <rect class="mp-bar mp-bar-4" x="105" y="38" width="17" height="76" rx="5" fill="#C97B4A"/>
+  <circle class="mp-dot" cx="44.5" cy="82" r="7" fill="#22261f"/>
+</svg><span>Mastery Path</span></a>
+      <nav class="mp-sitelinks" aria-label="Site and legal links">
+        <a href="https://learnmasterypath.com/">All courses</a>
+        <a href="https://learnmasterypath.com/about.html">About</a>
+        <a href="https://learnmasterypath.com/contact.html">Contact</a>
+        <a href="https://learnmasterypath.com/csharp-mastery-path/privacy/">Privacy Policy</a>
+        <a href="https://learnmasterypath.com/terms.html">Terms</a>
+        <a href="https://learnmasterypath.com/csharp-mastery-path/license/">License</a>
+        <a href="https://learnmasterypath.com/verify/">Verify a certificate</a>
+      </nav>
+    </div>
+    <p class="mp-license-note">
+      © 2026 Vinod Kumar Sigilipelli · Except where otherwise noted, lesson content is licensed under
+      <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> and code examples under the
+      <a href="https://opensource.org/license/mit">MIT License</a>.
+    </p>
+  </div>
+
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.path", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "navigation.footer", "navigation.indexes", "toc.follow", "content.code.copy", "content.code.annotate", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+        <script src="../javascripts/progress-tracker.js"></script>
+      
+        <script src="../javascripts/final-quiz.js"></script>
+      
+    
+  </body>
+</html>
